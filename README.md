@@ -1,13 +1,20 @@
-# ott
+# ott project readme:
 
 Getting Started:
+#
 Open the folder in VS Code.
 Open Terminal, if you haven't already, by pressing Ctrl + `
-Install all the node_module package using the Terminal. Type--> npm install
+#
+To install all the node_module packages using the Terminal, type:
+#
+npm install
+#
 Then, run the code using the command.
+#
 npm run dev
-
-Following is auto generated text:
+#
+Following all are auto generated:
+#
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
