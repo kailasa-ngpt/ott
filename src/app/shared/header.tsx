@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Input from "./../components/input";
+import SearchInput from "./../components/searchInput";
 
 const Header: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -12,27 +12,32 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-[#220E0E] text-white font-sans">
-        <nav className="flex items-center justify-between px-6 py-4">
+        <nav className="flex items-center justify-between px-2 py-4">
             <div className="flex items-center space-x-4">
-              <Image src="/images/logo.png" alt="Logo" width={40} height={40} />
-              <ul className="flex space-x-6">
-                <li><a href="#">HOME</a></li>
-                <li><a href="#">LIVE</a></li>
-                <li><a href="#">PLAYLISTS</a></li>
-              </ul>
+              <div className="flex-shrink-0 w-16 pl-2">
+                <Image src="/images/logo.png" alt="Logo" width={40} height={40} />
+              </div>
+              <div className="px-2">
+                <ul className="flex space-x-6">
+                  <li><a href="#">HOME</a></li>
+                  <li><a href="#">LIVE</a></li>
+                  <li><a href="#">PLAYLISTS</a></li>
+                </ul>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-            <Input
-                id="search"
-                value=""
-                onChange={handleSearchChange}
-                label="Search"
-                placeholder=""
-                type="text"
-            />
-            <button className="text-xl">🔔</button>
-            <button className="text-xl">👤</button>
+            <div className="flex items-center flex-grow">
+              <SearchInput
+                  id="search"
+                  value={searchValue}
+                  onChange={handleSearchChange}
+                  label="Search"
+                  type="text"
+              />
+              <div className="flex items-center space-x-4 px-2">
+                <button className="text-xl p-1">🔔</button>
+                <button className="text-xl p-1">👤</button>
+              </div>
             </div>
         </nav>
     </header>
