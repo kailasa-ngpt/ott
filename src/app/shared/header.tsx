@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-[#220E0E] text-white font-sans">
+    <header className="bg-[#150B0B] text-white font-sans">
         <nav className="flex items-center justify-between px-2 py-4">
             <div className="flex items-center space-x-4">
               <div className="flex-shrink-0 w-16 pl-2">
@@ -19,9 +19,9 @@ const Header: React.FC = () => {
               </div>
               <div className="px-2">
                 <ul className="flex space-x-6">
-                  <li><a href="#">HOME</a></li>
-                  <li><a href="#">LIVE</a></li>
-                  <li><a href="#">PLAYLISTS</a></li>
+                  <li><a href="/home">HOME</a></li>
+                  <li><a href="/live">LIVE</a></li>
+                  <li><a href="/playlists">PLAYLISTS</a></li>
                 </ul>
               </div>
             </div>
