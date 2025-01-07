@@ -1,3 +1,4 @@
+import ImageSlider from "../components/imageSlider";
 import Footer from "../shared/footer";
 import Header from "../shared/header";
 
@@ -5,9 +6,9 @@ const Home = () => {
   return (
     <div className="bg-[#220E0E] text-white font-sans">
       <Header />
-      <main className="px-6 py-8">
-        <h1 className="text-4xl font-bold">Welcome to the Homepage!</h1>
-      </main>
+        <div className="flex min-h-screen flex-col items-center mt-1">
+          <ImageSlider />
+        </div>
       <Footer /> 
     </div>
   );
