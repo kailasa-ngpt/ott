@@ -79,9 +79,9 @@ export default function ImageSlider(): JSX.Element {
   };
 
   return (
-    <div className="relative w-1/2 mx-auto items-center justify-center">
+    <div className="relative w-full mx-auto items-center justify-center">
       <div
-        className="relative h-[300px] mx-12 group"
+        className="relative h-[400px] mx-12 group"
         onMouseOver={handleMouseOver}
         onMouseLeave={handleMouseLeave}
       >
