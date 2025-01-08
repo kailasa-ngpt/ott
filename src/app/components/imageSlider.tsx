@@ -94,13 +94,13 @@ export default function ImageSlider(): JSX.Element {
         />
       </div>
       <button
-        className="absolute left-0 top-1/2 transform h-[300px] rounded-xl hover:bg-[#1a222f] mx-1 -mt-[10px] -translate-y-1/2 bg-[#111927] text-white p-2 group"
+        className="absolute left-0 top-1/2 transform h-[400px] rounded-xl hover:bg-[#1a222f] mx-1 -mt-[10px] -translate-y-1/2 bg-[#111927] text-white p-2 group"
         onClick={prevSlide}
       >
         <ChevronLeft className="text-gray-400 group-hover:text-white" />
       </button>
       <button
-        className="absolute right-0 top-1/2 transform h-[300px] rounded-xl hover:bg-[#1a222f] mx-1 -mt-[10px] -translate-y-1/2 bg-[#111927] text-white p-2 group"
+        className="absolute right-0 top-1/2 transform h-[400px] rounded-xl hover:bg-[#1a222f] mx-1 -mt-[10px] -translate-y-1/2 bg-[#111927] text-white p-2 group"
         onClick={nextSlide}
       >
         <ChevronRight className="text-gray-400 group-hover:text-white" />
