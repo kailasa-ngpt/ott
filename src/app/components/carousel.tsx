@@ -17,7 +17,7 @@ interface ImageData {
 // This image array will be later be filled by the images that comes from the API.
 // We will use a Service to fetch the images from the API.
 // For now, we are using some sample images for the 
-// purpose of testing the imageSlider component.
+// purpose of testing the carousel component.
 
 const images: ImageData[] = [
   {
@@ -34,7 +34,7 @@ const images: ImageData[] = [
   },
 ];
 
-export default function ImageSlider(): JSX.Element {
+export default function Carousel(): JSX.Element {
   // State to keep track of the current image index
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 

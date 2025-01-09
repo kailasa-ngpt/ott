@@ -1,14 +1,14 @@
-import ImageSlider from "../components/imageSlider";
 import Footer from "../shared/footer";
 import Header from "../shared/header";
 import Thumbnail from "../components/thumbnail";
+import Carousel from "../components/carousel";
 
 const Home = () => {
   return (
     <div className="bg-[#220E0E] text-white font-sans min-h-screen flex flex-col">
       <Header />
       <div className="flex flex-col items-center mt-1">
-        <ImageSlider />
+        <Carousel />
       </div>
       <div className="mt-4 w-full max-w-md">
         <Thumbnail
