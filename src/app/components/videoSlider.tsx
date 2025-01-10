@@ -5,16 +5,20 @@ import { getThumbnails } from "../../services/videoSliderService";
 import Thumbnail from "./thumbnail";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-const VideoSlider = () => {
+interface VideoSliderProps {
+  category: string;
+}
+
+const VideoSlider: React.FC<VideoSliderProps> = ({category}) => {
   const [videos, setVideos] = useState<{ thumbnailPath: string; videoTitle: string; videoLink: string; views: number; createdDate: string }[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getThumbnails() as { thumbnailPath: string; videoTitle: string; videoLink: string; views: number; createdDate: string }[];
+      const data = await getThumbnails(category) as { thumbnailPath: string; videoTitle: string; videoLink: string; views: number; createdDate: string }[];
       setVideos(data);
     };
     fetchData();
-  }, []);
+  }, [category]);
 
   const scrollLeft = () => {
     const slider = document.querySelector(".video-slider");
