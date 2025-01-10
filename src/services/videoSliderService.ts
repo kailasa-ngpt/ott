@@ -1,5 +1,4 @@
-// services/thumbnailService.ts
-
+//temp data. This will be replaced with actual API call to fetch data from server
 const sampleThumbnailVideos = [
     {
       thumbnailPath: "/ThumbnailImages/sampleImage1.png",
