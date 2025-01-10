@@ -1,0 +1,7 @@
+export interface IThumbnail {
+  thumbnailPath: string;
+  videoTitle: string;
+  videoLink: string;
+  createdDate: string;
+  views: number;
+}

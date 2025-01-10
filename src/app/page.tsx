@@ -1,7 +1,13 @@
-import Image from "next/image";
+"use client";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-export default function Home() {
-  return (
-    <p>bigyan</p>
-  );
+export default function RedirectToHome() {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.location.replace("/home");
+    }
+  }, []);
+
+  return null;
 }
