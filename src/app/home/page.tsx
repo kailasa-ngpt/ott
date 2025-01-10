@@ -1,7 +1,7 @@
 import Footer from "../shared/footer";
 import Header from "../shared/header";
-import Thumbnail from "../components/thumbnail";
 import Carousel from "../components/carousel";
+import VideoSlider from "../components/videoSlider";
 
 const Home = () => {
   return (
@@ -15,13 +15,8 @@ const Home = () => {
           <h2 className="text-xl font-bold mt-1">Trending Now</h2>
           <hr className="w-full border-gray-500 my-2" />
         </div>
-        <div className="mt-4 w-full max-w-md">
-          <Thumbnail
-              thumbnailPath="/ThumbnailImages/sampleImage1.png"
-              videoTitle="Sample Video1"
-              videoLink="https://www.youtube.com/watch?v=43HMoUIj830"
-              createdDate="Jan 9, 2025"
-              views={12345}/>
+        <div className="">
+          <VideoSlider />
         </div>
       </div>
       <Footer /> 
