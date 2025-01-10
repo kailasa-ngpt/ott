@@ -11,7 +11,7 @@ const Home = () => {
         <div className="flex flex-col items-center mt-1">
           <Carousel />
         </div>
-        <div className="mt-4 w-full flex flex-col items-center">
+        <div className="mt-4 w-full flex flex-col items-start">
           <h2 className="text-xl font-bold mt-1">Trending Now</h2>
           <hr className="w-full border-gray-500 my-2" />
         </div>
