@@ -1,6 +1,6 @@
 const Footer: React.FC = () => {
     return (
-      <footer className="py-4 bg-black text-center text-gray-400 text-sm fixed bottom-0 left-0 w-full">
+      <footer className="py-4 bg-black text-center text-gray-400 text-sm w-full">
         <p>
           © 2024 Sri Nithyananda Paramashivam. All rights reserved. KAILASA's Nithyananda TV.
         </p>
