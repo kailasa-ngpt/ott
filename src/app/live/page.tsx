@@ -5,9 +5,9 @@ const Home = () => {
   return (
     <div className="bg-[#220E0E] text-white font-sans">
       <Header />
-      <main className="px-6 py-8">
+      <div className="container mx-auto px-4 flex-grow min-h-screen">
         <h1 className="text-4xl font-bold">Welcome to the Live page!</h1>
-      </main>
+      </div>
       <Footer /> 
     </div>
   );
