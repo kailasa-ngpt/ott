@@ -104,9 +104,9 @@ const sampleThumbnailVideos = [
   ];
   
   //delete following block of code later as we make the actual call. This is just for testing
-  export const getThumbnails = async (category :string) => {
+  export const getThumbnails = async (playlistId :string) => {
     // Simulate API delay with a Promise
-    if(category === "trending-now"){
+    if(playlistId === "123"){
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve(sampleThumbnailVideos);
