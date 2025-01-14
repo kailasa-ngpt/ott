@@ -1,31 +1,71 @@
-import VideoSlider from "../components/videoSlider";
+"use client";
+import { useEffect, useState } from "react";
 import Footer from "../shared/footer";
 import Header from "../shared/header";
+import { getPlayListsByUserId } from "../../services/playListService";
+import VideoSlider from "../components/videoSlider";
 
-const Home = () => {
+interface IPlayList {
+  playlistId: string;
+  playListTitle: string;
+  thumbnails: {
+    thumbnailPath: string;
+    videoTitle: string;
+    videoLink: string;
+    createdDate: string;
+    views: number;
+  }[];
+}
+
+
+const Playlists = () => {
+  const [playlistsState, setPlaylistsState] = useState<IPlayList[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      try {
+        let userId = getCurrentUserId();
+        const playlists = await getPlayListsByUserId(userId);
+        setPlaylistsState(playlists);
+      } catch (error) {
+        console.error("Error fetching playlist IDs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlaylists();
+  }, []);
+
   return (
     <div className="bg-[#220E0E] text-white font-sans">
       <Header />
       <div className="container mx-auto px-4 flex-grow min-h-screen">
-        <div className="mt-4">
-          <div className="w-full flex flex-col items-start">
-            <h2 className="text-xl font-bold mt-1">Playlist1</h2>
-            <hr className="w-full border-gray-500 my-2" />
-          </div>
-          <VideoSlider category="playlist1"  />
-        </div>
-
-        <div className="mt-4">
-          <div className="w-full flex flex-col items-start">
-            <h2 className="text-xl font-bold mt-1">Playlist2</h2>
-            <hr className="w-full border-gray-500 my-2" />
-          </div>
-          <VideoSlider category="playlist2"  />
-        </div>
+        {
+          loading ? (
+            <div className="mt-4 text-center">
+              <p className="text-xl">Loading...</p>
+            </div>
+          ) : (
+            playlistsState.length === 0) ? (
+              <div className="mt-4 text-center">
+                <p className="text-xl">You haven't created any playlists.</p>
+              </div>
+              ) : (
+                playlistsState.map((playlist, index) => (
+                    <div key={index}>
+                      <VideoSlider category={playlist.playListTitle}  thumbnails={playlist.thumbnails} />
+                    </div>
+                  )
+                )
+              )
+        }
       </div>
       <Footer/> 
     </div>
   );
 }
 
-export default Home;
+export default Playlists;
+
+const getCurrentUserId = () => "123"; //modify this code later as we make the actual call. This is just for testing

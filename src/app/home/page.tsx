@@ -1,9 +1,43 @@
+"use client"
+
 import Footer from "../shared/footer";
 import Header from "../shared/header";
 import Carousel from "../components/carousel";
 import VideoSlider from "../components/videoSlider";
+import { useEffect, useState } from "react";
+import { getSliderData } from "@/services/videoSliderService";
+
+const categories: string[] = ["trending-now", "popular", "guided-meditation", "four-powers"];
+
+interface Thumbnail {
+  thumbnailPath: string;
+  videoTitle: string;
+  videoLink: string;
+  views: number;
+  createdDate: string;
+}
+
+interface ISlider {
+  category: string;
+  thumbnails: Thumbnail[];
+}
 
 const Home = () => {
+  const [slidersData, setSlidersData] = useState<ISlider[]>([]);
+
+  useEffect(() => {
+    const fetchSliderData = async () => {
+      let sliders: ISlider[] = [];
+      for (const category of categories) {
+        const slider = await getSliderData(category);
+        sliders = [...sliders, slider];
+      }
+      setSlidersData(sliders);
+    };
+
+    fetchSliderData();
+  }, []);
+
   return (
     <div className="bg-[#220E0E] text-white font-sans min-h-screen flex flex-col">
       <Header />
@@ -11,13 +45,9 @@ const Home = () => {
         <div className="flex flex-col items-center mt-1">
           <Carousel />
         </div>
-        <div className="mt-4">
-          <div className="w-full flex flex-col items-start">
-            <h2 className="text-xl font-bold mt-1">Trending Now</h2>
-            <hr className="w-full border-gray-500 my-2" />
-          </div>
-          <VideoSlider category="trending-now"  />
-        </div>
+        {slidersData.length > 0 && (
+          <VideoSlider category={slidersData[0].category} thumbnails={slidersData[0].thumbnails} />
+        )}
         {/* Placeholder for livestreams */}
         <div className="mt-4">
           <div className="w-full flex flex-col items-start">
@@ -28,27 +58,15 @@ const Home = () => {
             Placeholder for Live Streams
           </div>
         </div>
-        <div className="mt-4">
-          <div className="w-full flex flex-col items-start">
-            <h2 className="text-xl font-bold mt-1">Popular</h2>
-            <hr className="w-full border-gray-500 my-2" />
-          </div>
-          <VideoSlider category="popular"/>
-        </div>
-        <div className="mt-4">
-          <div className="w-full flex flex-col items-start">
-            <h2 className="text-xl font-bold mt-1">Guided Meditation</h2>
-            <hr className="w-full border-gray-500 my-2" />
-          </div>
-          <VideoSlider category="guided-meditation"/>
-        </div>
-        <div className="mt-4">
-          <div className="w-full flex flex-col items-start">
-            <h2 className="text-xl font-bold mt-1">Four Powers</h2>
-            <hr className="w-full border-gray-500 my-2" />
-          </div>
-          <VideoSlider category="four-powers"/>
-        </div>
+        {slidersData.length > 0 && (
+          <VideoSlider category={slidersData[1].category} thumbnails={slidersData[1].thumbnails} />
+        )}
+        {slidersData.length > 0 && (
+          <VideoSlider category={slidersData[2].category} thumbnails={slidersData[2].thumbnails} />
+        )}
+        {slidersData.length > 0 && (
+          <VideoSlider category={slidersData[3].category} thumbnails={slidersData[3].thumbnails} />
+        )}
       </div>
       <Footer /> 
     </div>

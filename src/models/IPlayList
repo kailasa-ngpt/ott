@@ -1,0 +1,14 @@
+export interface IPlayList {
+    playlistId: string;
+    playListTitle: string;
+    playListContent: {
+        thumbnailPath: string;
+        videoTitle: string;
+        videoLink: string;
+        createdDate: string;
+        views: number;
+    }[];
+}
+
+  
+  

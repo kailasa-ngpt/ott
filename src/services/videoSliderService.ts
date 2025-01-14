@@ -2,7 +2,7 @@
 const sampleThumbnailVideos = [
     {
       thumbnailPath: "/ThumbnailImages/sampleImage1.png",
-      videoTitle: "Sample Video1",
+      videoTitle: "Sample Video from 1",
       videoLink: "https://www.youtube.com/watch?v=43HMoUIj830",
       createdDate: "Jan 9, 2025",
       views: 12345,
@@ -54,7 +54,7 @@ const sampleThumbnailVideos = [
   const sampleThumbnailVideos2 = [
     {
       thumbnailPath: "/ThumbnailImages/sampleImage1.png",
-      videoTitle: "Sample Video1",
+      videoTitle: "Sample Video from 2",
       videoLink: "https://www.youtube.com/watch?v=43HMoUIj830",
       createdDate: "Jan 9, 2025",
       views: 12345,
@@ -104,12 +104,17 @@ const sampleThumbnailVideos = [
   ];
   
   //delete following block of code later as we make the actual call. This is just for testing
-  export const getThumbnails = async (category :string) => {
+  export const getSliderData = async (category :string) : Promise<ISlider> => {
     // Simulate API delay with a Promise
     if(category === "trending-now"){
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(sampleThumbnailVideos);
+          resolve(
+            {
+              category: category,
+              thumbnails:sampleThumbnailVideos
+            }
+          );
         }, 50); // 50ms delay for realism
       });
     }
@@ -117,7 +122,10 @@ const sampleThumbnailVideos = [
     {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(sampleThumbnailVideos2);
+          resolve({
+            category: category,
+            thumbnails:sampleThumbnailVideos2
+          });
         }, 50); // 50ms delay for realism
       });
     }
@@ -130,4 +138,15 @@ const sampleThumbnailVideos = [
   //   const data = await response.json();
   //   return data;
   // };
+  interface Thumbnail {
+    thumbnailPath: string;
+    videoTitle: string;
+    videoLink: string;
+    views: number;
+    createdDate: string;
+  }
   
+  interface ISlider {
+    category: string;
+    thumbnails: Thumbnail[];
+  }
