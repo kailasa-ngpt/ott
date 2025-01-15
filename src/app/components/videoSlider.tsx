@@ -84,14 +84,17 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, thumbnails}) => {
 };
 
 const convertToTitleCase = (str: string): string => {
-  if (str.includes('-')) 
+  if (str.includes('-') || str.includes(' ')) 
   {
     return str
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
   }
-  return str;
+  else
+  {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 };
 
 export default VideoSlider;
