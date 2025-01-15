@@ -1,7 +1,7 @@
 import Footer from "../shared/footer";
 import Header from "../shared/header";
 
-const Home = () => {
+const Live = () => {
   return (
     <div className="bg-[#220E0E] text-white font-sans">
       <Header />
@@ -13,4 +13,4 @@ const Home = () => {
   );
 }
 
-export default Home;
+export default Live;
