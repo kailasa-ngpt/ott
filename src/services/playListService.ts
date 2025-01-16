@@ -7,7 +7,7 @@
             {
               playlistId: "playlistId1",
               playListTitle: "Playlist1",
-              thumbnails: 
+              videos: 
               [
                 {
                   thumbnailPath: "/ThumbnailImages/sampleImage2.png",
@@ -63,7 +63,7 @@
             {
               playlistId: "playlistId2",
               playListTitle: "Playlist2",
-              thumbnails: 
+              videos: 
               [
                 {
                   thumbnailPath: "/ThumbnailImages/sampleImage1.png",
@@ -126,7 +126,7 @@
   export interface IPlayList {
     playlistId: string;
     playListTitle: string;
-    thumbnails: {
+    videos: {
       thumbnailPath: string;
       videoTitle: string;
       videoLink: string;

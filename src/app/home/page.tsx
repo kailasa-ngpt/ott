@@ -9,7 +9,7 @@ import { getSliderData } from "@/services/videoSliderService";
 
 const categories: string[] = ["trending-now", "popular", "guided-meditation", "four-powers"];
 
-interface Thumbnail {
+interface IVideo {
   thumbnailPath: string;
   videoTitle: string;
   videoLink: string;
@@ -19,7 +19,7 @@ interface Thumbnail {
 
 interface ISlider {
   category: string;
-  thumbnails: Thumbnail[];
+  videos: IVideo[];
 }
 
 const Home = () => {
@@ -46,7 +46,7 @@ const Home = () => {
           <Carousel />
         </div>
         {slidersData.length > 0 && (
-          <VideoSlider category={slidersData[0].category} thumbnails={slidersData[0].thumbnails} />
+          <VideoSlider category={slidersData[0].category} videos={slidersData[0].videos} />
         )}
         {/* Placeholder for livestreams */}
         <div className="mt-4">
@@ -59,13 +59,13 @@ const Home = () => {
           </div>
         </div>
         {slidersData.length > 0 && (
-          <VideoSlider category={slidersData[1].category} thumbnails={slidersData[1].thumbnails} />
+          <VideoSlider category={slidersData[1].category} videos={slidersData[1].videos} />
         )}
         {slidersData.length > 0 && (
-          <VideoSlider category={slidersData[2].category} thumbnails={slidersData[2].thumbnails} />
+          <VideoSlider category={slidersData[2].category} videos={slidersData[2].videos} />
         )}
         {slidersData.length > 0 && (
-          <VideoSlider category={slidersData[3].category} thumbnails={slidersData[3].thumbnails} />
+          <VideoSlider category={slidersData[3].category} videos={slidersData[3].videos} />
         )}
       </div>
       <Footer /> 

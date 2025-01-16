@@ -112,7 +112,7 @@ const sampleThumbnailVideos = [
           resolve(
             {
               category: category,
-              thumbnails:sampleThumbnailVideos
+              videos:sampleThumbnailVideos
             }
           );
         }, 50); // 50ms delay for realism
@@ -124,7 +124,7 @@ const sampleThumbnailVideos = [
         setTimeout(() => {
           resolve({
             category: category,
-            thumbnails:sampleThumbnailVideos2
+            videos:sampleThumbnailVideos2
           });
         }, 50); // 50ms delay for realism
       });
@@ -138,7 +138,7 @@ const sampleThumbnailVideos = [
   //   const data = await response.json();
   //   return data;
   // };
-  interface Thumbnail {
+  interface IVideo {
     thumbnailPath: string;
     videoTitle: string;
     videoLink: string;
@@ -148,5 +148,5 @@ const sampleThumbnailVideos = [
   
   interface ISlider {
     category: string;
-    thumbnails: Thumbnail[];
+    videos: IVideo[];
   }

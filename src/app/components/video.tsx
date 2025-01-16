@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play } from "lucide-react";
 
-interface ThumbnailProps {
+interface VideoProps {
   thumbnailPath: string;
   videoTitle: string;
   videoLink: string;
@@ -11,7 +11,7 @@ interface ThumbnailProps {
   views: number;
 }
 
-const Thumbnail: React.FC<ThumbnailProps> = ({ thumbnailPath, videoTitle, videoLink, createdDate, views }) => {
+const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, createdDate, views }) => {
   return (
     <Link href={videoLink}>
       <div className="relative w-40 sm:w-52 lg:w-72 h-auto cursor-pointer group">
@@ -42,4 +42,4 @@ const Thumbnail: React.FC<ThumbnailProps> = ({ thumbnailPath, videoTitle, videoL
   );
 };
 
-export default Thumbnail;
+export default Video;

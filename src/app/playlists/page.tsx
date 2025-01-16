@@ -8,7 +8,7 @@ import VideoSlider from "../components/videoSlider";
 interface IPlayList {
   playlistId: string;
   playListTitle: string;
-  thumbnails: {
+  videos: {
     thumbnailPath: string;
     videoTitle: string;
     videoLink: string;
@@ -54,7 +54,7 @@ const Playlists = () => {
               ) : (
                 playlistsState.map((playlist, index) => (
                     <div key={index}>
-                      <VideoSlider category={playlist.playListTitle}  thumbnails={playlist.thumbnails} />
+                      <VideoSlider category={playlist.playListTitle}  videos={playlist.videos} />
                     </div>
                   )
                 )

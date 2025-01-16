@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Thumbnail from "./thumbnail";
+import Video from "./video";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 interface VideoSliderProps {
   category: string;
-  thumbnails: Thumbnail[]; // Data is passed as a prop
+  videos: IVideo[]; // Data is passed as a prop
 }
 
-interface Thumbnail {
+interface IVideo {
   thumbnailPath: string;
   videoTitle: string;
   videoLink: string;
@@ -17,7 +17,7 @@ interface Thumbnail {
   createdDate: string;
 }
 
-const VideoSlider: React.FC<VideoSliderProps> = ({category, thumbnails}) => {
+const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => {
   //const [videos, setVideos] = useState<{ thumbnailPath: string; videoTitle: string; videoLink: string; views: number; createdDate: string }[]>([]);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -58,14 +58,14 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, thumbnails}) => {
 
         {/* Video Slider */}
         <div ref={sliderRef} className="video-slider flex gap-4 overflow-x-auto scroll-smooth py-4 px-6 w-full">
-          {thumbnails.map((thumbnail, index) => (
+          {videos.map((video, index) => (
             <div key={index} className="flex-shrink-0 w-80">
-              <Thumbnail
-                thumbnailPath={thumbnail.thumbnailPath}
-                videoTitle={thumbnail.videoTitle}
-                videoLink={thumbnail.videoLink}
-                createdDate={thumbnail.createdDate}
-                views={thumbnail.views}/>
+              <Video
+                thumbnailPath={video.thumbnailPath}
+                videoTitle={video.videoTitle}
+                videoLink={video.videoLink}
+                createdDate={video.createdDate}
+                views={video.views}/>
             </div>
           ))}
         </div>
