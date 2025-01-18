@@ -10,8 +10,17 @@ const Header: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
+  // Handles event when any text is typed/deleted 
+  const handleSearchChange = (searchText: string) => {
+    setSearchValue(searchText);
+  };
+
+  // When the seafrch button is clicked
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchValue.trim()) {
+      router.push(`/search?query=${encodeURIComponent(searchValue.trim())}`);
+    }
   };
 
   const isActive = (path: string) => pathname === path;
@@ -56,6 +65,7 @@ const Header: React.FC = () => {
             </div>
 
             <div className="flex items-center flex-grow">
+            <form onSubmit = {handleSearch}>
               <SearchInput
                   id="search"
                   value={searchValue}
@@ -64,9 +74,11 @@ const Header: React.FC = () => {
                   type="text"
               />
               <div className="flex items-center space-x-4 px-2">
+              <button type="submit" className="text-xl p-1">Search</button>
                 <button className="text-xl p-1">🔔</button>
                 <button className="text-xl p-1">👤</button>
               </div>
+              </form>
             </div>
         </nav>
     </header>
