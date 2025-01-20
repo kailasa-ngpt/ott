@@ -1,4 +1,4 @@
-export interface IThumbnail {
+export interface IVideo {
   thumbnailPath: string;
   videoTitle: string;
   videoLink: string;

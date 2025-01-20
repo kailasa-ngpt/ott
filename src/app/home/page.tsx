@@ -10,11 +10,17 @@ import { getSliderData } from "@/services/videoSliderService";
 const categories: string[] = ["trending-now", "popular", "guided-meditation", "four-powers"];
 
 interface IVideo {
-  thumbnailPath: string;
-  videoTitle: string;
-  videoLink: string;
-  views: number;
-  createdDate: string;
+  Id: number;
+  video_id: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  title: string;
+  description: string;
+  thumbnail_id: string;
+  video_m3u8_id: string;
+  duration_secs: number | null;
+  delivered_date: string | null;
+  uploaded_date: string | null;
 }
 
 interface ISlider {

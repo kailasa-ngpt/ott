@@ -1,19 +1,30 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Play } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface VideoProps {
   thumbnailPath: string;
   videoTitle: string;
   videoLink: string;
   createdDate: string;
-  views: number;
 }
 
-const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, createdDate, views }) => {
+const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, createdDate }) => {
+  const router = useRouter();
+
+  const handleVideoClick = () => {
+    const url = new URL('/play', window.location.origin);
+    url.searchParams.append('thumbnailPath', thumbnailPath);
+    url.searchParams.append('videoTitle', videoTitle);
+    url.searchParams.append('videoLink', videoLink);
+
+    router.push(url.toString());
+  };
   return (
-    <Link href={videoLink}>
+    <div  onClick={handleVideoClick} className="relative w-40 sm:w-52 lg:w-72 h-auto cursor-pointer group">
       <div className="relative w-40 sm:w-52 lg:w-72 h-auto cursor-pointer group">
         {/* Image */}
         <div className="relative w-full h-24 sm:h-32 lg:h-48">
@@ -35,10 +46,9 @@ const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, cre
         <div className="mt-1 p-1 text-white rounded-lg">
           <div className="text-sm sm:text-base lg:text-lg font-bold">{videoTitle}</div>
           <div className="text-xs sm:text-sm">{createdDate}</div>
-          <div className="text-xs sm:text-sm">{views} views</div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

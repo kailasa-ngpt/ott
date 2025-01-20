@@ -20,7 +20,7 @@ const Player: React.FC<PlayerProps> = ({
   autoPlay = false,
   controls = true,
   preload = 'auto',
-  className = '', // Add className to the props
+  className = '', 
 }) => {
   const videoNode = useRef<HTMLVideoElement | null>(null);
   const playerInstance = useRef<typeof videojs.players | null>(null);
@@ -35,8 +35,9 @@ const Player: React.FC<PlayerProps> = ({
         poster: thumbnail,
         sources: [
           {
-            src: videoSrc,
-            type: 'video/mp4',
+            //src: videoSrc,
+            src: "https://pub-67940a2fbfa149ebb363693bbb5df7f0.r2.dev/a1507a17-b5b3-4cab-af09-31b69df46272/master.m3u8",
+            type: getMimeType(videoSrc),
           },
         ],
       });
@@ -73,6 +74,22 @@ const Player: React.FC<PlayerProps> = ({
       </div>
     </div>
   );
+};
+
+const getMimeType = (videoSrc: string) => {
+  const extension = videoSrc.split('.').pop();
+  switch (extension) {
+    case 'mp4':
+      return 'video/mp4';
+    case 'webm':
+      return 'video/webm';
+    case 'ogg':
+      return 'video/ogg';
+    case 'm3u8':
+      return 'application/x-mpegURL';
+    default:
+      return 'video/mp4'; // Default to MP4 if the extension is unknown
+  }
 };
 
 export default Player;

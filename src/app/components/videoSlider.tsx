@@ -10,11 +10,17 @@ interface VideoSliderProps {
 }
 
 interface IVideo {
-  thumbnailPath: string;
-  videoTitle: string;
-  videoLink: string;
-  views: number;
-  createdDate: string;
+  Id: number;
+  video_id: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  title: string;
+  description: string;
+  thumbnail_id: string;
+  video_m3u8_id: string;
+  duration_secs: number | null;
+  delivered_date: string | null;
+  uploaded_date: string | null;
 }
 
 const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => {
@@ -61,11 +67,10 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => 
           {videos.map((video, index) => (
             <div key={index} className="flex-shrink-0 w-80">
               <Video
-                thumbnailPath={video.thumbnailPath}
-                videoTitle={video.videoTitle}
-                videoLink={video.videoLink}
-                createdDate={video.createdDate}
-                views={video.views}/>
+                thumbnailPath={video.thumbnail_id}
+                videoTitle={video.title}
+                videoLink={video.video_m3u8_id}
+                createdDate={video.CreatedAt}/>
             </div>
           ))}
         </div>

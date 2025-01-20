@@ -4,8 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { fetchSearchResults } from '@/services/searchService';
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import Header from '../shared/header';
+import Footer from '../shared/footer';
 
 // Define the structure of a video result
 interface VideoResult {
