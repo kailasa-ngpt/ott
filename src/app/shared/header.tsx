@@ -3,12 +3,15 @@
 import React, { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import { z } from 'zod'; 
+import { searchSchema } from '../../services/validationSchemas';
 import SearchInput from "./../components/searchInput";
 
 const Header: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
   const pathname = usePathname();
+  const [error, setError] = useState<string | null>(null);
 
   // Handles event when any text is typed/deleted 
   const handleSearchChange = (searchText: string) => {
@@ -18,9 +21,19 @@ const Header: React.FC = () => {
   // When the seafrch button is clicked
   const handleSearch = (e) => {
     e.preventDefault();
+    try {
+    // Validate input using Zod schema
+    searchSchema.parse({ query: searchValue });
+    setError(null); // Clear any previous errors
+
     if (searchValue.trim()) {
       router.push(`/search?query=${encodeURIComponent(searchValue.trim())}`);
     }
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      setError(err.errors[0].message); // Show the first validation error
+    }
+  }
   };
 
   const isActive = (path: string) => pathname === path;
