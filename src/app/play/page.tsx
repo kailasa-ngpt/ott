@@ -19,8 +19,6 @@ const Play = () => {
   const videoTitle = searchParams.get('videoTitle');
   const videoLink = searchParams.get('videoLink');
   const [videoData, setVideoData] = useState<IVideoData | null>();
-  console.log("videoLink:");
-  console.log(videoLink);
   
   useEffect(() => {
     if (thumbnailPath && videoTitle && videoLink) {
@@ -45,7 +43,7 @@ const Play = () => {
       <Header />
       <div className="mx-auto flex-grow flex flex-col justify-center items-center">
         <div className="p-4  w-full">
-        <div className="relative"> 
+          <div className="relative"> 
             <Player 
               videoSrc={videoData.videoLink} 
               thumbnail={videoData.thumbnailPath} 
@@ -55,6 +53,7 @@ const Play = () => {
               preload="auto" 
             />
           </div>
+          <p>{videoData.videoTitle}</p>
         </div>
       </div>
       <Footer /> 

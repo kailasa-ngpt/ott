@@ -10,7 +10,7 @@ interface PlayerProps {
   autoPlay?: boolean;
   controls?: boolean;
   preload?: 'auto' | 'metadata' | 'none';
-  className?: string; // Add className to the interface
+  className?: string;
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -24,9 +24,11 @@ const Player: React.FC<PlayerProps> = ({
 }) => {
   const videoNode = useRef<HTMLVideoElement | null>(null);
   const playerInstance = useRef<typeof videojs.players | null>(null);
-
+  console.log("videoSrc at player.tsx:");
+  console.log(videoSrc);
+  
   useEffect(() => {
-    if (videoNode.current) {
+    if (videoNode.current && !playerInstance.current) {
       playerInstance.current = videojs(videoNode.current, {
         autoplay: autoPlay,
         controls,
@@ -35,13 +37,11 @@ const Player: React.FC<PlayerProps> = ({
         poster: thumbnail,
         sources: [
           {
-            //src: videoSrc,
-            src: "https://pub-67940a2fbfa149ebb363693bbb5df7f0.r2.dev/a1507a17-b5b3-4cab-af09-31b69df46272/master.m3u8",
-            type: getMimeType(videoSrc),
+            src: videoSrc,
+            type: videoSrc.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4',          
           },
         ],
       });
-
       playerInstance.current.ready(() => {
         const player = playerInstance.current;
         if (player) {
@@ -52,44 +52,36 @@ const Player: React.FC<PlayerProps> = ({
           player.on('ended', () => {
             console.log('Video has ended');
           });
+
+          // Error handling
+          player.on('error', () => {
+            console.error('Error occurred while loading the video:', player.error());
+          });
         }
       });
+
     }
 
+    // Cleanup function to dispose of the player instance when the component unmounts or videoSrc changes:
     return () => {
       if (playerInstance.current) {
         playerInstance.current.dispose();
+        playerInstance.current = null;
       }
     };
   }, [videoSrc, thumbnail, autoLoop, autoPlay, controls, preload]);
 
   return (
-    <div>
       <div data-vjs-player>
         <video
+          height="452" width="768"
           ref={videoNode}
           className={`video-js  ${className}`}
           playsInline
+          src = {videoSrc}
         ></video>
       </div>
-    </div>
   );
-};
-
-const getMimeType = (videoSrc: string) => {
-  const extension = videoSrc.split('.').pop();
-  switch (extension) {
-    case 'mp4':
-      return 'video/mp4';
-    case 'webm':
-      return 'video/webm';
-    case 'ogg':
-      return 'video/ogg';
-    case 'm3u8':
-      return 'application/x-mpegURL';
-    default:
-      return 'video/mp4'; // Default to MP4 if the extension is unknown
-  }
 };
 
 export default Player;
