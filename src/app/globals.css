@@ -14,3 +14,7 @@ body {
 html {
   @apply h-full;
 }
+
+.h-500px {
+  height: 500px;
+}

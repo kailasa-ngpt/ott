@@ -11,6 +11,7 @@ interface PlayerProps {
   controls?: boolean;
   preload?: 'auto' | 'metadata' | 'none';
   className?: string;
+  isLive?: boolean;
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -21,6 +22,7 @@ const Player: React.FC<PlayerProps> = ({
   controls = true,
   preload = 'auto',
   className = '', 
+  isLive,
 }) => {
   const videoNode = useRef<HTMLVideoElement | null>(null);
   const playerInstance = useRef<typeof videojs.players | null>(null);

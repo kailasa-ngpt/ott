@@ -9,10 +9,12 @@ interface VideoProps {
   thumbnailPath: string;
   videoTitle: string;
   videoLink: string;
-  createdDate: string;
+  deliveredDate: string | null;
+  description: string;
+  isLive: boolean | null;
 }
 
-const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, createdDate }) => {
+const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, deliveredDate, description, isLive }) => {
   const router = useRouter();
 
   const handleVideoClick = () => {
@@ -20,6 +22,9 @@ const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, cre
     url.searchParams.append('thumbnailPath', thumbnailPath);
     url.searchParams.append('videoTitle', videoTitle);
     url.searchParams.append('videoLink', videoLink);
+    url.searchParams.append('description', description);
+    url.searchParams.append('isLive', isLive ? 'true' : 'false');
+    if(deliveredDate) url.searchParams.append('deliveredDate', deliveredDate);
 
     router.push(url.toString());
   };
@@ -45,7 +50,7 @@ const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, cre
         {/* Video Info */}
         <div className="mt-1 p-1 text-white rounded-lg">
           <div className="text-sm sm:text-base lg:text-lg font-bold">{videoTitle}</div>
-          <div className="text-xs sm:text-sm">{createdDate}</div>
+          <div className="text-xs sm:text-sm">{deliveredDate}</div>
         </div>
       </div>
     </div>

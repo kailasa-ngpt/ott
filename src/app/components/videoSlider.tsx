@@ -49,11 +49,11 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => 
 
   return (
     <div className="mt-4">
-            <div className="w-full flex flex-col items-start">
-              <h2 className="text-xl font-bold mt-1">{convertToTitleCase(category)}</h2>
-              <hr className="w-full border-gray-500 my-2" />
-            </div>
-            <div className="relative">
+      <div className="w-full flex flex-col items-start">
+        <h2 className="text-xl font-bold mt-1">{convertToTitleCase(category)}</h2>
+        <hr className="w-full border-gray-500 my-2" />
+      </div>
+      <div className="relative">
         {/* Left Scroll Button */}
         <button
           onClick={scrollLeft}
@@ -70,7 +70,10 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => 
                 thumbnailPath={video.thumbnail_id}
                 videoTitle={video.title}
                 videoLink={video.video_m3u8_id}
-                createdDate={video.CreatedAt}/>
+                deliveredDate={video.delivered_date}
+                description={video.description}
+                isLive={false}
+                />
             </div>
           ))}
         </div>

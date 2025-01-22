@@ -8,8 +8,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-// PLEASE DON'T DELETE FOLLOWING AS WE NEED THIS IN LOCAL DEPLOYMENT:
-
 module.exports = {
   reactStrictMode: false,
   images: {
