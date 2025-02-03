@@ -1,10 +1,17 @@
 {
   "dependencies": {
+    "dotenv": "^16.4.7",
     "express": "^4.21.2"
+  },
+  "scripts": {
+    "start": "npx ts-node app.ts",
+    "dev": "SET NODE_ENV=DEVELOPMENT& nodemon app.ts",
+    "prod": "SET NODE_ENV=PRODUCTION& nodemon app.ts"
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
+    "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
