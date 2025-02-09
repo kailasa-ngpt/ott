@@ -12,7 +12,8 @@ app.get('/', (req: Request, res: Response) => {
 
 //IMPORT ROUTES:
 import videoRoutes from './routes/videoRouter';
-app.use("api/v1", videoRoutes);
+import playlistRoutes from './routes/playlistRouter';
+app.use("api/v1", playlistRoutes);
 
 
 app.listen(PORT, () => {
