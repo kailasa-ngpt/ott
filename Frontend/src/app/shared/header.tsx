@@ -1,17 +1,46 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { z } from 'zod'; 
 import { searchSchema } from '../../services/validationSchemas';
 import SearchInput from "./../components/searchInput";
+import { initiateLogin, logout, getSession } from '../utils/api';
 
 const Header: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
   const pathname = usePathname();
   const [error, setError] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    checkSession();
+  }, []);
+
+  const checkSession = async () => {
+    try {
+      const session = await getSession();
+      setIsLoggedIn(!!session.user);
+    } catch (error) {
+      console.error('Error checking session:', error);
+    }
+  };
+
+  const handleLogin = () => {
+    initiateLogin();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsLoggedIn(false);
+      router.push('/');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   // Handles event when any text is typed/deleted 
   const handleSearchChange = (searchText: string) => {
@@ -93,6 +122,11 @@ const Header: React.FC = () => {
               </div>
               </form>
             </div>
+            {isLoggedIn ? (
+        <button onClick={handleLogout}>Logout</button>
+      ) : (
+        <button onClick={handleLogin}>Login</button>
+      )}
         </nav>
     </header>
   );
