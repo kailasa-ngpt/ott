@@ -1,6 +1,7 @@
 import axios from 'axios';
 const API_URL = 'https://cms-ott.koogle.sk/api/v2/tables/migjkvqskrgjn5s/records';
 const XC_TOKEN = 'OKbRlSd6P3z5fWuwT_ee7yGjn9QouGaqIxfXWLq3';
+//THESE UPPER TWO LINES, TEMPORARY, EDIT LATER, GET DATA FROM BACKEND.
 
 export const getSliderData = async (category: string): Promise<ISlider> => {
   try {
