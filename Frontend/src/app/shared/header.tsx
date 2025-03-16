@@ -12,35 +12,60 @@ const Header: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
   const pathname = usePathname();
-  const [error, setError] = useState<string | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // Initialize as null
+    const [isLoading, setIsLoading] = useState(true);
+    const [searchValue, setSearchValue] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    checkSession();
+    useEffect(() => {
+      console.log('Header useEffect: Starting');
+      const checkSession = async () => {
+          console.log('Header useEffect: Checking session');
+          setIsLoading(true);
+          try {
+            const sessionResponse = await getSession();
+            console.log('Header useEffect: Session data:', sessionResponse);
+
+               // Check if sessionResponse is not null or undefined and has a valid session object
+               const hasValidSession = sessionResponse && sessionResponse.session !== null && sessionResponse.session !== undefined;
+               setIsLoggedIn(hasValidSession);
+          } catch (error) {
+              console.error('Header useEffect: Error checking session:', error);
+              setIsLoggedIn(false); // Handle errors by assuming user is not logged in
+          } finally {
+              setIsLoading(false);
+              console.log('Header useEffect: Session check complete, isLoggedIn:', isLoggedIn);
+          }
+      };
+
+      checkSession();
+      console.log('Header useEffect: Ending');
   }, []);
 
-  const checkSession = async () => {
-    try {
-      const session = await getSession();
-      setIsLoggedIn(!!session.user);
-    } catch (error) {
-      console.error('Error checking session:', error);
-    }
-  };
-
   const handleLogin = () => {
+    console.log('Header: handleLogin called');
     initiateLogin();
   };
 
   const handleLogout = async () => {
+    console.log('Header: handleLogout called');
     try {
-      await logout();
-      setIsLoggedIn(false);
-      router.push('/');
+      const success = await logout();
+      if (success) {
+        console.log('Header: Logout successful');
+        setIsLoggedIn(false); // Update the isLoggedIn state
+      } else {
+        console.error('Header: Logout failed');
+      }
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error('Header: Error during logout:', error);
+    } finally {
+      // This will always execute after the try/catch block
+      console.log('Header: reloading to update state.');
+      window.location.reload(); // Refresh the page after logout
     }
   };
+
 
   // Handles event when any text is typed/deleted 
   const handleSearchChange = (searchText: string) => {
@@ -65,6 +90,11 @@ const Header: React.FC = () => {
   }
   };
 
+  if (isLoading) {
+    console.log('Header: Displaying loading indicator');
+    return <div>Loading...</div>; // Display loading indicator while checking session
+  }
+  
   const isActive = (path: string) => pathname === path;
 
   return (
