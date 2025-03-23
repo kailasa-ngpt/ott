@@ -139,6 +139,28 @@ export class VideoService {
     async getVideosByTag(tagId: string): Promise<IVideo[]> {
         return mockVideos.filter(video => video.tags.includes(tagId));
     }
+    
+    // Get videos by playlist ID
+    async getVideosByPlaylistId(playlistId: string): Promise<IVideo[]> {
+        // This is mock data - in a real application, this would query the database
+        // to find videos associated with the given playlist
+        
+        // For demo purposes, we'll return different videos based on the playlistId
+        // This simulates different playlists having different videos
+        if (playlistId === 'playlist1') {
+            return [mockVideos[0]]; // Return first video
+        } else if (playlistId === 'playlist2') {
+            return [mockVideos[1]]; // Return second video
+        } else if (playlistId === 'allVideos') {
+            return mockVideos; // Return all videos
+        } else {
+            // For any other playlist ID, return a random subset of videos
+            return mockVideos.filter(video => 
+                // Use the string hash of the video ID and playlist ID to determine inclusion
+                (video.id.charCodeAt(0) + playlistId.charCodeAt(0)) % 2 === 0
+            );
+        }
+    }
 }
 
 export const videoService = new VideoService(); 

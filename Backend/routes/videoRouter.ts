@@ -63,6 +63,28 @@ videoRouter.get('/tag/:tagId', videoController.getVideosByTag);
 
 /**
  * @swagger
+ * /api/videos/playlist/{playlistId}:
+ *   get:
+ *     summary: Get videos by playlist
+ *     description: Retrieves all videos belonging to a specific playlist
+ *     tags: [Videos]
+ *     parameters:
+ *       - in: path
+ *         name: playlistId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The playlist ID
+ *     responses:
+ *       200:
+ *         description: List of videos retrieved successfully
+ *       500:
+ *         description: Server error
+ */
+videoRouter.get('/playlist/:playlistId', videoController.getVideosByPlaylistId);
+
+/**
+ * @swagger
  * /api/videos/{videoId}:
  *   get:
  *     summary: Get a single video

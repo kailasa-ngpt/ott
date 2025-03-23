@@ -209,3 +209,22 @@ export const getVideosByTag = async (req: Request, res: Response): Promise<void>
         });
     }
 };
+
+// Get videos by playlist
+export const getVideosByPlaylistId = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const videos = await videoService.getVideosByPlaylistId(req.params.playlistId);
+        
+        res.status(200).json({
+            success: true,
+            count: videos.length,
+            data: videos
+        });
+    } catch (error: any) {
+        console.error('Controller error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+};
