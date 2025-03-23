@@ -9,7 +9,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "scripts": {
-    "start": "nodemon --exec \"ts-node --transpile-only\" app.ts",
+    "start": "node dist/app.js",
     "dev": "SET NODE_ENV=DEVELOPMENT& nodemon app.ts",
     "prod": "SET NODE_ENV=PRODUCTION& nodemon app.ts"
   },

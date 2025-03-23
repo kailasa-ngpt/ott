@@ -32,6 +32,14 @@ const swaggerDefinition = {
     {
       name: 'Playlists',
       description: 'Playlist management operations'
+    },
+    {
+      name: 'Tags',
+      description: 'Tag management operations'
+    },
+    {
+      name: 'Categories',
+      description: 'Category management operations'
     }
   ]
 };
@@ -39,7 +47,7 @@ const swaggerDefinition = {
 const options = {
   swaggerDefinition,
   // Paths to files containing OpenAPI definitions
-  apis: ['./routes/*.ts', './controllers/*.ts'],
+  apis: ['./routes/*.ts', './routes/api/*.ts', './controllers/*.ts'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

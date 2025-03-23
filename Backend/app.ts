@@ -11,7 +11,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 dotenv.config({ path: './config.env' });
-const PORT = process.env.PORT || 4000;
+
+// Get port from arguments or use default
+const args = process.argv.slice(2);
+let PORT = process.env.PORT || 4000;
+
+// Check for custom port in arguments
+const portArgIndex = args.indexOf('--port');
+if (portArgIndex !== -1 && args.length > portArgIndex + 1) {
+    PORT = parseInt(args[portArgIndex + 1], 10);
+}
 
 // Swagger documentation setup
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -30,13 +39,12 @@ app.use(cors({
 }));
 
 //IMPORT ROUTES:
-import videoRoutes from './routes/videoRouter';
-import playlistRoutes from './routes/playlistRouter';
+import apiRouter from './routes/api/index';
 import cloudflareR2Routes from './routes/cloudflareR2Router';
-app.use("/api/v1/r2", cloudflareR2Routes);
-app.use("/api/v1", videoRoutes);
-app.use("api/v1", playlistRoutes);
 
+// Mount routes
+app.use("/api/v1/r2", cloudflareR2Routes);
+app.use("/api", apiRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
