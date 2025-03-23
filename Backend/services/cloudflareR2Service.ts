@@ -1,4 +1,4 @@
-import { S3Client, ListObjectsV2Command, HeadObjectCommand, GetObjectCommand, ListObjectsV2CommandOutput } from '@aws-sdk/client-s3';
+import { S3Client, ListObjectsV2Command, HeadObjectCommand, GetObjectCommand, ListObjectsV2CommandOutput, PutObjectCommand } from '@aws-sdk/client-s3';
 
 // Configure S3 client
 // const s3Client = new S3Client({
@@ -22,6 +22,49 @@ const s3Client = new S3Client({
 
 //RUN THE COMMAND TO SEE THE CONTENTS OF THE CLOUDFLARE R2 BUCKET:
 // npx ts-node Backend/services/cloudflareR2Service.ts
+
+/**
+ * Upload a file to the R2 bucket
+ * @param key The key (path) where to store the file
+ * @param body The file content
+ * @returns The uploaded file data
+ */
+export const uploadFile = async (key: string, body: Buffer | Uint8Array | Blob | string) => {
+  try {
+    const command = new PutObjectCommand({
+      Bucket: 'ntv-ott',
+      Key: key,
+      Body: body
+    });
+    
+    const data = await s3Client.send(command);
+    console.log('File uploaded successfully:', key);
+    return data;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get a file from the R2 bucket
+ * @param key The key (path) of the file to retrieve
+ * @returns The file content
+ */
+export const getFile = async (key: string) => {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: 'ntv-ott',
+      Key: key
+    });
+    
+    const data = await s3Client.send(command);
+    return data.Body;
+  } catch (error) {
+    console.error('Error getting file:', error);
+    throw error;
+  }
+};
 
 // List all objects in the bucket with pagination
 export const listAllObjects = async () => {
