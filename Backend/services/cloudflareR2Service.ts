@@ -248,4 +248,4 @@ export const exploreStorage = async () => {
 };
 
 // Execute exploration immediately
-exploreStorage().catch(console.error);
+// exploreStorage().catch(console.error);
