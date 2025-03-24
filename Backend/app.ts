@@ -44,7 +44,8 @@ import apiRouter from './routes/api/index';
 import cloudflareR2Routes from './routes/cloudflareR2Router';
 
 // Mount routes
-app.use("/api/v1/r2", cloudflareR2Routes);
+// Temporarily disable R2 routes
+// app.use("/api/v1/r2", cloudflareR2Routes);
 app.use("/api", apiRouter);
 
 app.listen(PORT, () => {

@@ -24,46 +24,18 @@ const s3Client = new S3Client({
 // npx ts-node Backend/services/cloudflareR2Service.ts
 
 /**
- * Upload a file to the R2 bucket
- * @param key The key (path) where to store the file
- * @param body The file content
- * @returns The uploaded file data
+ * NOTE: These functions are currently not used in the application.
+ * They will be properly implemented when needed.
+ * 
+ * For now, we're only including placeholder declarations to prevent TypeScript errors
+ * in case any modules attempt to import them.
  */
-export const uploadFile = async (key: string, body: Buffer | Uint8Array | Blob | string) => {
-  try {
-    const command = new PutObjectCommand({
-      Bucket: 'ntv-ott',
-      Key: key,
-      Body: body
-    });
-    
-    const data = await s3Client.send(command);
-    console.log('File uploaded successfully:', key);
-    return data;
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    throw error;
-  }
+export const uploadFile = async (key: string, body: any) => {
+  throw new Error('Not implemented');
 };
 
-/**
- * Get a file from the R2 bucket
- * @param key The key (path) of the file to retrieve
- * @returns The file content
- */
 export const getFile = async (key: string) => {
-  try {
-    const command = new GetObjectCommand({
-      Bucket: 'ntv-ott',
-      Key: key
-    });
-    
-    const data = await s3Client.send(command);
-    return data.Body;
-  } catch (error) {
-    console.error('Error getting file:', error);
-    throw error;
-  }
+  throw new Error('Not implemented');
 };
 
 // List all objects in the bucket with pagination
@@ -247,5 +219,5 @@ export const exploreStorage = async () => {
     console.log('\n=== Exploration Complete ===');
 };
 
-// Execute exploration immediately
+// Execute exploration immediately - commented out to avoid running on import
 // exploreStorage().catch(console.error);

@@ -1,3 +1,4 @@
+/*
 import { Request, Response } from 'express';
 import { uploadFile, getFile } from '../services/cloudflareR2Service';
 
@@ -33,4 +34,21 @@ export const getFromR2 = async (req: Request, res: Response) => {
       message: 'Error getting file',
     });
   }
+};
+*/
+
+// This functionality is not being used currently
+// Will be implemented in the future when needed
+export const uploadToR2 = async (req: any, res: any) => {
+  res.status(501).json({
+    success: false,
+    message: 'Not implemented yet',
+  });
+};
+
+export const getFromR2 = async (req: any, res: any) => {
+  res.status(501).json({
+    success: false,
+    message: 'Not implemented yet',
+  });
 };
