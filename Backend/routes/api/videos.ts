@@ -48,17 +48,6 @@ router.get('/tag/:tagId', videoController.getVideosByTag);
 router.get('/:videoId', videoController.getVideo);
 
 /**
- * @route   POST api/videos
- * @desc    Create a new video
- * @access  Private (to be implemented with auth)
- * @param {Object} request.body.required - Video object
- * @returns {Object} 201 - Created video object
- * @returns {Error} 500 - Server error
- */
-
-router.post('/', videoController.createVideo);
-
-/**
  * @route   PUT api/videos/:videoId
  * @desc    Update video
  * @access  Private (to be implemented with auth)

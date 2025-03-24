@@ -80,7 +80,9 @@ export class VideoService {
         */
     }
 
-    // Create a new video
+    // Create a new video - This functionality has been removed
+    // Videos should be created through a different process
+    /*
     async createVideo(videoData: Omit<IVideo, 'views' | 'loves'>): Promise<IVideo> {
         const newVideo: IVideo = {
             ...videoData,
@@ -92,6 +94,7 @@ export class VideoService {
         mockVideos.push(newVideo);
         return newVideo;
     }
+    */
 
     // Update an existing video
     async updateVideo(videoId: string, videoData: Partial<IVideo>): Promise<IVideo> {

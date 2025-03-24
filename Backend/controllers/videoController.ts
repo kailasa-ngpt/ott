@@ -47,23 +47,8 @@ export const getVideo = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-// Create a new video
-export const createVideo = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const video = await videoService.createVideo(req.body);
-        
-        res.status(201).json({
-            success: true,
-            data: video
-        });
-    } catch (error: any) {
-        console.error('Controller error:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Server Error'
-        });
-    }
-};
+// Create a new video - removed as per requirement
+// Videos should be created through a different process
 
 // Update a video
 export const updateVideo = async (req: Request, res: Response): Promise<void> => {

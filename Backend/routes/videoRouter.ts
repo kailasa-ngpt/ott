@@ -109,53 +109,6 @@ videoRouter.get('/:videoId', videoController.getVideo);
 
 /**
  * @swagger
- * /api/videos:
- *   post:
- *     summary: Create a new video
- *     description: Creates a new video with the provided data
- *     tags: [Videos]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - title
- *               - url
- *             properties:
- *               title:
- *                 type: string
- *                 description: The title of the video
- *               description:
- *                 type: string
- *                 description: Description of the video
- *               url:
- *                 type: string
- *                 description: The URL of the video
- *               thumbnail:
- *                 type: string
- *                 description: The thumbnail URL of the video
- *               categories:
- *                 type: array
- *                 items:
- *                   type: string
- *                 description: Array of category IDs
- *               tags:
- *                 type: array
- *                 items:
- *                   type: string
- *                 description: Array of tag IDs
- *     responses:
- *       201:
- *         description: Video created successfully
- *       500:
- *         description: Server error
- */
-videoRouter.post('/', videoController.createVideo);
-
-/**
- * @swagger
  * /api/videos/{videoId}:
  *   put:
  *     summary: Update a video
