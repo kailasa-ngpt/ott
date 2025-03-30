@@ -80,22 +80,6 @@ export class VideoService {
         */
     }
 
-    // Create a new video - This functionality has been removed
-    // Videos should be created through a different process
-    /*
-    async createVideo(videoData: Omit<IVideo, 'views' | 'loves'>): Promise<IVideo> {
-        const newVideo: IVideo = {
-            ...videoData,
-            uploadDate: videoData.uploadDate || new Date().toISOString(),
-            views: 0,
-            loves: 0
-        };
-        
-        mockVideos.push(newVideo);
-        return newVideo;
-    }
-    */
-
     // Update an existing video
     async updateVideo(videoId: string, videoData: Partial<IVideo>): Promise<IVideo> {
         const index = mockVideos.findIndex(v => v.id === videoId);

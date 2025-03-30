@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
+import connectDB from './config/db';
+import path from 'path';
 
 const app = express();
 
@@ -13,7 +15,10 @@ app.use(cors({
     origin: 'http://localhost:3000'
 }));
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// Connect to MongoDB
+connectDB();
 
 // Get port from arguments or use default
 const args = process.argv.slice(2);

@@ -47,9 +47,6 @@ export const getVideo = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-// Create a new video - removed as per requirement
-// Videos should be created through a different process
-
 // Update a video
 export const updateVideo = async (req: Request, res: Response): Promise<void> => {
     try {
