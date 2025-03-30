@@ -1,4 +1,4 @@
-import Playlist, { IPlaylist } from '../models/Playlist';
+import Playlist, { IPlaylist } from '../models/IPlaylist';
 
 export const getAllPlaylists = async (): Promise<IPlaylist[]> => {
     try {
