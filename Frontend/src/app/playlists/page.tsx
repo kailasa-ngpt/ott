@@ -4,6 +4,7 @@ import Footer from "../shared/footer";
 import Header from "../shared/header";
 import { getPlayListsByUserId } from "../../services/playListService";
 import VideoSlider from "../components/videoSlider";
+import { adaptPlaylistVideosToSliderFormat } from "../../utils/playlist-adapter";
 
 interface IPlayList {
   playlistId: string;
@@ -16,7 +17,6 @@ interface IPlayList {
     views: number;
   }[];
 }
-
 
 const Playlists = () => {
   const [playlistsState, setPlaylistsState] = useState<IPlayList[]>([]);
@@ -54,7 +54,10 @@ const Playlists = () => {
               ) : (
                 playlistsState.map((playlist, index) => (
                     <div key={index}>
-                      <VideoSlider category={playlist.playListTitle}  videos={playlist.videos} />
+                      <VideoSlider 
+                        category={playlist.playListTitle}  
+                        videos={adaptPlaylistVideosToSliderFormat(playlist.videos)} 
+                      />
                     </div>
                   )
                 )
