@@ -8,17 +8,29 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install both production and development dependencies
-# We need dev dependencies to compile TypeScript
 RUN npm install
 
 # Copy the rest of the application code
 COPY . .
 
-# Build TypeScript files
-RUN npm run build
+# Debug: Check what files exist in the current directory
+RUN ls -la
 
-# Expose the port your app runs on
+# Debug: Show tsconfig.json content
+RUN cat tsconfig.json
+
+# Debug: Run build with verbose output
+RUN npm run build --verbose
+
+# Debug: Check if dist directory was created
+RUN ls -la dist || echo "dist directory does not exist"
+
+# Try to use the TypeScript compiler directly if npm run build fails
+RUN npx tsc || echo "tsc command failed"
+
+# Check again if dist directory was created
+RUN ls -la dist || echo "dist directory still does not exist"
+
+# As a fallback, use ts-node
 EXPOSE 8080
-
-# Start the server using the compiled JavaScript files
-CMD ["node", "dist/app.js"]
+CMD ["npx", "ts-node", "app.ts"]
