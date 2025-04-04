@@ -18,9 +18,12 @@ services:
     depends_on:
       - mongo
     ports:
-      - "8080:8080"
+      - "4000:4000"
     environment:
-      MONGO_URI: mongodb://mongo:27017/mydatabase  # Use the initialized database
+      - PORT=4000
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/mydatabase
+    restart: unless-stopped
 
   frontend:
     build:
@@ -30,6 +33,10 @@ services:
       - backend
     ports:
       - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:4000
+      - NEXT_TELEMETRY_DISABLED=1
+    restart: unless-stopped
 
 volumes:
   mongo-data:

@@ -1,11 +1,13 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { searchSchema } from '../../../services/validationSchemas';
 import { z } from 'zod';
 
-export async function GET(req: NextRequest) {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: Request) {
   try {
-    const searchParams = req.nextUrl.searchParams;
-    const query = searchParams.get('query');
+    const url = new URL(request.url);
+    const query = url.searchParams.get('query');
 
     if (!query) {
       return NextResponse.json({ error: 'Query parameter is required' }, { status: 400 });
