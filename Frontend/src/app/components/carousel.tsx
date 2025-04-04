@@ -1,36 +1,25 @@
 "use client";
 import { useState, useEffect, JSX } from "react";
 import Image from "next/image";
-import { StaticImageData } from "next/image";
-import image1 from "../../../public/SliderImages/sampleImage1.png";
-import image2 from "../../../public/SliderImages/sampleImage2.png";
-import image3 from "../../../public/SliderImages/sampleImage3.png";
-import image4 from "../../../public/SliderImages/sampleImage4.png";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Interface for image data
 interface ImageData {
-  src: StaticImageData;
+  src: string;
 }
 
-// Following is Image data array.
-// This image array will be later be filled by the images that comes from the API.
-// We will use a Service to fetch the images from the API.
-// For now, we are using some sample images for the 
-// purpose of testing the carousel component.
-
+// Using placeholder images instead of static imports
 const images: ImageData[] = [
   {
-    src: image1,
+    src: "/api/placeholder/800/400",
   },
   {
-    src: image2,
+    src: "/api/placeholder/800/400",
   },
   {
-    src: image3,
+    src: "/api/placeholder/800/400",
   },
   {
-    src: image4,
+    src: "/api/placeholder/800/400",
   },
 ];
 
@@ -85,25 +74,29 @@ export default function Carousel(): JSX.Element {
         onMouseOver={handleMouseOver}
         onMouseLeave={handleMouseLeave}
       >
-        <Image
-          src={images[currentIndex].src}
-          alt={`Slider Image ${currentIndex + 1}`}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-xl transition-all duration-500 ease-in-out cursor-pointer"
-        />
+        <div className="relative w-full h-full">
+          <Image
+            src={images[currentIndex].src}
+            alt={`Slider Image ${currentIndex + 1}`}
+            fill
+            className="object-cover rounded-xl transition-all duration-500 ease-in-out cursor-pointer"
+          />
+          <div className="absolute inset-0 flex items-center justify-center text-white text-xl">
+            <span>Placeholder Slide {currentIndex + 1}</span>
+          </div>
+        </div>
       </div>
       <button
         className="absolute left-0 top-1/2 transform h-[400px] rounded-xl hover:bg-[#1a222f] mx-1 -mt-[10px] -translate-y-1/2 bg-[#111927] text-white p-2 group"
         onClick={prevSlide}
       >
-        <ChevronLeft className="text-gray-400 group-hover:text-white" />
+        &lt;
       </button>
       <button
         className="absolute right-0 top-1/2 transform h-[400px] rounded-xl hover:bg-[#1a222f] mx-1 -mt-[10px] -translate-y-1/2 bg-[#111927] text-white p-2 group"
         onClick={nextSlide}
       >
-        <ChevronRight className="text-gray-400 group-hover:text-white" />
+        &gt;
       </button>
       <div className="flex justify-center mt-4">
         {images.map((_, index) => (

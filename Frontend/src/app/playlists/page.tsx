@@ -4,7 +4,7 @@ import Footer from "../shared/footer";
 import Header from "../shared/header";
 import { getPlayListsByUserId } from "../../services/playListService";
 import VideoSlider from "../components/videoSlider";
-import { adaptPlaylistVideosToSliderFormat } from "../../utils/playlist-adapter";
+import { adaptPlaylistVideosToSliderFormat } from "../utils/playlist-adapter";
 
 interface IPlayList {
   playlistId: string;
