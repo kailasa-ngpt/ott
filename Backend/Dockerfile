@@ -1,30 +1,24 @@
-# Build stage
-FROM node:20-alpine AS builder
-
-# Set working directory
-WORKDIR /app
-
-# Copy package.json and install dependencies
-COPY package*.json ./
-RUN npm install
-
-# Copy all files
-COPY . .
-
-# Build the app (if using TypeScript)
-RUN npm run build || echo "No build script found, continuing..."
-
-# Runtime stage
+# Use an official Node.js image
 FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy from build stage
-COPY --from=builder /app .
+# Copy package.json and package-lock.json to leverage Docker caching
+COPY package*.json ./
 
-# Expose port 4000
-EXPOSE 4000
+# Install both production and development dependencies
+# We need dev dependencies to compile TypeScript
+RUN npm install
 
-# Start the server
-CMD ["npm", "run", "start"]
+# Copy the rest of the application code
+COPY . .
+
+# Build TypeScript files
+RUN npm run build
+
+# Expose the port your app runs on
+EXPOSE 8080
+
+# Start the server using the compiled JavaScript files
+CMD ["node", "dist/app.js"]
