@@ -1,23 +1,20 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { searchSchema } from '@/app/services/validationSchemas';
+import { NextResponse, NextRequest } from 'next/server';
+import { searchSchema } from '../../../services/validationSchemas';
 import { z } from 'zod';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', ['GET']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-
+export async function GET(req: NextRequest) {
   try {
-    // Validate query parameter using Zod schema
-    const { query } = searchSchema.parse(req.query);
+    const searchParams = req.nextUrl.searchParams;
+    const query = searchParams.get('query');
 
-    // Fetch data from external API or database
+    if (!query) {
+      return NextResponse.json({ error: 'Query parameter is required' }, { status: 400 });
+    }
+
+    const validatedQuery = searchSchema.parse({ query: query });
+
     const response = await fetch(
-      `https://api.example.com/search?q=${encodeURIComponent(query)}`
+      `https://api.example.com/search?q=${encodeURIComponent(validatedQuery.query)}`
     );
 
     if (!response.ok) {
@@ -25,12 +22,12 @@ export default async function handler(
     }
 
     const data = await response.json();
-    res.status(200).json(data);
+    return NextResponse.json(data, { status: 200 });
   } catch (err) {
     if (err instanceof z.ZodError) {
-      return res.status(400).json({ error: err.errors[0].message });
+      return NextResponse.json({ error: err.errors[0].message }, { status: 400 });
     }
     console.error('Server error:', err);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

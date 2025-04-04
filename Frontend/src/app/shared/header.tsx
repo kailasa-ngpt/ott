@@ -14,7 +14,6 @@ const Header: React.FC = () => {
   const pathname = usePathname();
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // Initialize as null
     const [isLoading, setIsLoading] = useState(true);
-    const [searchValue, setSearchValue] = useState('');
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {

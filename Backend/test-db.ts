@@ -1,5 +1,5 @@
 import connectDB from './config/db';
-import Playlist from './models/Playlist';
+import Playlist from './models/IPlaylist';
 
 const testConnection = async () => {
     try {
