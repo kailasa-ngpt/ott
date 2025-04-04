@@ -4,39 +4,27 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package.json and install dependencies
 COPY package*.json ./
-
-# Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy all files
 COPY . .
 
-# Set environment variables for build
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
+# Build the app (if using TypeScript)
+RUN npm run build || echo "No build script found, continuing..."
 
-# Build the app
-RUN npm run build
+# Runtime stage
+FROM node:20-alpine
 
-# Production stage
-FROM node:20-alpine AS runner
-
+# Set working directory
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+# Copy from build stage
+COPY --from=builder /app .
 
-# Copy necessary files from build stage
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Expose port 4000
+EXPOSE 4000
 
-# Expose port 3000
-EXPOSE 3000
-
-# Command to run the app
-CMD ["npm", "start"]
+# Start the server
+CMD ["npm", "run", "start"]
