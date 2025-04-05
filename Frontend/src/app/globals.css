@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-color: white; /* Changed from #220E0E */
+  background-color: white;
   @apply h-full overflow-x-hidden;
 }
 
@@ -19,6 +19,11 @@ html {
   height: 500px;
 }
 
+/* Gradient header background */
+.gradient-header {
+  background: linear-gradient(to bottom, #ffcd99, white);
+}
+
 /* Add gradient border utilities */
 .gradient-border {
   border: 2px solid;
@@ -28,4 +33,27 @@ html {
 
 .orange-gradient-bg {
   background: linear-gradient(to right, #ff9901, #ff7801);
+}
+
+/* Text formatting */
+.header-text {
+  @apply font-bold text-black;
+}
+
+/* Arrow styling for carousel */
+.carousel-arrow {
+  @apply text-white bg-transparent;
+}
+
+/* Pagination styling */
+.pagination-dot {
+  @apply h-1 w-10 mx-1 rounded-xl transition-all duration-500 ease-in-out;
+}
+
+.pagination-dot-active {
+  @apply bg-gradient-to-r from-[#ff9901] to-[#ff7801];
+}
+
+.pagination-dot-inactive {
+  @apply bg-gray-300;
 }

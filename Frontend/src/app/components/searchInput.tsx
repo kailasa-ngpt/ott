@@ -18,31 +18,28 @@ const SearchInput: React.FC<SearchInputProps> = ({
     type,
 }) => {
     return (
-        <div className="relative flex-grow">
+        <div className="relative w-full">
             <input 
                 id={id}
                 value={value}
                 type={type}
                 onChange={onChange}
                 className="block rounded-full 
-                            px-6 py-3 w-full 
-                            text-black bg-white 
-                            appearance-none 
-                            border border-gray-300 
-                            focus:outline-none focus:ring-2 focus:ring-[#ff9901]
-                            peer"
+                           px-6 py-3 w-full 
+                           text-black bg-white 
+                           appearance-none 
+                           border border-gray-300 
+                           focus:outline-none focus:ring-2 focus:ring-[#ff9901]
+                           peer"
+                placeholder=" "
             />
             <label 
                 className="absolute 
-                            left-10 top-5
-                            text-lg text-gray-500 
-                            duration-150 transform 
-                            -translate-y-3 
-                            origin-0 
-                            peer-placeholder-shown:scale-100 
-                            peer-placeholder-shown:translate-y-0 
-                            peer-focus:scale-75
-                            peer-focus:-translate-y-6"
+                          left-6 top-1/2 -translate-y-1/2
+                          text-gray-500 
+                          duration-150 transform
+                          pointer-events-none
+                          peer-focus:text-sm peer-focus:-translate-y-5 peer-focus:top-1"
                 htmlFor={id}
             >
                 {label}

@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect, JSX } from "react";
-import PlaceholderImage from "./PlaceholderImage";// Interface for image data
+import PlaceholderImage from "./PlaceholderImage";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
+// Interface for image data
 interface ImageData {
   id: number;
   color: string;
@@ -60,16 +63,16 @@ export default function Carousel(): JSX.Element {
   };
 
   return (
-    <div className="relative w-full mx-auto items-center justify-center">
+    <div className="relative w-full">
       <div
-        className="relative h-[400px] mx-12 group"
+        className="relative h-[400px] w-full"
         onMouseOver={handleMouseOver}
         onMouseLeave={handleMouseLeave}
       >
         <div className="relative w-full h-full">
-          <div className="w-full h-full rounded-xl overflow-hidden">
+          <div className="w-full h-full overflow-hidden">
             <PlaceholderImage 
-              width={800} 
+              width={1200} 
               height={400} 
               text={images[currentIndex].title}
               bgColor={images[currentIndex].color}
@@ -79,16 +82,16 @@ export default function Carousel(): JSX.Element {
         </div>
       </div>
       <button
-        className="absolute left-0 top-1/2 transform h-[400px] rounded-xl hover:bg-[#1a222f] mx-1 -mt-[10px] -translate-y-1/2 bg-[#111927] text-white p-2 group"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 z-10"
         onClick={prevSlide}
       >
-        &lt;
+        <FaChevronLeft size={28} />
       </button>
       <button
-        className="absolute right-0 top-1/2 transform h-[400px] rounded-xl hover:bg-[#1a222f] mx-1 -mt-[10px] -translate-y-1/2 bg-[#111927] text-white p-2 group"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 z-10"
         onClick={nextSlide}
       >
-        &gt;
+        <FaChevronRight size={28} />
       </button>
       <div className="flex justify-center mt-4">
         {images.map((_, index) => (
@@ -96,7 +99,7 @@ export default function Carousel(): JSX.Element {
             key={index}
             className={`h-1 w-10 mx-1 ${
               index === currentIndex
-                ? "bg-[#beff46] rounded-xl"
+                ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801] rounded-xl"
                 : "bg-gray-300 rounded-xl"
             } transition-all duration-500 ease-in-out`}
           ></div>
