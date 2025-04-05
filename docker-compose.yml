@@ -10,13 +10,22 @@ services:
       - ./mongo-initdb:/docker-entrypoint-initdb.d  # Mount initialization scripts
     environment:
       MONGO_INITDB_DATABASE: mydatabase  # Database name for initialization
+    networks:
+      - app-network
+    healthcheck:
+      test: mongosh --eval 'db.runCommand("ping").ok' mongodb://localhost:27017/mydatabase --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   backend:
     build:
       context: ./Backend
     container_name: backend_container
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy  # Wait for MongoDB to be healthy
     ports:
       - "4002:4000"
     environment:
@@ -24,6 +33,8 @@ services:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://mongo:27017/mydatabase
     restart: unless-stopped
+    networks:
+      - app-network
 
   frontend:
     build:
@@ -37,6 +48,12 @@ services:
       - NEXT_PUBLIC_API_URL=http://backend:4000
       - NEXT_TELEMETRY_DISABLED=1
     restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   mongo-data:
