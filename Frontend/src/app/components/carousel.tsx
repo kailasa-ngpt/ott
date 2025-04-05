@@ -22,19 +22,19 @@ const contentItems: ContentData[] = [
     id: 2, 
     title: "Featured Content 2",
     description: "Join this spiritual journey as we explore ancient wisdom and practices that can transform your life and connect you with higher consciousness.",
-    color: '#513652'
+    color: '#8B3A3A'
   },
   { 
     id: 3, 
     title: "Featured Content 3",
     description: "Experience guided meditation sessions designed to help you reduce stress, find inner peace, and develop mindfulness in your daily life.",
-    color: '#345231' 
+    color: '#862e24' 
   },
   { 
     id: 4, 
     title: "Featured Content 4",
     description: "Discover the secrets of the universe through this documentary series that explores cosmic phenomena and spiritual understanding.",
-    color: '#2b4162' 
+    color: '#8B3A3A' 
   },
 ];
 
@@ -91,7 +91,7 @@ export default function Carousel(): JSX.Element {
       onMouseLeave={handleMouseLeave}
     >
       <div 
-        className="w-full h-[450px] flex items-center"
+        className="w-full h-[450px] flex items-center justify-center"
         style={{ backgroundColor: currentItem.color }}
       >
         <div className="container mx-auto px-4 md:px-8 flex items-center">

@@ -27,7 +27,15 @@ const tags = [
   { id: 'discourses', name: 'Discourses' },
   { id: 'satsangs', name: 'Satsangs' },
   { id: 'meditations', name: 'Meditations' },
-  { id: 'kriya', name: 'Kriyas' },
+  { id: 'kriyas', name: 'Kriyas' },
+  { id: 'satsangs2', name: 'Weekly Satsangs' },
+  { id: 'practices', name: 'Daily Practices' },
+  { id: 'series', name: 'Video Series' },
+  { id: 'workshops', name: 'Workshops' },
+  { id: 'events', name: 'Events' },
+  { id: 'courses', name: 'Courses' },
+  { id: 'webinars', name: 'Webinars' },
+  { id: 'sessions', name: 'Sessions' }
 ];
 
 // Section tabs
@@ -44,14 +52,14 @@ const VideoGridSection: React.FC = () => {
     <div className="w-full bg-white text-black py-8">
       <div className="container mx-auto px-4">
         {/* Section Tabs */}
-        <div className="flex space-x-6 mb-6">
+        <div className="flex justify-center space-x-6 mb-6">
           {sections.map(section => (
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
               className={`text-lg ${
                 activeSection === section.id
-                  ? 'text-black font-bold'
+                  ? 'text-black font-bold border-b-2 border-[#ff9901]'
                   : 'text-gray-500'
               }`}
             >
@@ -61,7 +69,7 @@ const VideoGridSection: React.FC = () => {
         </div>
 
         {/* Filter Tags */}
-        <div className="flex space-x-4 mb-8 overflow-x-auto pb-2">
+        <div className="flex justify-center space-x-4 mb-8 overflow-x-auto pb-2">
           {tags.map(tag => (
             <button
               key={tag.id}
@@ -78,37 +86,23 @@ const VideoGridSection: React.FC = () => {
         </div>
 
         {/* Videos Grid - First Row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 md:gap-4 mb-6">
           {sampleVideos.slice(0, 7).map(video => (
             <div key={video.id} className="flex flex-col">
-              <div className="aspect-[9/16] w-full rounded overflow-hidden mb-2 bg-gray-100">
-                <PlaceholderImage
-                  width={200}
-                  height={355}
-                  text=""
-                  bgColor={video.color}
-                  textColor="#ffffff"
-                />
+              <div className="aspect-[9/16] w-full rounded overflow-hidden mb-2 bg-gray-100" style={{ backgroundColor: video.color }}>
               </div>
-              <h3 className="text-sm font-medium">{video.title}</h3>
+              <h3 className="text-sm font-medium text-center">{video.title}</h3>
             </div>
           ))}
         </div>
 
         {/* Videos Grid - Second Row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 md:gap-4">
           {sampleVideos.slice(7, 14).map(video => (
             <div key={video.id} className="flex flex-col">
-              <div className="aspect-[9/16] w-full rounded overflow-hidden mb-2 bg-gray-100">
-                <PlaceholderImage
-                  width={200}
-                  height={355}
-                  text=""
-                  bgColor={video.color}
-                  textColor="#ffffff"
-                />
+              <div className="aspect-[9/16] w-full rounded overflow-hidden mb-2 bg-gray-100" style={{ backgroundColor: video.color }}>
               </div>
-              <h3 className="text-sm font-medium">{video.title}</h3>
+              <h3 className="text-sm font-medium text-center">{video.title}</h3>
             </div>
           ))}
         </div>

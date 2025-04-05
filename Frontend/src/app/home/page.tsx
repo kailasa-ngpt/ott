@@ -33,12 +33,12 @@ const Home = () => {
         ) : (
           <>
             {/* Hero Carousel Section */}
-            <section className="w-full">
+            <section className="w-full mb-8">
               <Carousel />
             </section>
             
             {/* Video Grid Sections */}
-            <section className="w-full mt-8">
+            <section className="w-full container mx-auto px-4">
               <VideoGridSection />
             </section>
             
