@@ -4,6 +4,7 @@ import Footer from "../shared/footer";
 import Header from "../shared/header";
 import Carousel from "../components/carousel";
 import VideoSlider from "../components/videoSlider";
+import VideoGridSection from '../components/VideoGridSection';
 import { useEffect, useState } from "react";
 import { getSliderData } from "@/services/videoSliderService";
 
