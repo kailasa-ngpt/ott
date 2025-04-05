@@ -1,40 +1,60 @@
 "use client";
 import { useState, useEffect, JSX } from "react";
-import PlaceholderImage from "./PlaceholderImage";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-// Interface for image data
-interface ImageData {
+// Interface for content data
+interface ContentData {
   id: number;
-  color: string;
   title: string;
+  description: string;
+  color: string;
 }
 
-// Sample carousel images
-const images: ImageData[] = [
-  { id: 1, color: '#ff9901', title: 'Featured Content 1' },
-  { id: 2, color: '#e57373', title: 'Featured Content 2' },
-  { id: 3, color: '#81c784', title: 'Featured Content 3' },
-  { id: 4, color: '#64b5f6', title: 'Featured Content 4' },
+// Sample content items
+const contentItems: ContentData[] = [
+  { 
+    id: 1, 
+    title: "Featured Content 1",
+    description: "An astronaut finds himself stranded on a hostile planet. With only meager supplies, he must draw upon his ingenuity to survive and find a way to signal Earth.",
+    color: '#862e24'
+  },
+  { 
+    id: 2, 
+    title: "Featured Content 2",
+    description: "Join this spiritual journey as we explore ancient wisdom and practices that can transform your life and connect you with higher consciousness.",
+    color: '#513652'
+  },
+  { 
+    id: 3, 
+    title: "Featured Content 3",
+    description: "Experience guided meditation sessions designed to help you reduce stress, find inner peace, and develop mindfulness in your daily life.",
+    color: '#345231' 
+  },
+  { 
+    id: 4, 
+    title: "Featured Content 4",
+    description: "Discover the secrets of the universe through this documentary series that explores cosmic phenomena and spiritual understanding.",
+    color: '#2b4162' 
+  },
 ];
 
 export default function Carousel(): JSX.Element {
-  // State to keep track of the current image index
+  // State to keep track of the current item index
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  // State to determine if the image is being hovered over
+  // State to determine if the carousel is being hovered over
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   // Function to show the previous slide
   const prevSlide = (): void => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) => (prevIndex - 1 + contentItems.length) % contentItems.length
     );
   };
 
   // Function to show the next slide
   const nextSlide = (): void => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % contentItems.length);
   };
 
   // useEffect hook to handle automatic slide transition
@@ -43,7 +63,7 @@ export default function Carousel(): JSX.Element {
     if (!isHovered) {
       const interval = setInterval(() => {
         nextSlide();
-      }, 3000);
+      }, 5000);
 
       // Cleanup the interval on component unmount
       return () => {
@@ -62,51 +82,55 @@ export default function Carousel(): JSX.Element {
     setIsHovered(false);
   };
 
+  const currentItem = contentItems[currentIndex];
+
   return (
-    <div className="relative w-full">
-      <div
-        className="relative h-[550px] w-full"
-        onMouseOver={handleMouseOver}
-        onMouseLeave={handleMouseLeave}
+    <div 
+      className="relative w-full" 
+      onMouseOver={handleMouseOver} 
+      onMouseLeave={handleMouseLeave}
+    >
+      <div 
+        className="w-full h-[450px] flex items-center"
+        style={{ backgroundColor: currentItem.color }}
       >
-        <div className="relative w-full h-full">
-          <div className="w-full h-full overflow-hidden bg-gradient-to-r from-red-900 to-red-800">
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10 px-8">
-              <h1 className="text-6xl font-bold mb-4 text-center">
-                {images[currentIndex].title}
-              </h1>
-              <p className="text-2xl mb-8 text-center max-w-4xl">
-                Experience spiritual growth, community, and a life of higher purpose.
-              </p>
-              <button className="px-8 py-4 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-full text-xl">
-                Watch Now
-              </button>
+        <div className="container mx-auto px-4 md:px-8 flex items-center">
+          {/* Poster/Rectangle on the left */}
+          <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
+            {/* This would be your poster image */}
+            <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
+              Poster
             </div>
-            <div className="absolute inset-0 bg-black opacity-40"></div>
-            <PlaceholderImage 
-              width={1920} 
-              height={550} 
-              text=""
-              bgColor={images[currentIndex].color}
-              textColor="#ffffff"
-            />
+          </div>
+          
+          {/* Content on the right */}
+          <div className="ml-8 text-white max-w-2xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{currentItem.title}</h1>
+            <p className="text-lg mb-6 opacity-90">{currentItem.description}</p>
+            <button className="px-8 py-3 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md text-lg">
+              Watch Now
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Navigation arrows */}
       <button
-        className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 z-10"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 z-10"
         onClick={prevSlide}
       >
-        <FaChevronLeft size={36} />
+        <FaChevronLeft size={32} />
       </button>
       <button
-        className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 z-10"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 z-10"
         onClick={nextSlide}
       >
-        <FaChevronRight size={36} />
+        <FaChevronRight size={32} />
       </button>
+      
+      {/* Pagination indicators */}
       <div className="flex justify-center mt-4">
-        {images.map((_, index) => (
+        {contentItems.map((_, index) => (
           <div
             key={index}
             className={`h-1 w-10 mx-1 ${
