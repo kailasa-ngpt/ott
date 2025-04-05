@@ -1,81 +1,68 @@
 "use client"
 
-import Footer from "../shared/footer";
-import Header from "../shared/header";
-import Carousel from "../components/carousel";
-import VideoSlider from "../components/videoSlider";
-import VideoGridSection from '../components/VideoGridSection';
 import { useEffect, useState } from "react";
+import Header from "../shared/header";
+import Footer from "../shared/footer";
+import Carousel from "../components/carousel";
+import VideoGridSection from "../components/VideoGridSection";
 import { getSliderData } from "@/services/videoSliderService";
 
-const categories: string[] = ["trending-now", "popular", "guided-meditation", "four-powers"];
-
-interface IVideo {
-  Id: number;
-  video_id: string;
-  CreatedAt: string;
-  UpdatedAt: string;
-  title: string;
-  description: string;
-  thumbnail_id: string;
-  video_m3u8_id: string;
-  duration_secs: number | null;
-  delivered_date: string | null;
-  uploaded_date: string | null;
-}
-
-interface ISlider {
-  category: string;
-  videos: IVideo[];
-}
-
 const Home = () => {
-  const [slidersData, setSlidersData] = useState<ISlider[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSliderData = async () => {
-      let sliders: ISlider[] = [];
-      for (const category of categories) {
-        const slider = await getSliderData(category);
-        sliders = [...sliders, slider];
-      }
-      setSlidersData(sliders);
-    };
-
-    fetchSliderData();
+    // Simulate data loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className="bg-white text-black font-sans min-h-screen flex flex-col">
+      {/* Header */}
       <Header />
-      <div className="container mx-auto px-4 flex-grow">
-        <div className="flex flex-col items-center mt-1">
-          <Carousel />
-        </div>
-        {slidersData.length > 0 && (
-          <VideoSlider category={slidersData[0].category} videos={slidersData[0].videos} />
-        )}
-        {/* Placeholder for livestreams */}
-        <div className="mt-4">
-          <div className="w-full flex flex-col items-start">
-            <h2 className="text-xl font-bold mt-1">Live Streams</h2>
-            <hr className="w-full border-gray-500 my-2" />
+      
+      {/* Main Content */}
+      <main className="flex-grow">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-96">
+            <div className="animate-pulse text-orange-500">Loading...</div>
           </div>
-          <div className="w-full bg-gray-800 flex items-center justify-center text-white text-xl">
-            Placeholder for Live Streams
-          </div>
-        </div>
-        {slidersData.length > 0 && (
-          <VideoSlider category={slidersData[1].category} videos={slidersData[1].videos} />
+        ) : (
+          <>
+            {/* Hero Carousel Section */}
+            <section className="w-full">
+              <Carousel />
+            </section>
+            
+            {/* Video Grid Sections */}
+            <section className="w-full mt-8">
+              <VideoGridSection />
+            </section>
+            
+            {/* Trending Section Placeholder */}
+            <section className="container mx-auto px-4 py-8">
+              <h2 className="text-2xl font-bold mb-4">Recommended For You</h2>
+              <div className="bg-gray-100 p-8 rounded-lg text-center">
+                <p className="text-gray-500">Personalized recommendations will appear here</p>
+              </div>
+            </section>
+            
+            {/* Continue Watching Section Placeholder */}
+            <section className="container mx-auto px-4 py-8">
+              <h2 className="text-2xl font-bold mb-4">Continue Watching</h2>
+              <div className="bg-gray-100 p-8 rounded-lg text-center">
+                <p className="text-gray-500">Your in-progress videos will appear here</p>
+              </div>
+            </section>
+          </>
         )}
-        {slidersData.length > 0 && (
-          <VideoSlider category={slidersData[2].category} videos={slidersData[2].videos} />
-        )}
-        {slidersData.length > 0 && (
-          <VideoSlider category={slidersData[3].category} videos={slidersData[3].videos} />
-        )}
-      </div>
-      <Footer /> 
+      </main>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
