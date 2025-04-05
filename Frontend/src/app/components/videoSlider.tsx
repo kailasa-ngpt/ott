@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useRef, useState } from "react";
 import Video from "./video";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -23,7 +22,7 @@ interface IVideo {
   uploaded_date: string | null;
 }
 
-const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => {
+const VideoSlider: React.FC<VideoSliderProps> = ({category, videos}) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [showControls, setShowControls] = useState(false);
 
@@ -42,7 +41,7 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => 
   return (
     <div className="mt-4 w-full">
       <div className="w-full flex flex-col items-start">
-        <h2 className="text-xl font-bold mt-1">{convertToTitleCase(category)}</h2>
+        <h2 className="text-xl font-bold mt-1">{convertToTitleCase(category || '')}</h2>
         <hr className="w-full border-gray-300 my-2" />
       </div>
       <div 
@@ -65,18 +64,26 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => 
           ref={sliderRef} 
           className="video-slider flex gap-4 overflow-x-auto scroll-smooth py-4 px-0 w-full"
         >
-          {videos.map((video, index) => (
-            <div key={index} className="flex-shrink-0 w-80">
-              <Video
-                thumbnailPath={video.thumbnail_id}
-                videoTitle={video.title}
-                videoLink={video.video_m3u8_id}
-                deliveredDate={video.delivered_date}
-                description={video.description}
-                isLive={false}
-              />
+          {videos && videos.length > 0 ? (
+            videos.map((video, index) => (
+              <div key={index} className="flex-shrink-0 w-80">
+                <Video
+                  thumbnailPath={video?.thumbnail_id || ''}
+                  videoTitle={video?.title || 'Untitled Video'}
+                  videoLink={video?.video_m3u8_id || '#'}
+                  deliveredDate={video?.delivered_date || null}
+                  description={video?.description || ''}
+                  isLive={false}
+                />
+              </div>
+            ))
+          ) : (
+            <div className="flex-shrink-0 w-80">
+              <div className="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center text-gray-600">
+                No videos available
+              </div>
             </div>
-          ))}
+          )}
         </div>
 
         {/* Right Scroll Button */}

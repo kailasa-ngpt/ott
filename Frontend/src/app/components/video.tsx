@@ -16,18 +16,18 @@ interface VideoProps {
 }
 
 const Video: React.FC<VideoProps> = ({ 
-  thumbnailPath, 
-  videoTitle, 
-  videoLink, 
-  deliveredDate, 
-  description, 
-  isLive 
+  thumbnailPath = '', // Provide default empty string
+  videoTitle = 'Untitled Video', // Provide default title
+  videoLink = '#', // Provide default link
+  deliveredDate = null,
+  description = '', // Provide default description
+  isLive = false
 }) => {
   const router = useRouter();
 
   const handleVideoClick = () => {
     const url = new URL('/play', window.location.origin);
-    url.searchParams.append('thumbnailPath', thumbnailPath);
+    url.searchParams.append('thumbnailPath', thumbnailPath || '');
     url.searchParams.append('videoTitle', videoTitle);
     url.searchParams.append('videoLink', videoLink);
     url.searchParams.append('description', description);
@@ -37,8 +37,9 @@ const Video: React.FC<VideoProps> = ({
     router.push(url.toString());
   };
 
-  // Check if thumbnailPath starts with http or https for external images
-  const isExternalImage = thumbnailPath.startsWith('http://') || thumbnailPath.startsWith('https://');
+  // ✅ Add null check before using startsWith
+  const isExternalImage = thumbnailPath && 
+    (thumbnailPath.startsWith('http://') || thumbnailPath.startsWith('https://'));
   
   // Generate random background color for placeholders
   const getRandomColor = () => {
