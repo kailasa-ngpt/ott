@@ -122,14 +122,14 @@ const Header: React.FC = () => {
           {isLoggedIn ? (
             <button 
               onClick={handleLogout}
-              className="px-4 py-2 rounded-md border border-gray-300 hover:bg-orange-gradient hover:text-white hover:border-transparent transition-all duration-300 font-semibold text-black"
+              className="px-4 py-2 rounded-md border-0 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-semibold"
             >
               Logout
             </button>
           ) : (
             <button 
               onClick={handleLogin}
-              className="px-4 py-2 rounded-md border border-gray-300 hover:bg-orange-gradient hover:text-white hover:border-transparent transition-all duration-300 font-semibold text-black"
+              className="px-4 py-2 rounded-md border-0 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-semibold"
             >
               Login
             </button>

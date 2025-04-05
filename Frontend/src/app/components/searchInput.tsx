@@ -29,21 +29,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
                            text-black bg-white 
                            appearance-none 
                            border border-gray-300 
-                           focus:outline-none focus:ring-2 focus:ring-[#ff9901]
-                           peer"
-                placeholder=" "
+                           focus:outline-none focus:ring-2 focus:ring-[#ff9901]"
+                placeholder={label}
             />
-            <label 
-                className="absolute 
-                          left-6 top-1/2 -translate-y-1/2
-                          text-gray-500 
-                          duration-150 transform
-                          pointer-events-none
-                          peer-focus:text-sm peer-focus:-translate-y-5 peer-focus:top-1"
-                htmlFor={id}
-            >
-                {label}
-            </label>
         </div>
     )
 }
