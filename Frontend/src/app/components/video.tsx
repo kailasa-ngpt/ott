@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { useRouter } from "next/navigation";
-import PlaceholderImage from "../../components/PlaceholderImage";
+import PlaceholderImage from "./PlaceholderImage";
 
 interface VideoProps {
   thumbnailPath: string;

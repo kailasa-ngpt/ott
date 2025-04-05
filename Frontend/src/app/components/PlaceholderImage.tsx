@@ -1,4 +1,4 @@
-// Frontend/src/components/PlaceholderImage.tsx
+// Frontend/src/app/components/PlaceholderImage.tsx
 import React from 'react';
 
 interface PlaceholderImageProps {

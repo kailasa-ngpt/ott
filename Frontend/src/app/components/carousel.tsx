@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect, JSX } from "react";
-import PlaceholderImage from "../../components/PlaceholderImage";
-
-// Interface for image data
+import PlaceholderImage from "./PlaceholderImage";// Interface for image data
 interface ImageData {
   id: number;
   color: string;
