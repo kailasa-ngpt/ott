@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { useRouter } from "next/navigation";
+import PlaceholderImage from "../../components/PlaceholderImage";
 
 interface VideoProps {
   thumbnailPath: string;
@@ -14,7 +15,14 @@ interface VideoProps {
   isLive: boolean | null;
 }
 
-const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, deliveredDate, description, isLive }) => {
+const Video: React.FC<VideoProps> = ({ 
+  thumbnailPath, 
+  videoTitle, 
+  videoLink, 
+  deliveredDate, 
+  description, 
+  isLive 
+}) => {
   const router = useRouter();
 
   const handleVideoClick = () => {
@@ -28,18 +36,40 @@ const Video: React.FC<VideoProps> = ({ thumbnailPath, videoTitle, videoLink, del
 
     router.push(url.toString());
   };
+
+  // Check if thumbnailPath starts with http or https for external images
+  const isExternalImage = thumbnailPath.startsWith('http://') || thumbnailPath.startsWith('https://');
+  
+  // Generate random background color for placeholders
+  const getRandomColor = () => {
+    const colors = ['#e57373', '#81c784', '#64b5f6', '#ffb74d', '#ba68c8', '#4fc3f7', '#aed581'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+  
   return (
-    <div  onClick={handleVideoClick} className="relative w-40 sm:w-52 lg:w-72 h-auto cursor-pointer group">
+    <div onClick={handleVideoClick} className="relative w-40 sm:w-52 lg:w-72 h-auto cursor-pointer group">
       <div className="relative w-40 sm:w-52 lg:w-72 h-auto cursor-pointer group">
         {/* Image */}
         <div className="relative w-full h-24 sm:h-32 lg:h-48">
-          <Image
-            src={thumbnailPath}
-            alt={videoTitle}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-xl"
-          />
+          {isExternalImage ? (
+            <Image
+              src={thumbnailPath}
+              alt={videoTitle}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-xl"
+            />
+          ) : (
+            <div className="w-full h-full rounded-xl overflow-hidden">
+              <PlaceholderImage 
+                width={280} 
+                height={160} 
+                text={videoTitle.substring(0, 20)}
+                bgColor={getRandomColor()}
+                textColor="#ffffff" 
+              />
+            </div>
+          )}
         </div>
 
         {/* Play Button Overlay */}

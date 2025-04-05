@@ -1,26 +1,20 @@
 "use client";
 import { useState, useEffect, JSX } from "react";
-import Image from "next/image";
+import PlaceholderImage from "../../components/PlaceholderImage";
 
 // Interface for image data
 interface ImageData {
-  src: string;
+  id: number;
+  color: string;
+  title: string;
 }
 
-// Using placeholder images instead of static imports
+// Sample carousel images
 const images: ImageData[] = [
-  {
-    src: "/api/placeholder/800/400",
-  },
-  {
-    src: "/api/placeholder/800/400",
-  },
-  {
-    src: "/api/placeholder/800/400",
-  },
-  {
-    src: "/api/placeholder/800/400",
-  },
+  { id: 1, color: '#ff9901', title: 'Featured Content 1' },
+  { id: 2, color: '#e57373', title: 'Featured Content 2' },
+  { id: 3, color: '#81c784', title: 'Featured Content 3' },
+  { id: 4, color: '#64b5f6', title: 'Featured Content 4' },
 ];
 
 export default function Carousel(): JSX.Element {
@@ -59,7 +53,7 @@ export default function Carousel(): JSX.Element {
 
   // Handle mouse over event
   const handleMouseOver = (): void => {
-    setIsHovered(false);
+    setIsHovered(true);
   };
 
   // Handle mouse leave event
@@ -75,14 +69,14 @@ export default function Carousel(): JSX.Element {
         onMouseLeave={handleMouseLeave}
       >
         <div className="relative w-full h-full">
-          <Image
-            src={images[currentIndex].src}
-            alt={`Slider Image ${currentIndex + 1}`}
-            fill
-            className="object-cover rounded-xl transition-all duration-500 ease-in-out cursor-pointer"
-          />
-          <div className="absolute inset-0 flex items-center justify-center text-white text-xl">
-            <span>Placeholder Slide {currentIndex + 1}</span>
+          <div className="w-full h-full rounded-xl overflow-hidden">
+            <PlaceholderImage 
+              width={800} 
+              height={400} 
+              text={images[currentIndex].title}
+              bgColor={images[currentIndex].color}
+              textColor="#ffffff"
+            />
           </div>
         </div>
       </div>
