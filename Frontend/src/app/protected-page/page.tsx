@@ -40,7 +40,7 @@ export default function ProtectedPage() {
   }
 
   return (
-    <div className="bg-[#220E0E] text-white font-sans">
+    <div className="bg-white text-gray-800 font-sans">
       <Header />
       <div className="container mx-auto px-4 py-8 flex-grow min-h-screen">
         <h1 className="text-3xl font-bold mb-4">Protected Page</h1>

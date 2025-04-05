@@ -45,7 +45,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="bg-[#220E0E] text-white font-sans min-h-screen flex flex-col">
+    <div className="bg-white text-black font-sans min-h-screen flex flex-col">
       <Header />
       <div className="container mx-auto px-4 flex-grow">
         <div className="flex flex-col items-center mt-1">

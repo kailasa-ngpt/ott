@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-color:  #220E0E;
+  background-color: white; /* Changed from #220E0E */
   @apply h-full overflow-x-hidden;
 }
 
@@ -17,4 +17,15 @@ html {
 
 .h-500px {
   height: 500px;
+}
+
+/* Add gradient border utilities */
+.gradient-border {
+  border: 2px solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to right, #ff9901, #ff7801);
+}
+
+.orange-gradient-bg {
+  background: linear-gradient(to right, #ff9901, #ff7801);
 }

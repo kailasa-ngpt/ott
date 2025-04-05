@@ -6,8 +6,14 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'orange-gradient': 'linear-gradient(to right, #ff9901, #ff7801)',
+      },
+      borderColor: {
+        'orange-gradient': 'linear-gradient(to right, #ff9901, #ff7801)',
+      }
+    },
   },
   plugins: [],
 }
-

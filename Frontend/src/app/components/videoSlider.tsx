@@ -24,16 +24,8 @@ interface IVideo {
 }
 
 const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => {
-  //const [videos, setVideos] = useState<{ thumbnailPath: string; videoTitle: string; videoLink: string; views: number; createdDate: string }[]>([]);
   const sliderRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const data = await getThumbnails(category) as { thumbnailPath: string; videoTitle: string; videoLink: string; views: number; createdDate: string }[];
-  //     setVideos(data);
-  //   };
-  //   fetchData();
-  // }, [category]);
+  const [showControls, setShowControls] = useState(false);
 
   const scrollLeft = () => {
     if (sliderRef.current) {
@@ -48,22 +40,31 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => 
   };
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 w-full">
       <div className="w-full flex flex-col items-start">
         <h2 className="text-xl font-bold mt-1">{convertToTitleCase(category)}</h2>
-        <hr className="w-full border-gray-500 my-2" />
+        <hr className="w-full border-gray-300 my-2" />
       </div>
-      <div className="relative">
+      <div 
+        className="relative w-full"
+        onMouseEnter={() => setShowControls(true)}
+        onMouseLeave={() => setShowControls(false)}
+      >
         {/* Left Scroll Button */}
         <button
           onClick={scrollLeft}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 w-10 h-10 rounded-full hover:bg-gray-700 z-10"
+          className={`absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent text-black p-2 w-10 h-10 rounded-full z-10 transition-opacity duration-300 ${
+            showControls ? "opacity-80" : "opacity-0"
+          }`}
         >
-          <FaArrowLeft />
+          <FaArrowLeft size={24} />
         </button>
 
         {/* Video Slider */}
-        <div ref={sliderRef} className="video-slider flex gap-4 overflow-x-auto scroll-smooth py-4 px-6 w-full">
+        <div 
+          ref={sliderRef} 
+          className="video-slider flex gap-4 overflow-x-auto scroll-smooth py-4 px-0 w-full"
+        >
           {videos.map((video, index) => (
             <div key={index} className="flex-shrink-0 w-80">
               <Video
@@ -73,7 +74,7 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => 
                 deliveredDate={video.delivered_date}
                 description={video.description}
                 isLive={false}
-                />
+              />
             </div>
           ))}
         </div>
@@ -81,13 +82,14 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos: videos}) => 
         {/* Right Scroll Button */}
         <button
           onClick={scrollRight}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 w-10 h-10 rounded-full hover:bg-gray-700 z-10"
+          className={`absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent text-black p-2 w-10 h-10 rounded-full z-10 transition-opacity duration-300 ${
+            showControls ? "opacity-80" : "opacity-0"
+          }`}
         >
-          <FaArrowRight />
+          <FaArrowRight size={24} />
         </button>
       </div>
     </div>
-    
   );
 };
 

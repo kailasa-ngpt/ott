@@ -96,7 +96,7 @@ const Header: React.FC = () => {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="bg-[#150B0B] text-white font-sans">
+    <header className="bg-white text-black font-sans shadow-sm">
       <nav className="flex items-center justify-between px-2 py-4">
         <div className="flex items-center space-x-4">
           <div className="flex-shrink-0 w-16 pl-2">
@@ -132,7 +132,7 @@ const Header: React.FC = () => {
         </div>
 
         <div className="flex items-center flex-grow">
-          <form onSubmit={handleSearch}>
+          <form onSubmit={handleSearch} className="flex items-center flex-grow">
             <SearchInput
               id="search"
               value={searchValue}
@@ -141,16 +141,35 @@ const Header: React.FC = () => {
               type="text"
             />
             <div className="flex items-center space-x-4 px-2">
-              <button type="submit" className="text-xl p-1">Search</button>
+              <button 
+                type="submit" 
+                className="px-6 py-3 rounded-full text-white bg-white border-2 border-transparent"
+                style={{
+                  borderImage: 'linear-gradient(to right, #ff9901, #ff7801) 1',
+                  background: 'linear-gradient(to right, #ff9901, #ff7801)'
+                }}
+              >
+                Search
+              </button>
               <button className="text-xl p-1">🔔</button>
               <button className="text-xl p-1">👤</button>
             </div>
           </form>
         </div>
         {isLoggedIn ? (
-          <button onClick={handleLogout}>Logout</button>
+          <button 
+            onClick={handleLogout}
+            className="px-4 py-2 rounded-md border border-gray-300 hover:bg-orange-gradient hover:text-white hover:border-transparent transition-all duration-300"
+          >
+            Logout
+          </button>
         ) : (
-          <button onClick={handleLogin}>Login</button>
+          <button 
+            onClick={handleLogin}
+            className="px-4 py-2 rounded-md border border-gray-300 hover:bg-orange-gradient hover:text-white hover:border-transparent transition-all duration-300"
+          >
+            Login
+          </button>
         )}
       </nav>
     </header>

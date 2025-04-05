@@ -69,7 +69,7 @@ function SearchContent() {
 // Main component with Suspense boundary
 export default function SearchPage() {
   return (
-    <div className="bg-[#220E0E] text-white min-h-screen flex flex-col">
+    <div className="bg-white text-gray-800 min-h-screen flex flex-col">
       <Header />
       <Suspense fallback={<div className="container mx-auto px-4 py-8">Loading search results...</div>}>
         <SearchContent />

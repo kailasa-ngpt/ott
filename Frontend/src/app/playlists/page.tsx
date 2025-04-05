@@ -38,7 +38,7 @@ const Playlists = () => {
   }, []);
 
   return (
-    <div className="bg-[#220E0E] text-white font-sans">
+    <div className="bg-white text-gray-800 font-sans">
       <Header />
       <div className="container mx-auto px-4 flex-grow min-h-screen">
         {
