@@ -1,3 +1,5 @@
+// In Frontend/src/app/home/page.tsx
+
 "use client"
 
 import { useEffect, useState } from "react";
@@ -5,6 +7,7 @@ import Header from "../shared/header";
 import Footer from "../shared/footer";
 import Carousel from "../components/carousel";
 import VideoGridSection from "../components/VideoGridSection";
+import FeaturedPlaylists from "../components/FeaturedPlaylists"; // Add this import
 import { getSliderData } from "@/services/videoSliderService";
 
 const Home = () => {
@@ -42,7 +45,10 @@ const Home = () => {
               <VideoGridSection />
             </section>
             
-            {/* Trending Section Placeholder */}
+            {/* Featured Playlists Section - Add this */}
+            <FeaturedPlaylists />
+            
+            {/* Recommended Section Placeholder */}
             <section className="container mx-auto px-4 py-8">
               <h2 className="text-2xl font-bold mb-4">Recommended For You</h2>
               <div className="bg-gray-100 p-8 rounded-lg text-center">
