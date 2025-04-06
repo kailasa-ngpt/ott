@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import PlaceholderImage from './PlaceholderImage';
 
-// Sample movie/video data - expanded to 12 videos to fill 4 rows of 3 videos
+// Sample movie/video data - expanded to 12 videos to fill 4 rows of 3 videos on mobile
 const sampleVideos = [
   { id: 1, title: 'Yogic Powers 1', category: 'Spiritual', year: '2023', color: '#e57373' },
   { id: 2, title: 'Yogic Powers 2', category: 'Spiritual', year: '2023', color: '#81c784' },
@@ -17,9 +17,11 @@ const sampleVideos = [
   { id: 10, title: 'Living Consciously', category: 'Satsang', year: '2022', color: '#4db6ac' },
   { id: 11, title: 'Ancient Wisdom', category: 'Spiritual', year: '2022', color: '#9575cd' },
   { id: 12, title: 'Daily Practice', category: 'Meditation', year: '2022', color: '#f06292' },
+  { id: 13, title: 'Spiritual Awakening', category: 'Discourse', year: '2022', color: '#7986cb' },
+  { id: 14, title: 'The Eternal Self', category: 'Satsang', year: '2022', color: '#a1887f' },
 ];
 
-// Filter tags - simplified for mobile view
+// Filter tags
 const tags = [
   { id: 'all', name: 'All' },
   { id: 'courses', name: 'Courses' },
@@ -99,9 +101,15 @@ const VideoGridSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Videos Grid - Always 3 per row on mobile, 4 rows total */}
-        <div className="grid grid-cols-3 gap-2 mb-6">
-          {sampleVideos.slice(0, 12).map(video => (
+        {/* Videos Grid - Responsive grid with proper breakpoints */}
+        <div className={`grid ${
+          isMobile 
+            ? 'grid-cols-3 gap-2' // 3 columns on mobile
+            : 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 md:gap-4'
+          } mb-6`}
+        >
+          {/* Show only first 12 videos on mobile, but show more on desktop */}
+          {(isMobile ? sampleVideos.slice(0, 12) : sampleVideos).map(video => (
             <div key={video.id} className="flex flex-col">
               <div 
                 className="aspect-[9/16] w-full rounded overflow-hidden mb-1 bg-gray-100" 
