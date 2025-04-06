@@ -17,8 +17,21 @@ export class VideoService {
     }
 
     //From POSTMAN send id=OS8lk2KnzNE
-    async getVideoById(id: string): Promise<IVideo | null> {
-        return await Video.findById(id);
+    async getVideoById(Id: string): Promise<IVideo | null> {
+        try {
+            console.log('Attempting to find video with ID:', Id);
+            const video = await Video.findOne({ id: Id });
+
+            if (!video) {
+                console.log('No video found with ID:', Id);
+                return null;
+            }
+            console.log('Found video:', video);
+            return video;
+        } catch (error) {
+            console.error('Error in getVideoById:', error);
+            throw new Error('Error fetching video');
+        }
     }
 
     async createVideo(videoData: IVideo): Promise<IVideo> {
