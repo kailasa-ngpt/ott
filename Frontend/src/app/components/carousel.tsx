@@ -111,12 +111,18 @@ export default function Carousel(): JSX.Element {
       onMouseLeave={handleMouseLeave}
     >
       <div 
-        className={`w-full flex items-center justify-center ${isMobile ? 'h-[300px]' : 'h-[450px]'}`}
+        className={`w-full flex items-center justify-center ${isMobile ? 'h-[500px] pt-0' : 'h-[450px]'}`}
         style={{ backgroundColor: currentItem.color }}
       >
         <div className={`container mx-auto px-4 md:px-8 flex ${isMobile ? 'flex-col items-center text-center' : 'items-center'}`}>
-          {/* Poster/Rectangle - smaller on mobile */}
-          <div className={`${isMobile ? 'h-[130px] w-[100px] mb-4' : 'h-[350px] w-[250px]'} bg-gray-100 flex-shrink-0 shadow-lg`}>
+          {/* Poster/Rectangle - 9:16 aspect ratio on mobile */}
+          <div 
+            className={`${isMobile ? 'w-[180px] mb-4 mt-6' : 'h-[350px] w-[250px]'} bg-gray-100 flex-shrink-0 shadow-lg`}
+            style={{ 
+              aspectRatio: isMobile ? '9/16' : 'auto',
+              height: isMobile ? 'auto' : '350px' 
+            }}
+          >
             {/* This would be your poster image */}
             <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
               Poster
@@ -124,14 +130,14 @@ export default function Carousel(): JSX.Element {
           </div>
           
           {/* Content - adjusted for mobile */}
-          <div className={`${isMobile ? 'w-full' : 'ml-8'} text-white ${isMobile ? 'max-w-xs' : 'max-w-2xl'}`}>
+          <div className={`${isMobile ? 'w-full px-2' : 'ml-8'} text-white ${isMobile ? 'max-w-xs' : 'max-w-2xl'}`}>
             <h1 className={`${isMobile ? 'text-2xl' : 'text-4xl md:text-5xl'} font-bold mb-2 md:mb-4`}>
               {currentItem.title}
             </h1>
             <p className={`${isMobile ? 'text-sm line-clamp-3' : 'text-lg'} mb-4 md:mb-6 opacity-90`}>
               {currentItem.description}
             </p>
-            <button className={`${isMobile ? 'px-6 py-2 text-base' : 'px-8 py-3 text-lg'} bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto md:mx-0`}>
+            <button className={`${isMobile ? 'px-6 py-2 text-base mb-4' : 'px-8 py-3 text-lg'} bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto md:mx-0`}>
               <BiPlay className="mr-2" size={isMobile ? 18 : 24} />
               Watch Now
             </button>
@@ -162,7 +168,7 @@ export default function Carousel(): JSX.Element {
               index === currentIndex
                 ? "bg-[#ff9901] h-2 w-2 md:h-3 md:w-3 rounded-full"
                 : "bg-gray-300 h-2 w-2 md:h-3 md:w-3 rounded-full"
-            } mx-1 transition-all duration-500 ease-in-out`}
+            } mx-1 transition-all duration-500 ease-in-out cursor-pointer`}
             onClick={() => setCurrentIndex(index)}
           ></div>
         ))}
