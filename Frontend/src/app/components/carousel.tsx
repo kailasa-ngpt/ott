@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, JSX } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { BiPlay } from "react-icons/bi";
 
 // Interface for content data
 interface ContentData {
@@ -32,8 +33,8 @@ const contentItems: ContentData[] = [
   },
   { 
     id: 4, 
-    title: "Featured Content 4",
-    description: "Discover the secrets of the universe through this documentary series that explores cosmic phenomena and spiritual understanding.",
+    title: "Manifesting Powers",
+    description: "Explore ancient yogic techniques and spiritual practices to awaken the divine powers (shaktis) within you through Paramashiva's sacred knowledge.",
     color: '#8B3A3A' 
   },
 ];
@@ -44,6 +45,25 @@ export default function Carousel(): JSX.Element {
 
   // State to determine if the carousel is being hovered over
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  
+  // State to track if we're on mobile view
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Function to check and update screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkScreenSize();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkScreenSize);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   // Function to show the previous slide
   const prevSlide = (): void => {
@@ -91,53 +111,59 @@ export default function Carousel(): JSX.Element {
       onMouseLeave={handleMouseLeave}
     >
       <div 
-        className="w-full h-[700px] flex items-center justify-center"
+        className={`w-full flex items-center justify-center ${isMobile ? 'h-[300px]' : 'h-[450px]'}`}
         style={{ backgroundColor: currentItem.color }}
       >
-        <div className="container mx-auto px-4 md:px-8 flex items-center">
-          {/* Poster/Rectangle on the left */}
-          <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
+        <div className={`container mx-auto px-4 md:px-8 flex ${isMobile ? 'flex-col items-center text-center' : 'items-center'}`}>
+          {/* Poster/Rectangle - smaller on mobile */}
+          <div className={`${isMobile ? 'h-[130px] w-[100px] mb-4' : 'h-[350px] w-[250px]'} bg-gray-100 flex-shrink-0 shadow-lg`}>
             {/* This would be your poster image */}
             <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
               Poster
             </div>
           </div>
           
-          {/* Content on the right */}
-          <div className="ml-8 text-white max-w-2xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{currentItem.title}</h1>
-            <p className="text-lg mb-6 opacity-90">{currentItem.description}</p>
-            <button className="px-8 py-3 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md text-lg">
+          {/* Content - adjusted for mobile */}
+          <div className={`${isMobile ? 'w-full' : 'ml-8'} text-white ${isMobile ? 'max-w-xs' : 'max-w-2xl'}`}>
+            <h1 className={`${isMobile ? 'text-2xl' : 'text-4xl md:text-5xl'} font-bold mb-2 md:mb-4`}>
+              {currentItem.title}
+            </h1>
+            <p className={`${isMobile ? 'text-sm line-clamp-3' : 'text-lg'} mb-4 md:mb-6 opacity-90`}>
+              {currentItem.description}
+            </p>
+            <button className={`${isMobile ? 'px-6 py-2 text-base' : 'px-8 py-3 text-lg'} bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto md:mx-0`}>
+              <BiPlay className="mr-2" size={isMobile ? 18 : 24} />
               Watch Now
             </button>
           </div>
         </div>
       </div>
 
-      {/* Navigation arrows */}
+      {/* Navigation arrows - adjusted for mobile */}
       <button
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 z-10"
+        className={`absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-10`}
         onClick={prevSlide}
       >
-        <FaChevronLeft size={32} />
+        <FaChevronLeft size={isMobile ? 16 : 32} />
       </button>
       <button
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 z-10"
+        className={`absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-10`}
         onClick={nextSlide}
       >
-        <FaChevronRight size={32} />
+        <FaChevronRight size={isMobile ? 16 : 32} />
       </button>
       
-      {/* Pagination indicators */}
-      <div className="flex justify-center mt-4">
+      {/* Pagination indicators - styled like in the second image */}
+      <div className="flex justify-center mt-2 md:mt-4">
         {contentItems.map((_, index) => (
           <div
             key={index}
-            className={`h-1 w-10 mx-1 ${
+            className={`${
               index === currentIndex
-                ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801] rounded-xl"
-                : "bg-gray-300 rounded-xl"
-            } transition-all duration-500 ease-in-out`}
+                ? "bg-[#ff9901] h-2 w-2 md:h-3 md:w-3 rounded-full"
+                : "bg-gray-300 h-2 w-2 md:h-3 md:w-3 rounded-full"
+            } mx-1 transition-all duration-500 ease-in-out`}
+            onClick={() => setCurrentIndex(index)}
           ></div>
         ))}
       </div>
