@@ -83,20 +83,6 @@ const VideoGridSection: React.FC = () => {
             ))}
           </div>
         </div>
-          {tags.map(tag => (
-            <button
-              key={tag.id}
-              onClick={() => setActiveTag(tag.id)}
-              className={`px-6 py-2 rounded-full whitespace-nowrap ${
-                activeTag === tag.id
-                  ? 'bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold'
-                  : 'border border-[#ff9901] text-[#ff9901]'
-              }`}
-            >
-              {tag.name}
-            </button>
-          ))}
-        </div>
 
         {/* Videos Grid - First Row */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2 md:gap-4 mb-6">
