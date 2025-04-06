@@ -155,17 +155,6 @@ const Header: React.FC = () => {
                 Playlists
               </a>
             </li>
-            <li>
-              <a 
-                href="/search" 
-                className={`flex items-center p-3 rounded-lg mb-1 ${
-                  isActive("/search") ? "bg-[#ff9901] text-white" : "text-gray-700 hover:bg-[#ffe4c4]"
-                }`}
-              >
-                <Search className="mr-3" size={20} />
-                Search
-              </a>
-            </li>
           </ul>
         </nav>
       </div>
