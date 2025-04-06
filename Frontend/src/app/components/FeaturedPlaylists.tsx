@@ -1,37 +1,39 @@
 import React, { useRef, useState } from 'react';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaPlay } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
 // Sample data - Replace with your actual data
 const featuredPlaylists = [
   {
     id: "playlist1",
-    title: "Guided Meditations",
+    title: "Meditation Techniques",
     videos: [
-      { id: "m1", title: "Morning Meditation", color: "#e57373" },
-      { id: "m2", title: "Evening Peace", color: "#81c784" },
-      { id: "m3", title: "Mindfulness Practice", color: "#64b5f6" },
-      { id: "m4", title: "Chakra Alignment", color: "#ffb74d" }
+      { id: "m1", title: "Meditation 1", duration: "15 min", color: "#e9f0f5" },
+      { id: "m2", title: "Meditation 2", duration: "20 min", color: "#e9f0f5" },
+      { id: "m3", title: "Meditation 3", duration: "25 min", color: "#e9f0f5" },
+      { id: "m4", title: "Meditation 4", duration: "30 min", color: "#e9f0f5" },
+      { id: "m5", title: "Meditation 5", duration: "15 min", color: "#e9f0f5" }
     ]
   },
   {
     id: "playlist2",
-    title: "Spiritual Teachings",
+    title: "Sacred Teachings",
     videos: [
-      { id: "s1", title: "Path to Enlightenment", color: "#ba68c8" },
-      { id: "s2", title: "Divine Consciousness", color: "#4fc3f7" },
-      { id: "s3", title: "Sacred Wisdom", color: "#aed581" },
-      { id: "s4", title: "Inner Journey", color: "#ffd54f" }
+      { id: "s1", title: "Teaching 1", duration: "25 min", color: "#e9f0f5" },
+      { id: "s2", title: "Teaching 2", duration: "30 min", color: "#e9f0f5" },
+      { id: "s3", title: "Teaching 3", duration: "20 min", color: "#e9f0f5" },
+      { id: "s4", title: "Teaching 4", duration: "35 min", color: "#e9f0f5" },
+      { id: "s5", title: "Teaching 5", duration: "40 min", color: "#e9f0f5" }
     ]
   },
   {
     id: "playlist3",
-    title: "Yogic Powers",
+    title: "KAILASA's Economic Policies",
     videos: [
-      { id: "y1", title: "Advanced Techniques", color: "#ff8a65" },
-      { id: "y2", title: "Energy Mastery", color: "#4db6ac" },
-      { id: "y3", title: "Body Transformation", color: "#9575cd" },
-      { id: "y4", title: "Healing Practices", color: "#f06292" }
+      { id: "k1", title: "Economic Policy 1", duration: "45 min", color: "#e9f0f5" },
+      { id: "k2", title: "Economic Policy 2", duration: "40 min", color: "#e9f0f5" },
+      { id: "k3", title: "Economic Policy 3", duration: "35 min", color: "#e9f0f5" },
+      { id: "k4", title: "Economic Policy 4", duration: "30 min", color: "#e9f0f5" }
     ]
   }
 ];
@@ -62,11 +64,14 @@ const FeaturedPlaylists = () => {
     }
   };
 
-  const handleViewAll = () => {
-    router.push('/playlists');
+  const handleViewAll = (playlistId: string) => {
+    router.push(`/playlists/${playlistId}`);
   };
 
-  // This function is no longer needed as we're using direct placeholders with colors from the data
+  const handlePlayAll = (playlistId: string) => {
+    // Add logic to play all videos in the playlist
+    console.log(`Playing all videos in playlist: ${playlistId}`);
+  };
 
   // Function to set ref correctly with TypeScript
   const setScrollContainerRef = (el: HTMLDivElement | null, index: number) => {
@@ -74,26 +79,35 @@ const FeaturedPlaylists = () => {
   };
 
   return (
-    <section className="w-full py-8 bg-white">
+    <section className="w-full py-6 bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-black">Featured Playlists</h2>
-          <button 
-            onClick={handleViewAll}
-            className="text-orange-500 font-medium hover:underline flex items-center"
-          >
-            View all
-          </button>
-        </div>
-
         {featuredPlaylists.map((playlist, playlistIndex) => (
           <div 
             key={playlist.id} 
-            className="mb-8"
+            className="mb-10"
             onMouseEnter={() => setHoveredPlaylist(playlistIndex)}
             onMouseLeave={() => setHoveredPlaylist(null)}
           >
-            <h3 className="text-xl font-semibold mb-3 text-black">{playlist.title}</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-black">{playlist.title}</h2>
+              
+              <div className="flex items-center">
+                <button 
+                  onClick={() => handlePlayAll(playlist.id)}
+                  className="flex items-center text-black mr-4 hover:text-orange-500"
+                >
+                  <FaPlay className="mr-2" size={14} />
+                  <span>Play all</span>
+                </button>
+                
+                <button 
+                  onClick={() => handleViewAll(playlist.id)}
+                  className="text-orange-500 font-medium hover:underline"
+                >
+                  See all &gt;
+                </button>
+              </div>
+            </div>
             
             <div className="relative">
               {/* Left scroll button */}
@@ -114,18 +128,23 @@ const FeaturedPlaylists = () => {
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 {playlist.videos.map((video) => (
-                  <div key={video.id} className="flex-shrink-0 w-48">
-                    <div className="aspect-[16/9] w-full rounded-lg overflow-hidden mb-2">
+                  <div key={video.id} className="flex-shrink-0 w-44">
+                    <div className="aspect-[9/16] w-full rounded-lg overflow-hidden mb-2 bg-gray-100 relative">
                       <div 
                         className="w-full h-full flex items-center justify-center" 
                         style={{ backgroundColor: video.color }}
                       >
-                        <div className="text-white text-sm font-medium text-center p-2">
-                          {video.title}
-                        </div>
+                        <img 
+                          src={`/placeholder-image?text=${encodeURIComponent(video.title)}`} 
+                          alt={video.title}
+                          className="opacity-0 absolute" 
+                        />
                       </div>
                     </div>
-                    <p className="text-sm font-medium text-black truncate">{video.title}</p>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-black truncate">{video.title}</p>
+                      <p className="text-xs text-gray-500">{video.duration}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -141,8 +160,10 @@ const FeaturedPlaylists = () => {
                 <FaArrowRight className="text-orange-500" />
               </button>
               
-              {/* Gradient line under each playlist */}
-              <div className="h-1 w-full mt-2 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full"></div>
+              {/* Orange line under each playlist - only for first and second playlists */}
+              {playlistIndex < 2 && (
+                <div className="h-1 w-full mt-2 bg-orange-500 rounded-full"></div>
+              )}
             </div>
           </div>
         ))}

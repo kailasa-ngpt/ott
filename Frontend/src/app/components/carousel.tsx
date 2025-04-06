@@ -91,7 +91,7 @@ export default function Carousel(): JSX.Element {
       onMouseLeave={handleMouseLeave}
     >
       <div 
-        className="w-full h-[800px] flex items-center justify-center"
+        className="w-full h-[700px] flex items-center justify-center"
         style={{ backgroundColor: currentItem.color }}
       >
         <div className="container mx-auto px-4 md:px-8 flex items-center">
