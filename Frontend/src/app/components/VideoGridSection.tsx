@@ -24,18 +24,15 @@ const sampleVideos = [
 // Filter tags
 const tags = [
   { id: 'all', name: 'All' },
+  { id: 'courses', name: 'Courses' },
   { id: 'discourses', name: 'Discourses' },
   { id: 'satsangs', name: 'Satsangs' },
   { id: 'meditations', name: 'Meditations' },
   { id: 'kriyas', name: 'Kriyas' },
-  { id: 'satsangs2', name: 'Weekly Satsangs' },
+  { id: 'weekly', name: 'Weekly Satsangs' },
   { id: 'practices', name: 'Daily Practices' },
   { id: 'series', name: 'Video Series' },
   { id: 'workshops', name: 'Workshops' },
-  { id: 'events', name: 'Events' },
-  { id: 'courses', name: 'Courses' },
-  { id: 'webinars', name: 'Webinars' },
-  { id: 'sessions', name: 'Sessions' }
 ];
 
 // Section tabs
@@ -68,8 +65,24 @@ const VideoGridSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Filter Tags */}
-        <div className="flex justify-center space-x-4 mb-8 overflow-x-auto pb-2">
+        {/* Filter Tags - now with custom scrollbar */}
+        <div className="relative w-full max-w-full mb-8">
+          <div className="flex justify-start space-x-4 overflow-x-auto pb-2 px-4 scrollbar-thin">
+            {tags.map(tag => (
+              <button
+                key={tag.id}
+                onClick={() => setActiveTag(tag.id)}
+                className={`px-6 py-2 rounded-full whitespace-nowrap flex-shrink-0 ${
+                  activeTag === tag.id
+                    ? 'bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold'
+                    : 'border border-[#ff9901] text-[#ff9901]'
+                }`}
+              >
+                {tag.name}
+              </button>
+            ))}
+          </div>
+        </div>
           {tags.map(tag => (
             <button
               key={tag.id}
