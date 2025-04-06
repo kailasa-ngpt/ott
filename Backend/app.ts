@@ -5,6 +5,10 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import connectDB from './config/db';
 import path from 'path';
+import videoRoutes from './routes/api/videos';
+
+// Load environment variables first
+dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 const app = express();
 
@@ -14,8 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
-
-dotenv.config({ path: path.join(__dirname, '.env') });
 
 // Connect to MongoDB
 connectDB();
@@ -52,6 +54,7 @@ import cloudflareR2Routes from './routes/cloudflareR2Router';
 // Temporarily disable R2 routes
 // app.use("/api/v1/r2", cloudflareR2Routes);
 app.use("/api", apiRouter);
+app.use('/api/videos', videoRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

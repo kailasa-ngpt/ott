@@ -4,73 +4,195 @@ import * as videoController from '../../controllers/videoController';
 const router = express.Router();
 
 /**
- * @route   GET api/videos
- * @desc    Get all videos
- * @access  Public
- * @returns {Object} 200 - An array of videos
- * @returns {Error} 500 - Server error
+ * @swagger
+ * /api/videos:
+ *   get:
+ *     summary: Get all videos
+ *     description: Retrieves a list of all videos
+ *     tags: [Videos]
+ *     responses:
+ *       200:
+ *         description: List of videos retrieved successfully
+ *       500:
+ *         description: Server error
  */
-
 router.get('/', videoController.getAllVideos);
 
 /**
- * @route   GET api/videos/category/:categoryId
- * @desc    Get videos by category
- * @access  Public
- * @param {string} categoryId.path.required - Category ID
- * @returns {Object} 200 - An array of videos
- * @returns {Error} 500 - Server error
+ * @swagger
+ * /api/videos/{videoId}:
+ *   get:
+ *     summary: Get a single video
+ *     description: Retrieves a video by its ID
+ *     tags: [Videos]
+ *     parameters:
+ *       - in: path
+ *         name: videoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The video ID
+ *     responses:
+ *       200:
+ *         description: Video retrieved successfully
+ *       404:
+ *         description: Video not found
+ *       500:
+ *         description: Server error
  */
+router.get('/:id', videoController.getVideoById);
 
+/**
+ * @swagger
+ * /api/videos:
+ *   post:
+ *     summary: Create a new video
+ *     description: Creates a new video entry
+ *     tags: [Videos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - title
+ *               - description
+ *               - videoUrl
+ *               - thumbnailUrl
+ *               - uploadDate
+ *               - categories
+ *               - viewStatus
+ *               - videoLength
+ *               - tags
+ *     responses:
+ *       201:
+ *         description: Video created successfully
+ *       500:
+ *         description: Server error
+ */
+router.post('/', videoController.createVideo);
+
+/**
+ * @swagger
+ * /api/videos/{videoId}:
+ *   put:
+ *     summary: Update a video
+ *     description: Updates an existing video
+ *     tags: [Videos]
+ *     parameters:
+ *       - in: path
+ *         name: videoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The video ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Video updated successfully
+ *       404:
+ *         description: Video not found
+ *       500:
+ *         description: Server error
+ */
+router.put('/:id', videoController.updateVideo);
+
+/**
+ * @swagger
+ * /api/videos/{videoId}:
+ *   delete:
+ *     summary: Delete a video
+ *     description: Deletes a video by its ID
+ *     tags: [Videos]
+ *     parameters:
+ *       - in: path
+ *         name: videoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The video ID
+ *     responses:
+ *       200:
+ *         description: Video deleted successfully
+ *       404:
+ *         description: Video not found
+ *       500:
+ *         description: Server error
+ */
+router.delete('/:id', videoController.deleteVideo);
+
+/**
+ * @swagger
+ * /api/videos/category/{categoryId}:
+ *   get:
+ *     summary: Get videos by category
+ *     description: Retrieves videos that belong to a specific category
+ *     tags: [Videos]
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The category ID
+ *     responses:
+ *       200:
+ *         description: Videos retrieved successfully
+ *       500:
+ *         description: Server error
+ */
 router.get('/category/:categoryId', videoController.getVideosByCategory);
 
 /**
- * @route   GET api/videos/tag/:tagId
- * @desc    Get videos by tag
- * @access  Public
- * @param {string} tagId.path.required - Tag ID
- * @returns {Object} 200 - An array of videos
- * @returns {Error} 500 - Server error
+ * @swagger
+ * /api/videos/tag/{tagId}:
+ *   get:
+ *     summary: Get videos by tag
+ *     description: Retrieves videos that have a specific tag
+ *     tags: [Videos]
+ *     parameters:
+ *       - in: path
+ *         name: tagId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The tag ID
+ *     responses:
+ *       200:
+ *         description: Videos retrieved successfully
+ *       500:
+ *         description: Server error
  */
-
 router.get('/tag/:tagId', videoController.getVideosByTag);
 
 /**
- * @route   GET api/videos/:videoId
- * @desc    Get video by ID
- * @access  Public
- * @param {string} videoId.path.required - Video ID
- * @returns {Object} 200 - Video object
- * @returns {Error} 404 - Video not found
- * @returns {Error} 500 - Server error
+ * @swagger
+ * /api/videos/playlist/{playlistId}:
+ *   get:
+ *     summary: Get videos by playlist
+ *     description: Retrieves videos that belong to a specific playlist
+ *     tags: [Videos]
+ *     parameters:
+ *       - in: path
+ *         name: playlistId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The playlist ID
+ *     responses:
+ *       200:
+ *         description: Videos retrieved successfully
+ *       500:
+ *         description: Server error
  */
-
-router.get('/:videoId', videoController.getVideo);
-
-/**
- * @route   PUT api/videos/:videoId
- * @desc    Update video
- * @access  Private (to be implemented with auth)
- * @param {string} videoId.path.required - Video ID
- * @param {Object} request.body.required - Updated video object
- * @returns {Object} 200 - Updated video object
- * @returns {Error} 404 - Video not found
- * @returns {Error} 500 - Server error
- */
-
-router.put('/:videoId', videoController.updateVideo);
-
-/**
- * @route   DELETE api/videos/:videoId
- * @desc    Delete video
- * @access  Private (to be implemented with auth)
- * @param {string} videoId.path.required - Video ID
- * @returns {Object} 200 - Success message
- * @returns {Error} 404 - Video not found
- * @returns {Error} 500 - Server error
- */
-
-router.delete('/:videoId', videoController.deleteVideo);
+router.get('/playlist/:playlistId', videoController.getVideosByPlaylist);
 
 /**
  * @route   PUT api/videos/:videoId/views

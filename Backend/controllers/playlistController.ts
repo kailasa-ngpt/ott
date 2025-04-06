@@ -104,7 +104,7 @@ export const getAllVideosByPlaylists = async (req: Request, res: Response): Prom
         for (const playlist of playlists) {
             const videoObjects = [];
             for (const videoId of playlist.videos) {
-                const video = await videoService.getVideo(videoId);
+                const video = await videoService.getVideoById(videoId);
                 videoObjects.push(video);
             }
             results.push({

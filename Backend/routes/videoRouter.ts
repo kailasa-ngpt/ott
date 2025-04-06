@@ -81,7 +81,7 @@ videoRouter.get('/tag/:tagId', videoController.getVideosByTag);
  *       500:
  *         description: Server error
  */
-videoRouter.get('/playlist/:playlistId', videoController.getVideosByPlaylistId);
+videoRouter.get('/playlist/:playlistId', videoController.getVideosByPlaylist);
 
 /**
  * @swagger
@@ -105,7 +105,7 @@ videoRouter.get('/playlist/:playlistId', videoController.getVideosByPlaylistId);
  *       500:
  *         description: Server error
  */
-videoRouter.get('/:videoId', videoController.getVideo);
+videoRouter.get('/:videoId', videoController.getVideoById);
 
 /**
  * @swagger

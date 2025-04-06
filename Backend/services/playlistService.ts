@@ -9,21 +9,13 @@ export const getAllPlaylists = async (): Promise<IPlaylist[]> => {
 };
 
 //From POSTMAN send id=PL21WI5_pNwj5QaRIWKUaSDRRU9NLuEGAk
-// or trt id = 67e8d0dc7e71928d51bf8072
 export const getPlaylistById = async (id: string): Promise<IPlaylist | null> => {
     try {
-        console.log('Attempting to find playlist with ID:', id);
-        // Try to find by MongoDB _id first
-        let playlist = await Playlist.findById(id).populate('videos');
-        
-        // If not found by _id, try to find by the custom id field
-        if (!playlist) {
-            console.log('Not found by _id, trying custom id field');
-            playlist = await Playlist.findOne({ id: id }).populate('videos');
-        }
+        console.log('Attempting to find playlist with YouTube ID:', id);
+        const playlist = await Playlist.findOne({ id: id }).populate('videos');
 
         if (!playlist) {
-            console.log('No playlist found with ID:', id);
+            console.log('No playlist found with YouTube-like playlist ID:', id);
             return null;
         }
         console.log('Found playlist:', playlist);
