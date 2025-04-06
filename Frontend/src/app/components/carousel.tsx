@@ -15,26 +15,26 @@ interface ContentData {
 const contentItems: ContentData[] = [
   { 
     id: 1, 
-    title: "Featured Content 1",
-    description: "An astronaut finds himself stranded on a hostile planet. With only meager supplies, he must draw upon his ingenuity to survive and find a way to signal Earth.",
+    title: "Manifesting Powers",
+    description: "Explore ancient yogic techniques and spiritual practices to awaken the divine powers (shaktis) within you through Paramashiva's sacred knowledge.",
     color: '#862e24'
   },
   { 
     id: 2, 
-    title: "Featured Content 2",
+    title: "Divine Consciousness",
     description: "Join this spiritual journey as we explore ancient wisdom and practices that can transform your life and connect you with higher consciousness.",
     color: '#8B3A3A'
   },
   { 
     id: 3, 
-    title: "Featured Content 3",
+    title: "Meditation Mastery",
     description: "Experience guided meditation sessions designed to help you reduce stress, find inner peace, and develop mindfulness in your daily life.",
     color: '#862e24' 
   },
   { 
     id: 4, 
-    title: "Manifesting Powers",
-    description: "Explore ancient yogic techniques and spiritual practices to awaken the divine powers (shaktis) within you through Paramashiva's sacred knowledge.",
+    title: "Sacred Teachings",
+    description: "Discover the secrets of the universe through sacred teachings that explore cosmic phenomena and spiritual understanding.",
     color: '#8B3A3A' 
   },
 ];
@@ -114,38 +114,63 @@ export default function Carousel(): JSX.Element {
         className={`w-full flex items-center justify-center ${isMobile ? 'h-[500px] pt-0' : 'h-[450px]'}`}
         style={{ backgroundColor: currentItem.color }}
       >
-        <div className={`container mx-auto px-4 md:px-8 flex ${isMobile ? 'flex-col items-center text-center' : 'items-center'}`}>
-          {/* Poster/Rectangle - 9:16 aspect ratio on mobile */}
-          <div 
-            className={`${isMobile ? 'w-[180px] mb-4 mt-6' : 'h-[350px] w-[250px]'} bg-gray-100 flex-shrink-0 shadow-lg`}
-            style={{ 
-              aspectRatio: isMobile ? '9/16' : 'auto',
-              height: isMobile ? 'auto' : '350px' 
-            }}
-          >
-            {/* This would be your poster image */}
-            <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
-              Poster
+        {isMobile ? (
+          // Mobile Layout - stacked vertically
+          <div className="container mx-auto px-4 flex flex-col items-center text-center">
+            {/* Poster - 9:16 aspect ratio on mobile */}
+            <div 
+              className="w-[180px] mb-4 mt-6 bg-gray-100 flex-shrink-0 shadow-lg"
+              style={{ aspectRatio: '9/16' }}
+            >
+              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
+                Poster
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="w-full px-2 text-white max-w-xs">
+              <h1 className="text-2xl font-bold mb-2">
+                {currentItem.title}
+              </h1>
+              <p className="text-sm line-clamp-3 mb-4 opacity-90">
+                {currentItem.description}
+              </p>
+              <button className="px-6 py-2 text-base mb-4 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto">
+                <BiPlay className="mr-2" size={18} />
+                Watch Now
+              </button>
             </div>
           </div>
-          
-          {/* Content - adjusted for mobile */}
-          <div className={`${isMobile ? 'w-full px-2' : 'ml-8'} text-white ${isMobile ? 'max-w-xs' : 'max-w-2xl'}`}>
-            <h1 className={`${isMobile ? 'text-2xl' : 'text-4xl md:text-5xl'} font-bold mb-2 md:mb-4`}>
-              {currentItem.title}
-            </h1>
-            <p className={`${isMobile ? 'text-sm line-clamp-3' : 'text-lg'} mb-4 md:mb-6 opacity-90`}>
-              {currentItem.description}
-            </p>
-            <button className={`${isMobile ? 'px-6 py-2 text-base mb-4' : 'px-8 py-3 text-lg'} bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto md:mx-0`}>
-              <BiPlay className="mr-2" size={isMobile ? 18 : 24} />
-              Watch Now
-            </button>
+        ) : (
+          // Desktop Layout - side-by-side, centered in section
+          <div className="container mx-auto px-4 flex justify-center">
+            <div className="flex items-center max-w-4xl">
+              {/* Poster */}
+              <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
+                <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
+                  Poster
+                </div>
+              </div>
+              
+              {/* Content */}
+              <div className="ml-8 text-white max-w-2xl">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                  {currentItem.title}
+                </h1>
+                <p className="text-lg mb-6 opacity-90">
+                  {currentItem.description}
+                </p>
+                <button className="px-8 py-3 text-lg bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center">
+                  <BiPlay className="mr-2" size={24} />
+                  Watch Now
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Navigation arrows - adjusted for mobile */}
+      {/* Navigation arrows */}
       <button
         className={`absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-10`}
         onClick={prevSlide}
@@ -159,7 +184,7 @@ export default function Carousel(): JSX.Element {
         <FaChevronRight size={isMobile ? 16 : 32} />
       </button>
       
-      {/* Pagination indicators - styled like in the second image */}
+      {/* Pagination indicators */}
       <div className="flex justify-center mt-2 md:mt-4">
         {contentItems.map((_, index) => (
           <div
