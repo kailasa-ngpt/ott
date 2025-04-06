@@ -1,6 +1,6 @@
 import { S3Client, ListObjectsV2Command, HeadObjectCommand, GetObjectCommand, ListObjectsV2CommandOutput, PutObjectCommand } from '@aws-sdk/client-s3';
 
-// Configure S3 client
+// Old configuration - commented out
 // const s3Client = new S3Client({
 //     endpoint: 'https://ea4b278dc87ae2346b7f5b8f453c97c4.r2.cloudflarestorage.com',
 //     credentials: {
@@ -11,11 +11,26 @@ import { S3Client, ListObjectsV2Command, HeadObjectCommand, GetObjectCommand, Li
 // });
 
 //DEV:
+// const s3Client = new S3Client({
+//     endpoint: 'https://5be98fe813fcf5f08db3eb1de5c62c51.r2.cloudflarestorage.com',
+//     credentials: {
+//         accessKeyId: '3fc75660d71f604a55812f40b0b05540',
+//         secretAccessKey: '95877ed8694ecd691b02b94d696e474b8a883190f65299c67bb1eab21ece9b11'
+//     },
+//     region: 'auto'  // Required for Cloudflare R2
+// });
+
+// New configuration
+const BUCKET_NAME = "ntv-ott";
+const ENDPOINT_URL = "https://ea4b278dc87ae2346b7f5b8f453c97c4.r2.cloudflarestorage.com";
+const ACCESS_KEY_ID = "7129775cb1da9a1341e4b56d870eb3a2";
+const ACCESS_KEY_SECRET = "e628efcfc75f717bf3dfd40905dbbeb6ead73f3d3cc7f31c7348e7f471721e31";
+
 const s3Client = new S3Client({
-    endpoint: 'https://5be98fe813fcf5f08db3eb1de5c62c51.r2.cloudflarestorage.com',
+    endpoint: ENDPOINT_URL,
     credentials: {
-        accessKeyId: '3fc75660d71f604a55812f40b0b05540',
-        secretAccessKey: '95877ed8694ecd691b02b94d696e474b8a883190f65299c67bb1eab21ece9b11'
+        accessKeyId: ACCESS_KEY_ID,
+        secretAccessKey: ACCESS_KEY_SECRET
     },
     region: 'auto'  // Required for Cloudflare R2
 });
@@ -221,3 +236,89 @@ export const exploreStorage = async () => {
 
 // Execute exploration immediately - commented out to avoid running on import
 // exploreStorage().catch(console.error);
+
+// Test getObjectContent
+const testObjectContent = async () => {
+    try {
+        console.log('Listing all objects in bucket...');
+        const { Contents } = await listAllObjects();
+        
+        if (Contents && Contents.length > 0) {
+            // Find the master playlist file
+            const masterPlaylist = Contents.find(obj => obj.Key?.endsWith('master.m3u8'));
+            
+            if (masterPlaylist?.Key) {
+                console.log('\nGetting content for master playlist:', masterPlaylist.Key);
+                const result = await getObjectContent(masterPlaylist.Key);
+                
+                // Convert the response stream to text
+                const streamToString = (stream: any): Promise<string> =>
+                    new Promise((resolve, reject) => {
+                        const chunks: any[] = [];
+                        stream.on('data', (chunk: any) => chunks.push(chunk));
+                        stream.on('error', reject);
+                        stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+                    });
+                
+                if (result.Body) {
+                    const content = await streamToString(result.Body);
+                    console.log('\nMaster Playlist Content:');
+                    console.log(content);
+                }
+            } else {
+                console.log('No master playlist found');
+            }
+        } else {
+            console.log('No objects found in the bucket');
+        }
+    } catch (error) {
+        console.error('Error testing:', error);
+    }
+};
+
+// Uncomment to run the test
+testObjectContent().catch(console.error);
+
+// Get all YouTube-style video IDs from the bucket
+export const getVideoIds = async (): Promise<string[]> => {
+    try {
+        const { Contents } = await listAllObjects();
+        if (!Contents) return [];
+
+        // Extract unique folder names that match YouTube ID pattern
+        const videoIds = new Set<string>();
+        
+        Contents.forEach(item => {
+            if (item.Key) {
+                // Split the path and get the first part (folder name)
+                const parts = item.Key.split('/');
+                const potentialId = parts[0];
+                
+                // Check if it matches YouTube ID pattern (11 characters, can include - and _)
+                if (potentialId && /^[a-zA-Z0-9_-]{11}$/.test(potentialId)) {
+                    videoIds.add(potentialId);
+                }
+            }
+        });
+
+        return Array.from(videoIds).sort();
+    } catch (error) {
+        console.error('Error getting video IDs:', error);
+        throw error;
+    }
+};
+
+// Test getVideoIds
+const testVideoIds = async () => {
+    try {
+        console.log('Getting all video IDs...');
+        const videoIds = await getVideoIds();
+        console.log('\nFound video IDs:', videoIds);
+        console.log(`Total videos: ${videoIds.length}`);
+    } catch (error) {
+        console.error('Error testing video IDs:', error);
+    }
+};
+
+// Uncomment to run the test
+// testVideoIds().catch(console.error);
