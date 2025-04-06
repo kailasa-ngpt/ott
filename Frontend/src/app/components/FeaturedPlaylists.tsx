@@ -38,10 +38,10 @@ const featuredPlaylists = [
 
 const FeaturedPlaylists = () => {
   const router = useRouter();
-  const scrollContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Initialize refs array with null values
-  if (scrollContainerRefs.current.length !== featuredPlaylists.length) {
+  const scrollContainerRefs = useRef<Array<HTMLDivElement | null>>([]);
+  
+  // Initialize refs array
+  if (!scrollContainerRefs.current.length) {
     scrollContainerRefs.current = Array(featuredPlaylists.length).fill(null);
   }
 
@@ -67,6 +67,11 @@ const FeaturedPlaylists = () => {
   };
 
   // This function is no longer needed as we're using direct placeholders with colors from the data
+
+  // Function to set ref correctly with TypeScript
+  const setScrollContainerRef = (el: HTMLDivElement | null, index: number) => {
+    scrollContainerRefs.current[index] = el;
+  };
 
   return (
     <section className="w-full py-8 bg-white">
@@ -104,11 +109,11 @@ const FeaturedPlaylists = () => {
               
               {/* Scrollable container for videos */}
               <div
-                ref={el => scrollContainerRefs.current[playlistIndex] = el}
+                ref={(el) => setScrollContainerRef(el, playlistIndex)}
                 className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 scroll-smooth"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                {playlist.videos.map((video, videoIndex) => (
+                {playlist.videos.map((video) => (
                   <div key={video.id} className="flex-shrink-0 w-48">
                     <div className="aspect-[16/9] w-full rounded-lg overflow-hidden mb-2">
                       <div 
