@@ -1,129 +1,135 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-body {
-  background-color: white;
-  @apply h-full overflow-x-hidden;
+/* Sidebar animations and styling */
+.sidebar-enter {
+  transform: translateX(-100%);
 }
 
-#__next {
-  @apply h-full;
+.sidebar-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-in-out;
 }
 
-html {
-  @apply h-full;
+.sidebar-exit {
+  transform: translateX(0);
 }
 
-.h-500px {
-  height: 500px;
+.sidebar-exit-active {
+  transform: translateX(-100%);
+  transition: transform 300ms ease-in-out;
 }
 
-/* Gradient header background */
-.gradient-header {
-  background: linear-gradient(to bottom, #ffcd99, white);
+/* Sidebar styling with orange gradient background */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 300px;
+  background: linear-gradient(45deg, #ff7e5f, #feb47b); /* Orange gradient */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  transform: translateX(-100%);
+  transition: transform 300ms ease-in-out;
+  z-index: 1000;
 }
 
-/* Add gradient border utilities */
-.gradient-border {
-  border: 2px solid;
-  border-image-slice: 1;
-  border-image-source: linear-gradient(to right, #ff9901, #ff7801);
+.sidebar.open {
+  transform: translateX(0);
 }
 
-.orange-gradient-bg {
-  background: linear-gradient(to right, #ff9901, #ff7801);
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
 }
 
-/* Text formatting */
-.header-text {
-  @apply font-bold text-black;
+.sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
 }
 
-/* Arrow styling for carousel */
-.carousel-arrow {
-  @apply text-white bg-transparent;
+.sidebar-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
 }
 
-/* Pagination styling */
-.pagination-dot {
-  @apply h-1 w-10 mx-1 rounded-xl transition-all duration-500 ease-in-out;
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.pagination-dot-active {
-  @apply bg-gradient-to-r from-[#ff9901] to-[#ff7801];
+.sidebar-menu li {
+  padding: 1rem;
+  text-align: center;
 }
 
-.pagination-dot-inactive {
-  @apply bg-gray-300;
+.sidebar-menu li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  display: block;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+.sidebar-search {
+  padding: 1rem;
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.sidebar-search input {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
 }
 
-.scrollbar-thin::-webkit-scrollbar {
-  height: 4px;
+/* Button click animations */
+.btn-click {
+  transition: transform 150ms ease;
 }
 
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 20px;
+.btn-click:active {
+  transform: scale(0.95);
 }
 
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background: linear-gradient(to right, #ff9901, #ff7801);
-  border-radius: 20px;
+/* Ripple effect for sidebar buttons */
+.ripple {
+  position: relative;
+  overflow: hidden;
 }
 
-.scrollbar-thin {
-  scrollbar-width: thin;
-  scrollbar-color: #ff9901 #f1f1f1;
+.ripple:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.5s;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera but allow scrolling */
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
+.ripple:active:after {
+  transform: scale(0, 0);
+  opacity: 0.3;
+  transition: 0s;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox but allow scrolling */
-.scrollbar-hidden {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-/* Mobile navigation styles - NEW */
-/* Mobile navigation spacing */
-@media (max-width: 767px) {
-  .pb-mobile-nav {
-    padding-bottom: 5rem; /* Ensures content isn't hidden behind the nav bar */
-  }
-  
-  main {
-    margin-bottom: 4rem; /* Add space for mobile nav */
-  }
-  
-  /* Ensure the footer doesn't overlap with mobile nav */
-  footer {
-    margin-bottom: 4rem;
-  }
-}
-
-/* Additional mobile navigation styles */
-.mobile-nav-icon {
-  transition: all 0.2s ease;
-}
-
-.mobile-nav-icon-active {
-  transform: scale(1.1);
-}
-
-/* Smooth transition for tab changes */
-.nav-indicator {
-  transition: all 0.3s ease;
+/* Home and Playlist button styles */
+.home-btn, .playlist-btn {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
 }

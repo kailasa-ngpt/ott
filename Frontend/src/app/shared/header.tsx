@@ -7,8 +7,9 @@ import { z } from 'zod';
 import { searchSchema } from '../../services/validationSchemas';
 import SearchInput from "./../components/searchInput";
 import { initiateLogin, logout, getSession } from '../utils/api';
-import { LogIn, LogOut } from 'lucide-react';
+import { Menu, Search, LogIn, LogOut } from 'lucide-react';
 import MobileBottomNav from "../components/MobileBottomNav";
+import Sidebar from "../components/Sidebar";
 
 const Header: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -16,6 +17,7 @@ const Header: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -47,6 +49,11 @@ const Header: React.FC = () => {
 
     checkSession();
   }, []);
+
+  // Close sidebar when route changes
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   const handleLogin = () => {
     initiateLogin();
@@ -85,6 +92,10 @@ const Header: React.FC = () => {
     }
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -93,11 +104,27 @@ const Header: React.FC = () => {
 
   return (
     <>
+      {/* Sidebar component */}
+      <Sidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+        isLoggedIn={!!isLoggedIn}
+        handleLogin={handleLogin}
+      />
+      
       {/* Header */}
       <header className="gradient-header font-sans shadow-sm">
         {isMobile ? (
-          /* Mobile Header - Simplified */
+          /* Mobile Header - With Menu Button */
           <div className="flex items-center justify-between px-4 py-3">
+            <button 
+              onClick={toggleSidebar}
+              className="p-2 rounded-full active:scale-95 transition-transform duration-150"
+              aria-label="Menu"
+            >
+              <Menu size={24} className="text-gray-700" />
+            </button>
+            
             <div className="flex-shrink-0">
               <a href="/home">
                 <Image src="/images/logo.png" alt="Logo" width={32} height={32} />
@@ -119,7 +146,7 @@ const Header: React.FC = () => {
             {isLoggedIn ? (
               <button 
                 onClick={handleLogout}
-                className="p-1.5 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white"
+                className="p-1.5 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white active:scale-95 transition-transform duration-150"
                 aria-label="Sign out"
               >
                 <LogOut size={18} />
@@ -127,7 +154,7 @@ const Header: React.FC = () => {
             ) : (
               <button 
                 onClick={handleLogin}
-                className="p-1.5 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white"
+                className="p-1.5 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white active:scale-95 transition-transform duration-150"
                 aria-label="Sign in"
               >
                 <LogIn size={18} />
@@ -135,29 +162,38 @@ const Header: React.FC = () => {
             )}
           </div>
         ) : (
-          /* Desktop Header - Unchanged */
+          /* Desktop Header - With Menu Button */
           <nav className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center space-x-6">
-              <div className="flex-shrink-0 w-16">
+              <button 
+                onClick={toggleSidebar}
+                className="p-2 rounded-full hover:bg-gray-100 active:scale-95 transition-transform duration-150"
+                aria-label="Menu"
+              >
+                <Menu size={24} className="text-gray-700" />
+              </button>
+              
+              <div className="flex-shrink-0">
                 <a href="/home">
                   <Image src="/images/logo.png" alt="Logo" width={40} height={40} />
                 </a>
               </div>
+              
               <div className="flex space-x-8">
                 <a href="/home" className={`font-semibold text-black ${
                   isActive("/home") ? "underline underline-offset-4 decoration-4 decoration-orange-500" : ""
                 }`}>
                   Home
                 </a>
-                <a href="/live" className={`font-semibold text-black ${
-                  isActive("/live") ? "underline underline-offset-4 decoration-4 decoration-orange-500" : ""
-                }`}>
-                  Live
-                </a>
                 <a href="/playlists" className={`font-semibold text-black ${
                   isActive("/playlists") ? "underline underline-offset-4 decoration-4 decoration-orange-500" : ""
                 }`}>
                   Playlists
+                </a>
+                <a href="/search" className={`font-semibold text-black ${
+                  isActive("/search") ? "underline underline-offset-4 decoration-4 decoration-orange-500" : ""
+                }`}>
+                  Search
                 </a>
               </div>
             </div>
@@ -180,14 +216,14 @@ const Header: React.FC = () => {
               {isLoggedIn ? (
                 <button 
                   onClick={handleLogout}
-                  className="px-4 py-2 rounded-md border-0 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-semibold"
+                  className="px-4 py-2 rounded-md border-0 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-semibold active:scale-95 transition-transform duration-150"
                 >
                   Logout
                 </button>
               ) : (
                 <button 
                   onClick={handleLogin}
-                  className="px-4 py-2 rounded-md border-0 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-semibold"
+                  className="px-4 py-2 rounded-md border-0 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-semibold active:scale-95 transition-transform duration-150"
                 >
                   Login
                 </button>
@@ -198,7 +234,7 @@ const Header: React.FC = () => {
       </header>
 
       {/* Mobile Bottom Navigation - Only shown on mobile devices */}
-      {isMobile && <MobileBottomNav />}
+      {isMobile && <MobileBottomNav toggleSidebar={toggleSidebar} />}
     </>
   );
 };

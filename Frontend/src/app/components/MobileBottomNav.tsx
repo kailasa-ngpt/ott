@@ -3,7 +3,11 @@
 import { usePathname, useRouter } from "next/navigation";
 import { Home, Search, ListVideo, Menu } from "lucide-react";
 
-const MobileBottomNav = () => {
+interface MobileBottomNavProps {
+  toggleSidebar: () => void;
+}
+
+const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ toggleSidebar }) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -14,11 +18,11 @@ const MobileBottomNav = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-30 md:hidden">
       <div className="flex justify-around items-center h-16 px-2">
         <button
-          onClick={() => {}}
-          className="flex flex-col items-center justify-center w-1/4 py-1"
+          onClick={toggleSidebar}
+          className="flex flex-col items-center justify-center w-1/4 py-1 active:scale-95 transition-transform duration-150"
         >
           <div className={`p-1 rounded-full ${isActive("/menu") ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801]" : ""}`}>
             <Menu 
@@ -31,7 +35,7 @@ const MobileBottomNav = () => {
 
         <button
           onClick={() => navigateTo("/home")}
-          className="flex flex-col items-center justify-center w-1/4 py-1"
+          className="flex flex-col items-center justify-center w-1/4 py-1 active:scale-95 transition-transform duration-150"
         >
           <div className={`p-1 rounded-full ${isActive("/home") ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801]" : ""}`}>
             <Home 
@@ -44,7 +48,7 @@ const MobileBottomNav = () => {
 
         <button
           onClick={() => navigateTo("/playlists")}
-          className="flex flex-col items-center justify-center w-1/4 py-1"
+          className="flex flex-col items-center justify-center w-1/4 py-1 active:scale-95 transition-transform duration-150"
         >
           <div className={`p-1 rounded-full ${isActive("/playlists") ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801]" : ""}`}>
             <ListVideo 
@@ -57,7 +61,7 @@ const MobileBottomNav = () => {
 
         <button
           onClick={() => navigateTo("/search")}
-          className="flex flex-col items-center justify-center w-1/4 py-1"
+          className="flex flex-col items-center justify-center w-1/4 py-1 active:scale-95 transition-transform duration-150"
         >
           <div className={`p-1 rounded-full ${isActive("/search") ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801]" : ""}`}>
             <Search 
