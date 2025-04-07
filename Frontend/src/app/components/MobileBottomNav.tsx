@@ -18,58 +18,54 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ toggleSidebar }) => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-30 md:hidden">
-      <div className="flex justify-around items-center h-16 px-2">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 md:hidden">
+      <div className="flex justify-around items-center h-14">
         <button
           onClick={toggleSidebar}
-          className="flex flex-col items-center justify-center w-1/4 py-1 active:scale-95 transition-transform duration-150"
+          className="flex flex-col items-center justify-center w-1/4 py-2 active:scale-95 transition-transform duration-150"
         >
-          <div className={`p-1 rounded-full ${isActive("/menu") ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801]" : ""}`}>
-            <Menu 
-              size={24}
-              className={isActive("/menu") ? "text-white" : "text-gray-600"}
-            />
-          </div>
-          <span className="text-xs mt-1 font-medium text-gray-600">Menu</span>
+          <Menu 
+            size={20}
+            className={isActive("/menu") ? "text-[#ff9901]" : "text-gray-600"}
+          />
+          <span className={`text-xs mt-1 ${isActive("/menu") ? "text-[#ff9901] font-medium" : "text-gray-500"}`}>Menu</span>
+          {isActive("/menu") && <div className="h-1 w-6 mt-1 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801]"></div>}
         </button>
 
         <button
           onClick={() => navigateTo("/home")}
-          className="flex flex-col items-center justify-center w-1/4 py-1 active:scale-95 transition-transform duration-150"
+          className="flex flex-col items-center justify-center w-1/4 py-2 active:scale-95 transition-transform duration-150"
         >
-          <div className={`p-1 rounded-full ${isActive("/home") ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801]" : ""}`}>
-            <Home 
-              size={24} 
-              className={isActive("/home") ? "text-white" : "text-gray-600"}
-            />
-          </div>
-          <span className="text-xs mt-1 font-medium text-gray-600">Home</span>
+          <Home 
+            size={20} 
+            className={isActive("/home") ? "text-[#ff9901]" : "text-gray-600"}
+          />
+          <span className={`text-xs mt-1 ${isActive("/home") ? "text-[#ff9901] font-medium" : "text-gray-500"}`}>Home</span>
+          {isActive("/home") && <div className="h-1 w-6 mt-1 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801]"></div>}
         </button>
 
         <button
           onClick={() => navigateTo("/playlists")}
-          className="flex flex-col items-center justify-center w-1/4 py-1 active:scale-95 transition-transform duration-150"
+          className="flex flex-col items-center justify-center w-1/4 py-2 active:scale-95 transition-transform duration-150"
         >
-          <div className={`p-1 rounded-full ${isActive("/playlists") ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801]" : ""}`}>
-            <ListVideo 
-              size={24} 
-              className={isActive("/playlists") ? "text-white" : "text-gray-600"}
-            />
-          </div>
-          <span className="text-xs mt-1 font-medium text-gray-600">Playlists</span>
+          <ListVideo 
+            size={20} 
+            className={isActive("/playlists") ? "text-[#ff9901]" : "text-gray-600"}
+          />
+          <span className={`text-xs mt-1 ${isActive("/playlists") ? "text-[#ff9901] font-medium" : "text-gray-500"}`}>Playlists</span>
+          {isActive("/playlists") && <div className="h-1 w-6 mt-1 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801]"></div>}
         </button>
 
         <button
           onClick={() => navigateTo("/search")}
-          className="flex flex-col items-center justify-center w-1/4 py-1 active:scale-95 transition-transform duration-150"
+          className="flex flex-col items-center justify-center w-1/4 py-2 active:scale-95 transition-transform duration-150"
         >
-          <div className={`p-1 rounded-full ${isActive("/search") ? "bg-gradient-to-r from-[#ff9901] to-[#ff7801]" : ""}`}>
-            <Search 
-              size={24} 
-              className={isActive("/search") ? "text-white" : "text-gray-600"}
-            />
-          </div>
-          <span className="text-xs mt-1 font-medium text-gray-600">Search</span>
+          <Search 
+            size={20} 
+            className={isActive("/search") ? "text-[#ff9901]" : "text-gray-600"}
+          />
+          <span className={`text-xs mt-1 ${isActive("/search") ? "text-[#ff9901] font-medium" : "text-gray-500"}`}>Search</span>
+          {isActive("/search") && <div className="h-1 w-6 mt-1 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801]"></div>}
         </button>
       </div>
     </div>
