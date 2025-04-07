@@ -2,34 +2,38 @@
 import { useEffect, useState } from "react";
 import Footer from "../shared/footer";
 import Header from "../shared/header";
-import { getPlayListsByUserId } from "../../services/playListService";
+//import { getPlayListsByUserId } from "../../services/playListService";
 import VideoSlider from "../components/videoSlider";
 import { adaptPlaylistVideosToSliderFormat } from "../utils/playlist-adapter";
+import { IPlayList } from "@/models/IPlayList";
+import { getPlaylistsByIds } from "@/services/playListService";
 
-interface IPlayList {
-  playlistId: string;
-  playListTitle: string;
-  videos: {
-    thumbnailPath: string;
-    videoTitle: string;
-    videoLink: string;
-    createdDate: string;
-    views: number;
-  }[];
-}
 
 const Playlists = () => {
   const [playlistsState, setPlaylistsState] = useState<IPlayList[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const playlistIds = [
+    "nithyanandasatsang2025",
+    "shivasankalpaupanishads",
+    "naradabhaktisutras",
+    "navatattvamnineformsofparamashiva",
+    "experienceparamashivaasyourfirstperson"
+  ];
+
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
-        let userId = getCurrentUserId();
-        const playlists = await getPlayListsByUserId(userId);
+        console.log('Fetching playlists with IDs:', playlistIds);
+        const playlists = await getPlaylistsByIds(playlistIds);
+        console.log('Received playlists:', playlists);
         setPlaylistsState(playlists);
       } catch (error) {
-        console.error("Error fetching playlist IDs:", error);
+        console.error("Error fetching playlists:", error);
+        // Log more details about the error
+        if (error instanceof Error) {
+          console.error("Error message:", error.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -49,13 +53,13 @@ const Playlists = () => {
           ) : (
             playlistsState.length === 0) ? (
               <div className="mt-4 text-center">
-                <p className="text-xl">You haven't created any playlists.</p>
+                <p className="text-xl">No playlists found.</p>
               </div>
               ) : (
                 playlistsState.map((playlist, index) => (
                     <div key={index}>
                       <VideoSlider 
-                        category={playlist.playListTitle}  
+                        category={playlist.name}  
                         videos={adaptPlaylistVideosToSliderFormat(playlist.videos)} 
                       />
                     </div>

@@ -125,3 +125,28 @@ export const getAllVideosByPlaylists = async (req: Request, res: Response): Prom
         });
     }
 };
+
+export const getPlaylistsByIds = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { ids } = req.query;
+        
+        if (!ids) {
+            res.status(400).json({ message: 'No playlist IDs provided' });
+            return;
+        }
+
+        // Convert comma-separated string to array and ensure string type
+        const idArray = (typeof ids === 'string' ? ids.split(',') : ids) as string[];
+        
+        if (!Array.isArray(idArray)) {
+            res.status(400).json({ message: 'Invalid playlist IDs format' });
+            return;
+        }
+
+        const playlists = await playlistService.getPlaylistsByIds(idArray);
+        res.json(playlists);
+    } catch (error) {
+        console.error('Error in getPlaylistsByIds:', error);
+        res.status(500).json({ message: 'Error fetching playlists' });
+    }
+};

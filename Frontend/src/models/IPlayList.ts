@@ -1,14 +1,11 @@
-export interface IPlayList {
-    playlistId: string;
-    playListTitle: string;
-    playListContent: {
-        id: string;
-        thumbnailPath: string;
-        videoTitle: string;
-        videoLink: string;
-        createdDate: string;
-        views: number;
-    }[];
+export interface IPlayList extends Document {
+    id: string;                    
+    name: string;                  
+    description: string;           
+    thumbnailPath: string;         
+    videos: string[];             
+    createdDate: string;          
+    updatedDate: string;          
 }
 
   

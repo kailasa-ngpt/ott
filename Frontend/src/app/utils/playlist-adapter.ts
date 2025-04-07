@@ -25,18 +25,37 @@ interface IPlaylistVideo {
 }
 
 // Adapter function to convert playlist videos to IVideo format
-export const adaptPlaylistVideosToSliderFormat = (videos: IPlaylistVideo[]): IVideo[] => {
-  return videos.map((video, index) => ({
-    Id: index, // Use index as a fallback ID
-    video_id: `video-${index}`, // Generate a temporary ID
-    CreatedAt: video.createdDate,
-    UpdatedAt: video.createdDate,
-    title: video.videoTitle,
-    description: "Video from playlist", // Default description
-    thumbnail_id: video.thumbnailPath,
-    video_m3u8_id: video.videoLink,
-    duration_secs: null,
-    delivered_date: video.createdDate,
-    uploaded_date: null
-  }));
+export const adaptPlaylistVideosToSliderFormat = (videos: string[] | IPlaylistVideo[]): IVideo[] => {
+  return videos.map((video, index) => {
+    // If video is a string (video ID), create a basic IPlaylistVideo object
+    if (typeof video === 'string') {
+      return {
+        Id: index,
+        video_id: video,
+        CreatedAt: new Date().toISOString(),
+        UpdatedAt: new Date().toISOString(),
+        title: `Video ${index + 1}`,
+        description: '',
+        thumbnail_id: '',
+        video_m3u8_id: video,
+        duration_secs: null,
+        delivered_date: null,
+        uploaded_date: null
+      };
+    }
+    // If video is already an IPlaylistVideo object, convert it
+    return {
+      Id: index,
+      video_id: video.videoLink,
+      CreatedAt: video.createdDate,
+      UpdatedAt: video.createdDate,
+      title: video.videoTitle,
+      description: '',
+      thumbnail_id: video.thumbnailPath,
+      video_m3u8_id: video.videoLink,
+      duration_secs: null,
+      delivered_date: null,
+      uploaded_date: null
+    };
+  });
 };
