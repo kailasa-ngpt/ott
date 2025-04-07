@@ -112,57 +112,9 @@ const Header: React.FC = () => {
         handleLogin={handleLogin}
       />
       
-      {/* Header */}
-      <header className="gradient-header font-sans shadow-sm">
-        {isMobile ? (
-          /* Mobile Header - With Menu Button */
-          <div className="flex items-center justify-between px-4 py-3">
-            <button 
-              onClick={toggleSidebar}
-              className="p-2 rounded-full active:scale-95 transition-transform duration-150"
-              aria-label="Menu"
-            >
-              <Menu size={24} className="text-gray-700" />
-            </button>
-            
-            <div className="flex-shrink-0">
-              <a href="/home">
-                <Image src="/images/logo.png" alt="Logo" width={32} height={32} />
-              </a>
-            </div>
-            
-            <form onSubmit={handleSearch} className="flex-grow mx-2">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchValue}
-                  onChange={handleSearchChange}
-                  placeholder="Search"
-                  className="w-full py-1.5 px-3 pl-3 text-sm rounded-full border border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#ff9901]"
-                />
-              </div>
-            </form>
-            
-            {isLoggedIn ? (
-              <button 
-                onClick={handleLogout}
-                className="p-1.5 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white active:scale-95 transition-transform duration-150"
-                aria-label="Sign out"
-              >
-                <LogOut size={18} />
-              </button>
-            ) : (
-              <button 
-                onClick={handleLogin}
-                className="p-1.5 rounded-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white active:scale-95 transition-transform duration-150"
-                aria-label="Sign in"
-              >
-                <LogIn size={18} />
-              </button>
-            )}
-          </div>
-        ) : (
-          /* Desktop Header - With Menu Button */
+      {/* Header - Only show on desktop */}
+      {!isMobile && (
+        <header className="gradient-header font-sans shadow-sm">
           <nav className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center space-x-6">
               <button 
@@ -230,8 +182,8 @@ const Header: React.FC = () => {
               )}
             </div>
           </nav>
-        )}
-      </header>
+        </header>
+      )}
 
       {/* Mobile Bottom Navigation - Only shown on mobile devices */}
       {isMobile && <MobileBottomNav toggleSidebar={toggleSidebar} />}

@@ -38,7 +38,7 @@ const Home = () => {
       <Header />
       
       {/* Main Content */}
-      <main className={`flex-grow ${isMobile ? 'pb-mobile-nav' : ''}`}>
+      <main className={`flex-grow ${isMobile ? 'pb-16' : ''}`}>
         {isLoading ? (
           <div className="flex justify-center items-center h-96">
             <div className="animate-pulse text-orange-500">Loading...</div>
@@ -69,7 +69,7 @@ const Home = () => {
         )}
       </main>
       
-      {/* Footer */}
+      {/* Footer - Add bottom padding on mobile to prevent content from being hidden behind the bottom nav */}
       <Footer />
     </div>
   );
