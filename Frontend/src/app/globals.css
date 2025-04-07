@@ -1,3 +1,8 @@
+/* Import Tailwind CSS base styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Sidebar animations and styling */
 .sidebar-enter {
   transform: translateX(-100%);
@@ -132,4 +137,9 @@
   color: #fff;
   text-decoration: none;
   font-size: 1.2rem;
+}
+
+/* Add spacing for mobile navigation at bottom */
+.pb-mobile-nav {
+  padding-bottom: 5rem; /* Adjust based on your mobile nav height */
 }
