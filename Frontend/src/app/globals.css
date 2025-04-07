@@ -61,6 +61,7 @@ html {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -94,4 +95,35 @@ html {
 .scrollbar-hidden {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Mobile navigation styles - NEW */
+/* Mobile navigation spacing */
+@media (max-width: 767px) {
+  .pb-mobile-nav {
+    padding-bottom: 5rem; /* Ensures content isn't hidden behind the nav bar */
+  }
+  
+  main {
+    margin-bottom: 4rem; /* Add space for mobile nav */
+  }
+  
+  /* Ensure the footer doesn't overlap with mobile nav */
+  footer {
+    margin-bottom: 4rem;
+  }
+}
+
+/* Additional mobile navigation styles */
+.mobile-nav-icon {
+  transition: all 0.2s ease;
+}
+
+.mobile-nav-icon-active {
+  transform: scale(1.1);
+}
+
+/* Smooth transition for tab changes */
+.nav-indicator {
+  transition: all 0.3s ease;
 }
