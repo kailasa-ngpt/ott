@@ -14,6 +14,36 @@ const router = express.Router();
 router.get('/', playlistController.getAllPlaylists);
 
 /**
+ * @swagger
+ * /api/playlists/getPlaylistsByIds:
+ *   get:
+ *     summary: Get multiple playlists by their IDs
+ *     tags: [Playlists]
+ *     parameters:
+ *       - in: query
+ *         name: ids
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of playlist IDs
+ *     responses:
+ *       200:
+ *         description: List of playlists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Playlist'
+ *       400:
+ *         description: Invalid playlist IDs provided
+ *       500:
+ *         description: Server error
+ */
+
+router.get('/getPlaylistsByIds', playlistController.getPlaylistsByIds);
+
+/**
  * @route   GET api/playlists/:id
  * @desc    Get playlist by ID
  * @access  Public

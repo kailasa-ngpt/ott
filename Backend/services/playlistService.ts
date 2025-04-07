@@ -74,4 +74,14 @@ export const removeVideoFromPlaylist = async (playlistId: string, videoId: strin
     } catch (error) {
         throw new Error('Error removing video from playlist');
     }
+};
+
+export const getPlaylistsByIds = async (ids: string[]): Promise<IPlaylist[]> => {
+    try {
+        const playlists = await Playlist.find({ id: { $in: ids } });
+        return playlists;
+    } catch (error) {
+        console.error('Error fetching playlists by IDs:', error);
+        throw error;
+    }
 }; 
