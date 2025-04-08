@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { searchSchema } from '../../services/validationSchemas';
 import SearchInput from "./../components/searchInput";
 import { initiateLogin, logout, getSession } from '../utils/api';
-import { Menu, Search, LogIn, LogOut } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import MobileBottomNav from "../components/MobileBottomNav";
 import Sidebar from "../components/Sidebar";
 
@@ -117,14 +117,6 @@ const Header: React.FC = () => {
         <header className="gradient-header font-sans shadow-sm">
           <nav className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center space-x-6">
-              <button 
-                onClick={toggleSidebar}
-                className="p-2 rounded-full hover:bg-gray-100 active:scale-95 transition-transform duration-150"
-                aria-label="Menu"
-              >
-                <Menu size={24} className="text-gray-700" />
-              </button>
-              
               <div className="flex-shrink-0">
                 <a href="/home">
                   <Image src="/images/logo.png" alt="Logo" width={40} height={40} />
@@ -162,9 +154,7 @@ const Header: React.FC = () => {
               </form>
             </div>
 
-            <div className="flex items-center space-x-6">
-              <button className="text-xl p-1 text-black">🔔</button>
-              <button className="text-xl p-1 text-black">👤</button>
+            <div className="flex items-center">
               {isLoggedIn ? (
                 <button 
                   onClick={handleLogout}
