@@ -2,8 +2,28 @@ import React, { useRef, useState } from 'react';
 import { FaArrowLeft, FaArrowRight, FaPlay } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
+// Define types for our data
+interface Video {
+  id: string;
+  title: string;
+  duration: string;
+  color: string;
+}
+
+interface Playlist {
+  id: string;
+  title: string;
+  videos: Video[];
+}
+
+// Props for the PlaceholderBox component
+interface PlaceholderBoxProps {
+  text: string;
+  color: string;
+}
+
 // Sample data - Replace with your actual data
-const featuredPlaylists = [
+const featuredPlaylists: Playlist[] = [
   {
     id: "playlist1",
     title: "Meditation Techniques",
@@ -61,7 +81,7 @@ const featuredPlaylists = [
 ];
 
 // Simple placeholder component to replace the image
-const PlaceholderBox = ({ text, color }) => (
+const PlaceholderBox: React.FC<PlaceholderBoxProps> = ({ text, color }) => (
   <div 
     className="w-full h-full flex items-center justify-center" 
     style={{ backgroundColor: color }}
@@ -72,7 +92,7 @@ const PlaceholderBox = ({ text, color }) => (
   </div>
 );
 
-const FeaturedPlaylists = () => {
+const FeaturedPlaylists: React.FC = () => {
   const router = useRouter();
   const scrollContainerRefs = useRef<Array<HTMLDivElement | null>>([]);
   
