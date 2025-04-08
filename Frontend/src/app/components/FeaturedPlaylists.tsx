@@ -60,6 +60,18 @@ const featuredPlaylists = [
   }
 ];
 
+// Simple placeholder component to replace the image
+const PlaceholderBox = ({ text, color }) => (
+  <div 
+    className="w-full h-full flex items-center justify-center" 
+    style={{ backgroundColor: color }}
+  >
+    <span className="text-white text-sm font-medium text-center px-2">
+      {text}
+    </span>
+  </div>
+);
+
 const FeaturedPlaylists = () => {
   const router = useRouter();
   const scrollContainerRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -161,16 +173,8 @@ const FeaturedPlaylists = () => {
                 {playlist.videos.map((video) => (
                   <div key={video.id} className="flex-shrink-0 w-44">
                     <div className="aspect-[9/16] w-full rounded-lg overflow-hidden mb-2 bg-gray-100 relative">
-                      <div 
-                        className="w-full h-full flex items-center justify-center" 
-                        style={{ backgroundColor: video.color }}
-                      >
-                        <img 
-                          src={`/placeholder-image?text=${encodeURIComponent(video.title)}`} 
-                          alt={video.title}
-                          className="opacity-0 absolute" 
-                        />
-                      </div>
+                      {/* Replace the problematic image tag with our custom component */}
+                      <PlaceholderBox text={video.title} color={video.color} />
                     </div>
                     <div className="text-left">
                       <p className="text-sm font-medium text-black truncate">{video.title}</p>

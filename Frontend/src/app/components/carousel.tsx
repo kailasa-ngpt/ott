@@ -40,125 +40,119 @@ const contentItems: ContentData[] = [
 ];
 
 export default function Carousel(): JSX.Element {
-  // State to keep track of the current and next item indexes
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [nextIndex, setNextIndex] = useState<number | null>(null);
-  
-  // State to track the direction of slide animation
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
-  
-  // State to determine if the carousel is being hovered over
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  
-  // State to track if we're on mobile view
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  // Function to check and update screen size
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
     };
     
-    // Initial check
     checkScreenSize();
-    
-    // Add event listener for window resize
     window.addEventListener('resize', checkScreenSize);
     
-    // Cleanup
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Function to handle slide transition
-  const goToSlide = (index: number, direction: 'left' | 'right') => {
-    // Don't allow transitions when one is already in progress
-    if (nextIndex !== null) return;
+  const nextSlide = () => {
+    if (isAnimating) return;
     
-    // Set the direction and next index
-    setSlideDirection(direction);
-    setNextIndex(index);
+    setDirection('right');
+    setIsAnimating(true);
     
-    // Complete the transition after animation duration
+    // After animation duration, change the slide
     setTimeout(() => {
-      setActiveIndex(index);
-      setNextIndex(null);
-    }, 300); // Match this with the CSS transition duration
+      setActiveIndex((prev) => (prev + 1) % contentItems.length);
+      // Allow a little time for the state to update before resetting animation flag
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 50);
+    }, 300);
   };
 
-  // Function to show the previous slide
-  const prevSlide = (): void => {
-    if (nextIndex !== null) return; // Prevent action during animation
-    const index = (activeIndex - 1 + contentItems.length) % contentItems.length;
-    goToSlide(index, 'left');
+  const prevSlide = () => {
+    if (isAnimating) return;
+    
+    setDirection('left');
+    setIsAnimating(true);
+    
+    // After animation duration, change the slide
+    setTimeout(() => {
+      setActiveIndex((prev) => (prev - 1 + contentItems.length) % contentItems.length);
+      // Allow a little time for the state to update before resetting animation flag
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 50);
+    }, 300);
   };
 
-  // Function to show the next slide
-  const nextSlide = (): void => {
-    if (nextIndex !== null) return; // Prevent action during animation
-    const index = (activeIndex + 1) % contentItems.length;
-    goToSlide(index, 'right');
-  };
-
-  // useEffect hook to handle automatic slide transition
   useEffect(() => {
-    // Start interval for automatic slide change if not hovered and no animation in progress
-    if (!isHovered && nextIndex === null) {
+    if (!isHovered && !isAnimating) {
       const interval = setInterval(() => {
         nextSlide();
       }, 5000);
-
-      // Cleanup the interval on component unmount
-      return () => {
-        clearInterval(interval);
-      };
+      
+      return () => clearInterval(interval);
     }
-  }, [isHovered, nextIndex, activeIndex]);
+  }, [isHovered, isAnimating]);
 
-  // Handle mouse over event
-  const handleMouseOver = (): void => {
+  const handleMouseOver = () => {
     setIsHovered(true);
   };
 
-  // Handle mouse leave event
-  const handleMouseLeave = (): void => {
+  const handleMouseLeave = () => {
     setIsHovered(false);
   };
 
-  // Determine which slide to show for next/animation
-  const getNextItemIndex = () => {
-    if (nextIndex !== null) return nextIndex;
-    return slideDirection === 'right' 
-      ? (activeIndex + 1) % contentItems.length 
-      : (activeIndex - 1 + contentItems.length) % contentItems.length;
+  const handleDotClick = (index: number) => {
+    if (isAnimating) return;
+    
+    if (index === activeIndex) return;
+    
+    setDirection(index > activeIndex ? 'right' : 'left');
+    setIsAnimating(true);
+    
+    // After animation duration, change the slide
+    setTimeout(() => {
+      setActiveIndex(index);
+      // Allow a little time for the state to update before resetting animation flag
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 50);
+    }, 300);
   };
 
-  // Current and next items
-  const activeItem = contentItems[activeIndex];
-  const nextItemIndex = getNextItemIndex();
-  const nextItem = nextIndex !== null ? contentItems[nextIndex] : null;
+  // Get the current slide and next/prev slide based on direction
+  const currentItem = contentItems[activeIndex];
+  const nextIndex = direction === 'right' 
+    ? (activeIndex + 1) % contentItems.length 
+    : (activeIndex - 1 + contentItems.length) % contentItems.length;
+  const nextItem = contentItems[nextIndex];
 
   return (
     <div 
       className="relative w-full overflow-hidden" 
       onMouseOver={handleMouseOver} 
       onMouseLeave={handleMouseLeave}
+      style={{ backgroundColor: currentItem.color }}
     >
-      {/* Slider container with background color matching active slide */}
-      <div 
-        className={`w-full ${isMobile ? 'h-[520px]' : 'h-[450px]'} relative`}
-        style={{ backgroundColor: activeItem.color }}
-      >
-        {/* Active slide */}
+      {/* Main slider container */}
+      <div className={`relative w-full ${isMobile ? 'h-[520px]' : 'h-[450px]'}`}>
+        {/* Current Slide */}
         <div 
-          className={`absolute inset-0 flex items-center justify-center w-full transition-transform duration-300 ease-in-out
-            ${nextIndex !== null && slideDirection === 'right' ? '-translate-x-full' : ''}
-            ${nextIndex !== null && slideDirection === 'left' ? 'translate-x-full' : ''}
-          `}
+          className={`absolute inset-0 w-full h-full transition-transform duration-300 ease-in-out ${
+            isAnimating 
+              ? direction === 'right' ? '-translate-x-full' : 'translate-x-full' 
+              : 'translate-x-0'
+          }`}
+          style={{ backgroundColor: currentItem.color }}
         >
           {isMobile ? (
-            // Mobile Layout - stacked vertically with improved spacing
-            <div className="container mx-auto px-4 flex flex-col items-center text-center">
-              {/* Poster - 9:16 aspect ratio on mobile with improved top spacing */}
+            // Mobile Layout
+            <div className="container mx-auto px-4 flex flex-col items-center text-center h-full justify-center">
               <div 
                 className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
                 style={{ aspectRatio: '9/16' }}
@@ -168,13 +162,12 @@ export default function Carousel(): JSX.Element {
                 </div>
               </div>
               
-              {/* Content with improved spacing */}
               <div className="w-full px-2 text-white max-w-xs">
                 <h1 className="text-2xl font-bold mb-2">
-                  {activeItem.title}
+                  {currentItem.title}
                 </h1>
                 <p className="text-sm line-clamp-3 mb-6 opacity-90">
-                  {activeItem.description}
+                  {currentItem.description}
                 </p>
                 <button className="px-6 py-2 text-base mb-8 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto">
                   <BiPlay className="mr-2" size={18} />
@@ -183,23 +176,21 @@ export default function Carousel(): JSX.Element {
               </div>
             </div>
           ) : (
-            // Desktop Layout - side-by-side, centered in section
-            <div className="container mx-auto px-4 flex justify-center">
+            // Desktop Layout
+            <div className="container mx-auto px-4 flex justify-center items-center h-full">
               <div className="flex items-center max-w-4xl">
-                {/* Poster */}
                 <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
                   <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
                     Poster
                   </div>
                 </div>
                 
-                {/* Content */}
                 <div className="ml-8 text-white max-w-2xl">
                   <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                    {activeItem.title}
+                    {currentItem.title}
                   </h1>
                   <p className="text-lg mb-6 opacity-90">
-                    {activeItem.description}
+                    {currentItem.description}
                   </p>
                   <button className="px-8 py-3 text-lg bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center">
                     <BiPlay className="mr-2" size={24} />
@@ -210,19 +201,18 @@ export default function Carousel(): JSX.Element {
             </div>
           )}
         </div>
-        
-        {/* Next/Previous slide (for animation) - only rendered during transitions */}
-        {nextIndex !== null && nextItem && (
+
+        {/* Next Slide (for animation) */}
+        {isAnimating && (
           <div 
-            className={`absolute inset-0 flex items-center justify-center w-full transition-transform duration-300 ease-in-out
-              ${slideDirection === 'right' ? 'translate-x-full' : ''}
-              ${slideDirection === 'left' ? '-translate-x-full' : ''}
-            `}
+            className={`absolute inset-0 w-full h-full transition-transform duration-300 ease-in-out ${
+              direction === 'right' ? 'translate-x-full' : '-translate-x-full'
+            }`}
             style={{ backgroundColor: nextItem.color }}
           >
             {isMobile ? (
-              // Mobile Layout for next/prev slide
-              <div className="container mx-auto px-4 flex flex-col items-center text-center">
+              // Mobile Layout for next slide
+              <div className="container mx-auto px-4 flex flex-col items-center text-center h-full justify-center">
                 <div 
                   className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
                   style={{ aspectRatio: '9/16' }}
@@ -231,6 +221,7 @@ export default function Carousel(): JSX.Element {
                     Poster
                   </div>
                 </div>
+                
                 <div className="w-full px-2 text-white max-w-xs">
                   <h1 className="text-2xl font-bold mb-2">
                     {nextItem.title}
@@ -245,14 +236,15 @@ export default function Carousel(): JSX.Element {
                 </div>
               </div>
             ) : (
-              // Desktop Layout for next/prev slide
-              <div className="container mx-auto px-4 flex justify-center">
+              // Desktop Layout for next slide
+              <div className="container mx-auto px-4 flex justify-center items-center h-full">
                 <div className="flex items-center max-w-4xl">
                   <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
                     <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
                       Poster
                     </div>
                   </div>
+                  
                   <div className="ml-8 text-white max-w-2xl">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">
                       {nextItem.title}
@@ -272,18 +264,18 @@ export default function Carousel(): JSX.Element {
         )}
       </div>
 
-      {/* Navigation arrows - always on top */}
+      {/* Navigation arrows */}
       <button
         className={`absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-20`}
         onClick={prevSlide}
-        disabled={nextIndex !== null}
+        disabled={isAnimating}
       >
         <FaChevronLeft size={isMobile ? 16 : 32} />
       </button>
       <button
         className={`absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-20`}
         onClick={nextSlide}
-        disabled={nextIndex !== null}
+        disabled={isAnimating}
       >
         <FaChevronRight size={isMobile ? 16 : 32} />
       </button>
@@ -293,17 +285,12 @@ export default function Carousel(): JSX.Element {
         {contentItems.map((_, index) => (
           <div
             key={index}
+            onClick={() => handleDotClick(index)}
             className={`${
               index === activeIndex
                 ? "bg-[#ff9901] h-2 w-2 md:h-3 md:w-3 rounded-full"
                 : "bg-gray-300 h-2 w-2 md:h-3 md:w-3 rounded-full"
             } mx-1 transition-all duration-500 ease-in-out cursor-pointer`}
-            onClick={() => {
-              if (nextIndex === null) {
-                const direction = index > activeIndex ? 'right' : 'left';
-                goToSlide(index, direction);
-              }
-            }}
           ></div>
         ))}
       </div>
