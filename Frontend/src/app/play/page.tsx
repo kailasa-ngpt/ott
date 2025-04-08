@@ -76,7 +76,7 @@ function PlayContent() {
 
 const Play = () => {
   return (
-    <div className="bg-[#220E0E] text-white font-sans flex flex-col min-h-screen">
+    <div className="bg-white text-gray-800 font-sans flex flex-col min-h-screen">
       <Header />
       <Suspense fallback={<div>Loading video details...</div>}>
         <PlayContent />
