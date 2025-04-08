@@ -1,29 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FaArrowLeft, FaArrowRight, FaPlay } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
-// Define types for our data
-interface Video {
-  id: string;
-  title: string;
-  duration: string;
-  color: string;
-}
-
-interface Playlist {
-  id: string;
-  title: string;
-  videos: Video[];
-}
-
-// Props for the PlaceholderBox component
-interface PlaceholderBoxProps {
-  text: string;
-  color: string;
-}
-
 // Sample data - Replace with your actual data
-const featuredPlaylists: Playlist[] = [
+const featuredPlaylists = [
   {
     id: "playlist1",
     title: "Meditation Techniques",
@@ -80,19 +60,7 @@ const featuredPlaylists: Playlist[] = [
   }
 ];
 
-// Simple placeholder component to replace the image
-const PlaceholderBox: React.FC<PlaceholderBoxProps> = ({ text, color }) => (
-  <div 
-    className="w-full h-full flex items-center justify-center" 
-    style={{ backgroundColor: color }}
-  >
-    <span className="text-white text-sm font-medium text-center px-2">
-      {text}
-    </span>
-  </div>
-);
-
-const FeaturedPlaylists: React.FC = () => {
+const FeaturedPlaylists = () => {
   const router = useRouter();
   const scrollContainerRefs = useRef<Array<HTMLDivElement | null>>([]);
   
@@ -104,6 +72,41 @@ const FeaturedPlaylists: React.FC = () => {
   // State to track hover for each playlist row
   const [hoveredPlaylist, setHoveredPlaylist] = useState<number | null>(null);
   const [playButtonHover, setPlayButtonHover] = useState<string | null>(null);
+  const [scrollPositions, setScrollPositions] = useState<{ start: boolean, end: boolean }[]>(
+    Array(featuredPlaylists.length).fill({ start: true, end: false })
+  );
+
+  // Check scroll positions initially and on scroll
+  useEffect(() => {
+    const updateScrollPositions = (index: number) => {
+      const container = scrollContainerRefs.current[index];
+      if (container) {
+        const atStart = container.scrollLeft <= 10;
+        const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+        
+        setScrollPositions(prev => {
+          const updated = [...prev];
+          updated[index] = { start: atStart, end: atEnd };
+          return updated;
+        });
+      }
+    };
+
+    // Initialize scroll positions and add scroll listeners
+    featuredPlaylists.forEach((_, index) => {
+      updateScrollPositions(index);
+      
+      const container = scrollContainerRefs.current[index];
+      if (container) {
+        const handleScroll = () => updateScrollPositions(index);
+        container.addEventListener('scroll', handleScroll);
+        
+        return () => {
+          container.removeEventListener('scroll', handleScroll);
+        };
+      }
+    });
+  }, []);
 
   const scrollLeft = (index: number) => {
     const container = scrollContainerRefs.current[index];
@@ -177,9 +180,12 @@ const FeaturedPlaylists: React.FC = () => {
               <button
                 onClick={() => scrollLeft(playlistIndex)}
                 className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full w-8 h-8 shadow-md flex items-center justify-center focus:outline-none transition-opacity duration-300 ${
-                  hoveredPlaylist === playlistIndex ? "opacity-80" : "opacity-0"
+                  (hoveredPlaylist === playlistIndex && !scrollPositions[playlistIndex]?.start) 
+                    ? "opacity-80" 
+                    : "opacity-0"
                 }`}
                 aria-label="Scroll left"
+                disabled={scrollPositions[playlistIndex]?.start}
               >
                 <FaArrowLeft className="text-orange-500" />
               </button>
@@ -193,8 +199,16 @@ const FeaturedPlaylists: React.FC = () => {
                 {playlist.videos.map((video) => (
                   <div key={video.id} className="flex-shrink-0 w-44">
                     <div className="aspect-[9/16] w-full rounded-lg overflow-hidden mb-2 bg-gray-100 relative">
-                      {/* Replace the problematic image tag with our custom component */}
-                      <PlaceholderBox text={video.title} color={video.color} />
+                      <div 
+                        className="w-full h-full flex items-center justify-center" 
+                        style={{ backgroundColor: video.color }}
+                      >
+                        <img 
+                          src={`/placeholder-image?text=${encodeURIComponent(video.title)}`} 
+                          alt={video.title}
+                          className="opacity-0 absolute" 
+                        />
+                      </div>
                     </div>
                     <div className="text-left">
                       <p className="text-sm font-medium text-black truncate">{video.title}</p>
@@ -208,17 +222,31 @@ const FeaturedPlaylists: React.FC = () => {
               <button
                 onClick={() => scrollRight(playlistIndex)}
                 className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full w-8 h-8 shadow-md flex items-center justify-center focus:outline-none transition-opacity duration-300 ${
-                  hoveredPlaylist === playlistIndex ? "opacity-80" : "opacity-0"
+                  (hoveredPlaylist === playlistIndex && !scrollPositions[playlistIndex]?.end) 
+                    ? "opacity-80" 
+                    : "opacity-0"
                 }`}
                 aria-label="Scroll right"
+                disabled={scrollPositions[playlistIndex]?.end}
               >
                 <FaArrowRight className="text-orange-500" />
               </button>
               
-              {/* Orange line under each playlist - only for first and second playlists */}
-              {playlistIndex < 2 && (
-                <div className="h-1 w-full mt-2 bg-orange-500 rounded-full"></div>
-              )}
+              {/* Scroll indicator track */}
+              <div className="h-1 w-full mt-2 bg-gray-200 rounded-full overflow-hidden">
+                {/* Scroll indicator thumb - dynamic width based on scroll position */}
+                <div className="h-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] rounded-full"
+                  style={{
+                    width: scrollContainerRefs.current[playlistIndex] 
+                      ? `${Math.min(100, (scrollContainerRefs.current[playlistIndex]!.clientWidth / scrollContainerRefs.current[playlistIndex]!.scrollWidth) * 100)}%`
+                      : '20%',
+                    transform: scrollContainerRefs.current[playlistIndex]
+                      ? `translateX(${(scrollContainerRefs.current[playlistIndex]!.scrollLeft / (scrollContainerRefs.current[playlistIndex]!.scrollWidth - scrollContainerRefs.current[playlistIndex]!.clientWidth)) * 100 * (1 - (scrollContainerRefs.current[playlistIndex]!.clientWidth / scrollContainerRefs.current[playlistIndex]!.scrollWidth))}%)`
+                      : 'translateX(0%)',
+                    transition: 'transform 0.1s ease-out'
+                  }}
+                />
+              </div>
             </div>
           </div>
         ))}
