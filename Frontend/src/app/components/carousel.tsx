@@ -111,7 +111,7 @@ export default function Carousel(): JSX.Element {
       onMouseLeave={handleMouseLeave}
     >
       <div 
-        className={`w-full flex items-center justify-center ${isMobile ? 'h-[520px] pt-0' : 'h-[450px]'}`}
+        className={`w-full flex items-center justify-center ${isMobile ? 'h-[520px] pt-0' : 'h-[450px]'} transition-transform duration-500 ease-in-out transform -translate-x-${currentIndex * 100}`}
         style={{ backgroundColor: currentItem.color }}
       >
         {isMobile ? (
