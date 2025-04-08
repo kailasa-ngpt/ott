@@ -111,15 +111,15 @@ export default function Carousel(): JSX.Element {
       onMouseLeave={handleMouseLeave}
     >
       <div 
-        className={`w-full flex items-center justify-center ${isMobile ? 'h-[500px] pt-0' : 'h-[450px]'}`}
+        className={`w-full flex items-center justify-center ${isMobile ? 'h-[520px] pt-0' : 'h-[450px]'}`}
         style={{ backgroundColor: currentItem.color }}
       >
         {isMobile ? (
-          // Mobile Layout - stacked vertically
+          // Mobile Layout - stacked vertically with improved spacing
           <div className="container mx-auto px-4 flex flex-col items-center text-center">
-            {/* Poster - 9:16 aspect ratio on mobile */}
+            {/* Poster - 9:16 aspect ratio on mobile with improved top spacing */}
             <div 
-              className="w-[180px] mb-4 mt-6 bg-gray-100 flex-shrink-0 shadow-lg"
+              className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
               style={{ aspectRatio: '9/16' }}
             >
               <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
@@ -127,15 +127,15 @@ export default function Carousel(): JSX.Element {
               </div>
             </div>
             
-            {/* Content */}
+            {/* Content with improved spacing */}
             <div className="w-full px-2 text-white max-w-xs">
               <h1 className="text-2xl font-bold mb-2">
                 {currentItem.title}
               </h1>
-              <p className="text-sm line-clamp-3 mb-4 opacity-90">
+              <p className="text-sm line-clamp-3 mb-6 opacity-90">
                 {currentItem.description}
               </p>
-              <button className="px-6 py-2 text-base mb-4 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto">
+              <button className="px-6 py-2 text-base mb-8 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto">
                 <BiPlay className="mr-2" size={18} />
                 Watch Now
               </button>
