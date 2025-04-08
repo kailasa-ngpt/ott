@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, JSX } from "react";
+import { useState, useEffect, JSX, useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { BiPlay } from "react-icons/bi";
 
@@ -42,7 +42,11 @@ const contentItems: ContentData[] = [
 export default function Carousel(): JSX.Element {
   // State to keep track of the current item index
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-
+  // State to track the direction of slide animation
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
+  // State to control slide animation
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  
   // State to determine if the carousel is being hovered over
   const [isHovered, setIsHovered] = useState<boolean>(false);
   
@@ -65,22 +69,40 @@ export default function Carousel(): JSX.Element {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Function to show the previous slide
+  // Function to show the previous slide with animation
   const prevSlide = (): void => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + contentItems.length) % contentItems.length
-    );
+    if (isAnimating) return; // Prevent multiple clicks during animation
+    
+    setSlideDirection('left');
+    setIsAnimating(true);
+    
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) => (prevIndex - 1 + contentItems.length) % contentItems.length);
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 50); // Small delay to ensure state is updated properly
+    }, 300); // Match this with the CSS transition duration
   };
 
-  // Function to show the next slide
+  // Function to show the next slide with animation
   const nextSlide = (): void => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % contentItems.length);
+    if (isAnimating) return; // Prevent multiple clicks during animation
+    
+    setSlideDirection('right');
+    setIsAnimating(true);
+    
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % contentItems.length);
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 50); // Small delay to ensure state is updated properly
+    }, 300); // Match this with the CSS transition duration
   };
 
   // useEffect hook to handle automatic slide transition
   useEffect(() => {
-    // Start interval for automatic slide change if not hovered
-    if (!isHovered) {
+    // Start interval for automatic slide change if not hovered and not currently animating
+    if (!isHovered && !isAnimating) {
       const interval = setInterval(() => {
         nextSlide();
       }, 5000);
@@ -90,7 +112,7 @@ export default function Carousel(): JSX.Element {
         clearInterval(interval);
       };
     }
-  }, [isHovered]);
+  }, [isHovered, isAnimating]);
 
   // Handle mouse over event
   const handleMouseOver = (): void => {
@@ -106,80 +128,173 @@ export default function Carousel(): JSX.Element {
 
   return (
     <div 
-      className="relative w-full" 
+      className="relative w-full overflow-hidden" 
       onMouseOver={handleMouseOver} 
       onMouseLeave={handleMouseLeave}
     >
+      {/* Animated slider container */}
       <div 
-        className={`w-full flex items-center justify-center ${isMobile ? 'h-[520px] pt-0' : 'h-[450px]'} transition-transform duration-500 ease-in-out transform -translate-x-${currentIndex * 100}`}
-        style={{ backgroundColor: currentItem.color }}
+        className={`w-full ${isMobile ? 'h-[520px]' : 'h-[450px]'} relative`}
       >
-        {isMobile ? (
-          // Mobile Layout - stacked vertically with improved spacing
-          <div className="container mx-auto px-4 flex flex-col items-center text-center">
-            {/* Poster - 9:16 aspect ratio on mobile with improved top spacing */}
-            <div 
-              className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
-              style={{ aspectRatio: '9/16' }}
-            >
-              <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
-                Poster
-              </div>
-            </div>
-            
-            {/* Content with improved spacing */}
-            <div className="w-full px-2 text-white max-w-xs">
-              <h1 className="text-2xl font-bold mb-2">
-                {currentItem.title}
-              </h1>
-              <p className="text-sm line-clamp-3 mb-6 opacity-90">
-                {currentItem.description}
-              </p>
-              <button className="px-6 py-2 text-base mb-8 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto">
-                <BiPlay className="mr-2" size={18} />
-                Watch Now
-              </button>
-            </div>
-          </div>
-        ) : (
-          // Desktop Layout - side-by-side, centered in section
-          <div className="container mx-auto px-4 flex justify-center">
-            <div className="flex items-center max-w-4xl">
-              {/* Poster */}
-              <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
+        {/* Current slide */}
+        <div 
+          className={`absolute inset-0 flex items-center justify-center w-full transition-transform duration-300 ease-in-out z-10
+            ${isAnimating && slideDirection === 'right' ? '-translate-x-full' : ''}
+            ${isAnimating && slideDirection === 'left' ? 'translate-x-full' : ''}
+          `}
+          style={{ backgroundColor: currentItem.color }}
+        >
+          {isMobile ? (
+            // Mobile Layout - stacked vertically with improved spacing
+            <div className="container mx-auto px-4 flex flex-col items-center text-center">
+              {/* Poster - 9:16 aspect ratio on mobile with improved top spacing */}
+              <div 
+                className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
+                style={{ aspectRatio: '9/16' }}
+              >
                 <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
                   Poster
                 </div>
               </div>
               
-              {/* Content */}
-              <div className="ml-8 text-white max-w-2xl">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              {/* Content with improved spacing */}
+              <div className="w-full px-2 text-white max-w-xs">
+                <h1 className="text-2xl font-bold mb-2">
                   {currentItem.title}
                 </h1>
-                <p className="text-lg mb-6 opacity-90">
+                <p className="text-sm line-clamp-3 mb-6 opacity-90">
                   {currentItem.description}
                 </p>
-                <button className="px-8 py-3 text-lg bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center">
-                  <BiPlay className="mr-2" size={24} />
+                <button className="px-6 py-2 text-base mb-8 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto">
+                  <BiPlay className="mr-2" size={18} />
                   Watch Now
                 </button>
               </div>
             </div>
+          ) : (
+            // Desktop Layout - side-by-side, centered in section
+            <div className="container mx-auto px-4 flex justify-center">
+              <div className="flex items-center max-w-4xl">
+                {/* Poster */}
+                <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
+                  <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
+                    Poster
+                  </div>
+                </div>
+                
+                {/* Content */}
+                <div className="ml-8 text-white max-w-2xl">
+                  <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                    {currentItem.title}
+                  </h1>
+                  <p className="text-lg mb-6 opacity-90">
+                    {currentItem.description}
+                  </p>
+                  <button className="px-8 py-3 text-lg bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center">
+                    <BiPlay className="mr-2" size={24} />
+                    Watch Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {/* Next/Previous slide (for animation) */}
+        {isAnimating && (
+          <div 
+            className={`absolute inset-0 flex items-center justify-center w-full transition-transform duration-300 ease-in-out
+              ${slideDirection === 'right' ? 'translate-x-full' : ''}
+              ${slideDirection === 'left' ? '-translate-x-full' : ''}
+            `}
+            style={{ 
+              backgroundColor: contentItems[
+                slideDirection === 'right' 
+                  ? (currentIndex + 1) % contentItems.length 
+                  : (currentIndex - 1 + contentItems.length) % contentItems.length
+              ].color 
+            }}
+          >
+            {isMobile ? (
+              // Mobile Layout for next/prev slide
+              <div className="container mx-auto px-4 flex flex-col items-center text-center">
+                <div 
+                  className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
+                  style={{ aspectRatio: '9/16' }}
+                >
+                  <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
+                    Poster
+                  </div>
+                </div>
+                <div className="w-full px-2 text-white max-w-xs">
+                  <h1 className="text-2xl font-bold mb-2">
+                    {contentItems[
+                      slideDirection === 'right' 
+                        ? (currentIndex + 1) % contentItems.length 
+                        : (currentIndex - 1 + contentItems.length) % contentItems.length
+                    ].title}
+                  </h1>
+                  <p className="text-sm line-clamp-3 mb-6 opacity-90">
+                    {contentItems[
+                      slideDirection === 'right' 
+                        ? (currentIndex + 1) % contentItems.length 
+                        : (currentIndex - 1 + contentItems.length) % contentItems.length
+                    ].description}
+                  </p>
+                  <button className="px-6 py-2 text-base mb-8 bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center justify-center mx-auto">
+                    <BiPlay className="mr-2" size={18} />
+                    Watch Now
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // Desktop Layout for next/prev slide
+              <div className="container mx-auto px-4 flex justify-center">
+                <div className="flex items-center max-w-4xl">
+                  <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
+                    <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
+                      Poster
+                    </div>
+                  </div>
+                  <div className="ml-8 text-white max-w-2xl">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                      {contentItems[
+                        slideDirection === 'right' 
+                          ? (currentIndex + 1) % contentItems.length 
+                          : (currentIndex - 1 + contentItems.length) % contentItems.length
+                      ].title}
+                    </h1>
+                    <p className="text-lg mb-6 opacity-90">
+                      {contentItems[
+                        slideDirection === 'right' 
+                          ? (currentIndex + 1) % contentItems.length 
+                          : (currentIndex - 1 + contentItems.length) % contentItems.length
+                      ].description}
+                    </p>
+                    <button className="px-8 py-3 text-lg bg-gradient-to-r from-[#ff9901] to-[#ff7801] text-white font-bold rounded-md flex items-center">
+                      <BiPlay className="mr-2" size={24} />
+                      Watch Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {/* Navigation arrows */}
       <button
-        className={`absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-10`}
+        className={`absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-20`}
         onClick={prevSlide}
+        disabled={isAnimating}
       >
         <FaChevronLeft size={isMobile ? 16 : 32} />
       </button>
       <button
-        className={`absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-10`}
+        className={`absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-20`}
         onClick={nextSlide}
+        disabled={isAnimating}
       >
         <FaChevronRight size={isMobile ? 16 : 32} />
       </button>
@@ -194,7 +309,12 @@ export default function Carousel(): JSX.Element {
                 ? "bg-[#ff9901] h-2 w-2 md:h-3 md:w-3 rounded-full"
                 : "bg-gray-300 h-2 w-2 md:h-3 md:w-3 rounded-full"
             } mx-1 transition-all duration-500 ease-in-out cursor-pointer`}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => {
+              if (!isAnimating) {
+                setSlideDirection(index > currentIndex ? 'right' : 'left');
+                setCurrentIndex(index);
+              }
+            }}
           ></div>
         ))}
       </div>
