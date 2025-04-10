@@ -52,13 +52,20 @@ export const deletePlaylist = async (id: string): Promise<boolean> => {
     }
 };
 
-export const addVideoToPlaylist = async (playlistId: string, videoId: string): Promise<IPlaylist | null> => {
+export const addVideoToPlaylist = async (playlistId: string, video: {
+    id: string;
+    thumbnail: string;
+    videoTitle: string;
+    videoLink: string;
+    createdDate: string;
+    views: number;
+}): Promise<IPlaylist | null> => {
     try {
         return await Playlist.findByIdAndUpdate(
             playlistId,
-            { $addToSet: { videos: videoId } },
+            { $addToSet: { videos: video } },
             { new: true }
-        ).populate('videos');
+        );
     } catch (error) {
         throw new Error('Error adding video to playlist');
     }
@@ -68,9 +75,9 @@ export const removeVideoFromPlaylist = async (playlistId: string, videoId: strin
     try {
         return await Playlist.findByIdAndUpdate(
             playlistId,
-            { $pull: { videos: videoId } },
+            { $pull: { videos: { id: videoId } } },
             { new: true }
-        ).populate('videos');
+        );
     } catch (error) {
         throw new Error('Error removing video from playlist');
     }
@@ -78,7 +85,9 @@ export const removeVideoFromPlaylist = async (playlistId: string, videoId: strin
 
 export const getPlaylistsByIds = async (ids: string[]): Promise<IPlaylist[]> => {
     try {
+        console.log('Fetching playlists with IDs:', ids);
         const playlists = await Playlist.find({ id: { $in: ids } });
+        console.log('Found playlists:', playlists);
         return playlists;
     } catch (error) {
         console.error('Error fetching playlists by IDs:', error);

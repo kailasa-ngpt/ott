@@ -67,7 +67,13 @@ export const deletePlaylist = async (req: Request, res: Response): Promise<void>
 // Add a video to a playlist
 export const addVideoToPlaylist = async (req: Request, res: Response): Promise<void> => {
     try {
-        const playlist = await playlistService.addVideoToPlaylist(req.params.id, req.body.videoId);
+        const { video } = req.body;
+        if (!video || !video.id || !video.thumbnail || !video.videoTitle || !video.videoLink || !video.createdDate || typeof video.views !== 'number') {
+            res.status(400).json({ message: 'Invalid video object provided' });
+            return;
+        }
+        
+        const playlist = await playlistService.addVideoToPlaylist(req.params.id, video);
         if (!playlist) {
             res.status(404).json({ message: 'Playlist not found' });
             return;
@@ -81,7 +87,13 @@ export const addVideoToPlaylist = async (req: Request, res: Response): Promise<v
 // Remove a video from a playlist
 export const removeVideoFromPlaylist = async (req: Request, res: Response): Promise<void> => {
     try {
-        const playlist = await playlistService.removeVideoFromPlaylist(req.params.id, req.params.videoId);
+        const { videoId } = req.params;
+        if (!videoId) {
+            res.status(400).json({ message: 'No video ID provided' });
+            return;
+        }
+        
+        const playlist = await playlistService.removeVideoFromPlaylist(req.params.id, videoId);
         if (!playlist) {
             res.status(404).json({ message: 'Playlist not found' });
             return;
@@ -99,19 +111,10 @@ export const getAllVideosByPlaylists = async (req: Request, res: Response): Prom
     try {
         const playlists = await playlistService.getAllPlaylists();
         
-        const results = [];
-
-        for (const playlist of playlists) {
-            const videoObjects = [];
-            for (const videoId of playlist.videos) {
-                const video = await videoService.getVideoById(videoId);
-                videoObjects.push(video);
-            }
-            results.push({
-                playlist,
-                videos: videoObjects
-            });
-        }
+        const results = playlists.map(playlist => ({
+            playlist,
+            videos: playlist.videos
+        }));
 
         res.status(200).json({
             success: true,

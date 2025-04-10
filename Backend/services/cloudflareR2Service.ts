@@ -322,3 +322,68 @@ const testVideoIds = async () => {
 
 // Uncomment to run the test
 // testVideoIds().catch(console.error);
+
+export const testR2Connection = async () => {
+    try {
+        console.log('Testing R2 connection with parameters:');
+        console.log('Endpoint:', ENDPOINT_URL);
+        console.log('Bucket:', BUCKET_NAME);
+        
+        const command = new ListObjectsV2Command({
+            Bucket: BUCKET_NAME
+        });
+
+        const response = await s3Client.send(command);
+        console.log('Connection successful!');
+        console.log('Found objects:', response.Contents?.length || 0);
+        console.log('First few objects:', response.Contents?.slice(0, 3));
+        
+        return {
+            success: true,
+            bucket: BUCKET_NAME,
+            endpoint: ENDPOINT_URL,
+            objectCount: response.Contents?.length || 0
+        };
+    } catch (error) {
+        console.error('R2 connection test failed:', error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
+};
+
+// Add this at the bottom to run the test
+testR2Connection().then(console.log).catch(console.error);
+
+export const testVideoAccess = async (videoId: string) => {
+    try {
+        const videoUrl = `https://${BUCKET_NAME}.${ENDPOINT_URL.split('//')[1]}/${videoId}/master.m3u8`;
+        console.log('Testing video URL:', videoUrl);
+        
+        const response = await fetch(videoUrl);
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
+        if (response.ok) {
+            const content = await response.text();
+            console.log('Master playlist content:', content);
+            return {
+                success: true,
+                url: videoUrl,
+                content: content
+            };
+        } else {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error testing video access:', error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error'
+        };
+    }
+};
+
+// Test with a known video ID
+testVideoAccess('-23ixHuyjtE').then(console.log).catch(console.error);

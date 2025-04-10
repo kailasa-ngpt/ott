@@ -5,7 +5,14 @@ export interface IPlaylist extends Document {
     name: string;
     description: string;
     thumbnailPath: string;
-    videos: string[]; // Array of video IDs
+    videos: {
+        id: string;
+        thumbnail: string;
+        videoTitle: string;
+        videoLink: string;
+        createdDate: string;
+        views: number;
+    }[]
     createdDate: string;
     updatedDate: string;
 }
@@ -31,7 +38,31 @@ const playlistSchema = new Schema({
         required: true
     },
     videos: [{
-        type: String
+        id: {
+            type: String,
+            required: true
+        },
+        thumbnail: {
+            type: String,
+            required: true
+        },
+        videoTitle: {
+            type: String,
+            required: true
+        },
+        videoLink: {
+            type: String,
+            required: true
+        },
+        createdDate: {
+            type: String,
+            required: true
+        },
+        views: {
+            type: Number,
+            required: true,
+            default: 0
+        }
     }],
     createdDate: {
         type: String,

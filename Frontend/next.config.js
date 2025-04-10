@@ -10,6 +10,16 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'ea4b278dc87ae2346b7f5b8f453c97c4.r2.cloudflarestorage.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+    domains: [
+      'ntv-ott.ea4b278dc87ae2346b7f5b8f453c97c4.r2.cloudflarestorage.com',
+      'ea4b278dc87ae2346b7f5b8f453c97c4.r2.cloudflarestorage.com'
     ],
   },
 };

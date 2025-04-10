@@ -5,113 +5,109 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 interface VideoSliderProps {
   category: string;
-  videos: IVideo[]; // Data is passed as a prop
+  videos?: {
+    id: string;
+    thumbnail: string;
+    videoTitle: string;
+    videoLink: string;
+    createdDate: string;
+    views: number;
+  }[];
 }
 
-interface IVideo {
-  Id: number;
-  video_id: string;
-  CreatedAt: string;
-  UpdatedAt: string;
-  title: string;
-  description: string;
-  thumbnail_id: string;
-  video_m3u8_id: string;
-  duration_secs: number | null;
-  delivered_date: string | null;
-  uploaded_date: string | null;
-}
-
-const VideoSlider: React.FC<VideoSliderProps> = ({category, videos}) => {
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const [showControls, setShowControls] = useState(false);
+const VideoSlider: React.FC<VideoSliderProps> = ({category, videos = []}) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
 
   const scrollLeft = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: -300, behavior: "smooth" });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: -300,
+        behavior: 'smooth'
+      });
     }
   };
 
   const scrollRight = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: 300, behavior: "smooth" });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: 300,
+        behavior: 'smooth'
+      });
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollContainerRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        setShowLeftArrow(scrollLeft > 0);
+        setShowRightArrow(scrollLeft < scrollWidth - clientWidth);
+      }
+    };
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      handleScroll(); // Initial check
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
   return (
-    <div className="mt-4 w-full">
-      <div className="w-full flex flex-col items-start">
-        <h2 className="text-xl font-bold mt-1">{convertToTitleCase(category || '')}</h2>
-        <hr className="w-full border-gray-300 my-2" />
-      </div>
-      <div 
-        className="relative w-full"
-        onMouseEnter={() => setShowControls(true)}
-        onMouseLeave={() => setShowControls(false)}
-      >
-        {/* Left Scroll Button */}
-        <button
-          onClick={scrollLeft}
-          className={`absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent text-black p-2 w-10 h-10 rounded-full z-10 transition-opacity duration-300 ${
-            showControls ? "opacity-80" : "opacity-0"
-          }`}
+    <div className="mb-8">
+      <h2 className="text-2xl font-bold mb-4">{convertToTitleCase(category)}</h2>
+      <div className="relative">
+        {showLeftArrow && (
+          <button
+            onClick={scrollLeft}
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full z-10"
+          >
+            <FaArrowLeft />
+          </button>
+        )}
+        <div
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto space-x-4 scrollbar-hide"
         >
-          <FaArrowLeft size={24} />
-        </button>
-
-        {/* Video Slider */}
-        <div 
-          ref={sliderRef} 
-          className="video-slider flex gap-4 overflow-x-auto scroll-smooth py-4 px-0 w-full"
-        >
-          {videos && videos.length > 0 ? (
-            videos.map((video, index) => (
-              <div key={index} className="flex-shrink-0 w-80">
-                <Video
-                  thumbnailPath={video?.thumbnail_id || ''}
-                  videoTitle={video?.title || 'Untitled Video'}
-                  videoLink={video?.video_m3u8_id || '#'}
-                  deliveredDate={video?.delivered_date || null}
-                  description={video?.description || ''}
-                  isLive={false}
-                />
-              </div>
-            ))
-          ) : (
-            <div className="flex-shrink-0 w-80">
-              <div className="w-full h-48 bg-gray-200 rounded-xl flex items-center justify-center text-gray-600">
-                No videos available
-              </div>
+          {videos.map((video) => (
+            <div key={video.id} className="flex-none w-64">
+              <Video 
+                thumbnailPath={video.thumbnail}
+                videoTitle={video.videoTitle}
+                videoLink={video.videoLink}
+                deliveredDate={video.createdDate}
+                description={`${video.views} views`}
+                isLive={false}
+              />
             </div>
-          )}
+          ))}
         </div>
-
-        {/* Right Scroll Button */}
-        <button
-          onClick={scrollRight}
-          className={`absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent text-black p-2 w-10 h-10 rounded-full z-10 transition-opacity duration-300 ${
-            showControls ? "opacity-80" : "opacity-0"
-          }`}
-        >
-          <FaArrowRight size={24} />
-        </button>
+        {showRightArrow && (
+          <button
+            onClick={scrollRight}
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full z-10"
+          >
+            <FaArrowRight />
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
-const convertToTitleCase = (str: string): string => {
-  if (str.includes('-') || str.includes(' ')) 
-  {
-    return str
+const convertToTitleCase = (str: string | undefined | null): string => {
+  if (!str) return '';
+  return str
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
-  }
-  else
-  {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
 };
 
 export default VideoSlider;
