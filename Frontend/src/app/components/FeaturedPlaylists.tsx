@@ -82,7 +82,8 @@ const FeaturedPlaylists = () => {
       const container = scrollContainerRefs.current[index];
       if (container) {
         const atStart = container.scrollLeft <= 10;
-        const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+        // More strict check for end position - consider it at end when very close
+        const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
         
         setScrollPositions(prev => {
           const updated = [...prev];
@@ -241,7 +242,11 @@ const FeaturedPlaylists = () => {
                       ? `${Math.min(100, (scrollContainerRefs.current[playlistIndex]!.clientWidth / scrollContainerRefs.current[playlistIndex]!.scrollWidth) * 100)}%`
                       : '20%',
                     transform: scrollContainerRefs.current[playlistIndex]
-                      ? `translateX(${(scrollContainerRefs.current[playlistIndex]!.scrollLeft / (scrollContainerRefs.current[playlistIndex]!.scrollWidth - scrollContainerRefs.current[playlistIndex]!.clientWidth)) * 100 * (1 - (scrollContainerRefs.current[playlistIndex]!.clientWidth / scrollContainerRefs.current[playlistIndex]!.scrollWidth))}%)`
+                      ? `translateX(${
+                          scrollPositions[playlistIndex]?.end 
+                            ? '100%' // Force 100% position when at the end
+                            : (scrollContainerRefs.current[playlistIndex]!.scrollLeft / (scrollContainerRefs.current[playlistIndex]!.scrollWidth - scrollContainerRefs.current[playlistIndex]!.clientWidth)) * 100 * (1 - (scrollContainerRefs.current[playlistIndex]!.clientWidth / scrollContainerRefs.current[playlistIndex]!.scrollWidth)) + '%'
+                        })`
                       : 'translateX(0%)',
                     transition: 'transform 0.1s ease-out'
                   }}
