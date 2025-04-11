@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { FaPlay } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
@@ -87,6 +87,31 @@ const FeaturedPlaylists = () => {
           </button>
         </div>
 
+        {/* CSS for custom scrollbar (add directly in the component) */}
+        <style jsx global>{`
+          /* Custom scrollbar styles */
+          .orange-scrollbar::-webkit-scrollbar {
+            height: 4px;
+            background-color: transparent;
+          }
+          
+          .orange-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(to right, #ff9901, #ff7801);
+            border-radius: 4px;
+          }
+          
+          .orange-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+          }
+          
+          /* For Firefox */
+          .orange-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #ff9901 #f1f1f1;
+          }
+        `}</style>
+
         {featuredPlaylists.map((playlist) => (
           <div key={playlist.id} className="mb-8">
             <div className="flex items-center mb-4">
@@ -107,9 +132,9 @@ const FeaturedPlaylists = () => {
               </button>
             </div>
             
-            {/* Simple scrollable container with orange line indicator */}
-            <div className="w-full mb-1">
-              <div className="flex overflow-x-auto scrollbar-hide pb-4 space-x-4">
+            {/* Scrollable container with orange scrollbar */}
+            <div className="orange-scrollbar overflow-x-auto pb-2 mb-2">
+              <div className="flex space-x-4">
                 {playlist.videos.map((video) => (
                   <div key={video.id} className="flex-shrink-0 w-44">
                     <div className="aspect-[9/16] w-full rounded-lg overflow-hidden mb-2 bg-gray-100 relative">
@@ -127,9 +152,6 @@ const FeaturedPlaylists = () => {
                   </div>
                 ))}
               </div>
-              
-              {/* Simple orange gradient line */}
-              <div className="h-1 w-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] rounded-full"></div>
             </div>
           </div>
         ))}
