@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { FaArrowLeft, FaArrowRight, FaPlay } from 'react-icons/fa';
+import React, { useState, useRef } from 'react';
+import { FaPlay } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
 // Sample data - Replace with your actual data
@@ -62,90 +62,7 @@ const featuredPlaylists = [
 
 const FeaturedPlaylists = () => {
   const router = useRouter();
-  const scrollContainerRefs = useRef<Array<HTMLDivElement | null>>([]);
-  
-  // Initialize refs array
-  if (!scrollContainerRefs.current.length) {
-    scrollContainerRefs.current = Array(featuredPlaylists.length).fill(null);
-  }
-
-  // State to track hover for each playlist row
-  const [hoveredPlaylist, setHoveredPlaylist] = useState<number | null>(null);
   const [playButtonHover, setPlayButtonHover] = useState<string | null>(null);
-  const [scrollPositions, setScrollPositions] = useState<{ start: boolean, end: boolean }[]>(
-    Array(featuredPlaylists.length).fill({ start: true, end: false })
-  );
-
-  // Check scroll positions initially and on scroll
-  useEffect(() => {
-    const updateScrollPositions = (index: number) => {
-      const container = scrollContainerRefs.current[index];
-      if (container) {
-        const atStart = container.scrollLeft <= 5;
-        // More strict check for end position with extra buffer for mobile
-        const maxScroll = container.scrollWidth - container.clientWidth;
-        const atEnd = Math.abs(container.scrollLeft - maxScroll) <= 5 || container.scrollLeft >= maxScroll;
-        
-        setScrollPositions(prev => {
-          const updated = [...prev];
-          updated[index] = { start: atStart, end: atEnd };
-          return updated;
-        });
-      }
-    };
-
-    // Initialize scroll positions and add scroll listeners
-    featuredPlaylists.forEach((_, index) => {
-      updateScrollPositions(index);
-      
-      const container = scrollContainerRefs.current[index];
-      if (container) {
-        const handleScroll = () => updateScrollPositions(index);
-        container.addEventListener('scroll', handleScroll);
-        
-        return () => {
-          container.removeEventListener('scroll', handleScroll);
-        };
-      }
-    });
-  }, []);
-
-  // Recalculate scroll positions on window resize
-  useEffect(() => {
-    const handleResize = () => {
-      featuredPlaylists.forEach((_, index) => {
-        const container = scrollContainerRefs.current[index];
-        if (container) {
-          const atStart = container.scrollLeft <= 5;
-          const maxScroll = container.scrollWidth - container.clientWidth;
-          const atEnd = Math.abs(container.scrollLeft - maxScroll) <= 5 || container.scrollLeft >= maxScroll;
-          
-          setScrollPositions(prev => {
-            const updated = [...prev];
-            updated[index] = { start: atStart, end: atEnd };
-            return updated;
-          });
-        }
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const scrollLeft = (index: number) => {
-    const container = scrollContainerRefs.current[index];
-    if (container) {
-      container.scrollBy({ left: -300, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = (index: number) => {
-    const container = scrollContainerRefs.current[index];
-    if (container) {
-      container.scrollBy({ left: 300, behavior: 'smooth' });
-    }
-  };
 
   const handleViewAll = () => {
     router.push('/playlists');
@@ -154,11 +71,6 @@ const FeaturedPlaylists = () => {
   const handlePlayAll = (playlistId: string) => {
     // Add logic to play all videos in the playlist
     console.log(`Playing all videos in playlist: ${playlistId}`);
-  };
-
-  // Function to set ref correctly with TypeScript
-  const setScrollContainerRef = (el: HTMLDivElement | null, index: number) => {
-    scrollContainerRefs.current[index] = el;
   };
 
   return (
@@ -175,13 +87,8 @@ const FeaturedPlaylists = () => {
           </button>
         </div>
 
-        {featuredPlaylists.map((playlist, playlistIndex) => (
-          <div 
-            key={playlist.id} 
-            className="mb-8"
-            onMouseEnter={() => setHoveredPlaylist(playlistIndex)}
-            onMouseLeave={() => setHoveredPlaylist(null)}
-          >
+        {featuredPlaylists.map((playlist) => (
+          <div key={playlist.id} className="mb-8">
             <div className="flex items-center mb-4">
               <h2 className="text-xl font-bold text-black mr-4">{playlist.title}</h2>
               
@@ -200,27 +107,9 @@ const FeaturedPlaylists = () => {
               </button>
             </div>
             
-            <div className="relative">
-              {/* Left scroll button */}
-              <button
-                onClick={() => scrollLeft(playlistIndex)}
-                className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full w-8 h-8 shadow-md flex items-center justify-center focus:outline-none transition-opacity duration-300 ${
-                  (hoveredPlaylist === playlistIndex && !scrollPositions[playlistIndex]?.start) 
-                    ? "opacity-80" 
-                    : "opacity-0"
-                }`}
-                aria-label="Scroll left"
-                disabled={scrollPositions[playlistIndex]?.start}
-              >
-                <FaArrowLeft className="text-orange-500" />
-              </button>
-              
-              {/* Scrollable container for videos */}
-              <div
-                ref={(el) => setScrollContainerRef(el, playlistIndex)}
-                className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 scroll-smooth"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
+            {/* Simple scrollable container with orange line indicator */}
+            <div className="w-full mb-1">
+              <div className="flex overflow-x-auto scrollbar-hide pb-4 space-x-4">
                 {playlist.videos.map((video) => (
                   <div key={video.id} className="flex-shrink-0 w-44">
                     <div className="aspect-[9/16] w-full rounded-lg overflow-hidden mb-2 bg-gray-100 relative">
@@ -228,11 +117,7 @@ const FeaturedPlaylists = () => {
                         className="w-full h-full flex items-center justify-center" 
                         style={{ backgroundColor: video.color }}
                       >
-                        <img 
-                          src={`/placeholder-image?text=${encodeURIComponent(video.title)}`} 
-                          alt={video.title}
-                          className="opacity-0 absolute" 
-                        />
+                        <span className="text-gray-700">{video.title}</span>
                       </div>
                     </div>
                     <div className="text-left">
@@ -243,39 +128,8 @@ const FeaturedPlaylists = () => {
                 ))}
               </div>
               
-              {/* Right scroll button */}
-              <button
-                onClick={() => scrollRight(playlistIndex)}
-                className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full w-8 h-8 shadow-md flex items-center justify-center focus:outline-none transition-opacity duration-300 ${
-                  (hoveredPlaylist === playlistIndex && !scrollPositions[playlistIndex]?.end) 
-                    ? "opacity-80" 
-                    : "opacity-0"
-                }`}
-                aria-label="Scroll right"
-                disabled={scrollPositions[playlistIndex]?.end}
-              >
-                <FaArrowRight className="text-orange-500" />
-              </button>
-              
-              {/* Scroll indicator track */}
-              <div className="h-1 w-full mt-2 bg-gray-200 rounded-full overflow-hidden">
-                {/* Scroll indicator thumb - dynamic width based on scroll position */}
-                <div className="h-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] rounded-full"
-                  style={{
-                    width: scrollContainerRefs.current[playlistIndex] 
-                      ? `${Math.min(100, (scrollContainerRefs.current[playlistIndex]!.clientWidth / scrollContainerRefs.current[playlistIndex]!.scrollWidth) * 100)}%`
-                      : '20%',
-                    transform: scrollContainerRefs.current[playlistIndex]
-                      ? scrollPositions[playlistIndex]?.end 
-                          ? 'translateX(100%)' // Force to end when at the end (100% - width)
-                          : scrollPositions[playlistIndex]?.start
-                            ? 'translateX(0%)' // Force to start when at the start
-                            : `translateX(${(scrollContainerRefs.current[playlistIndex]!.scrollLeft / (scrollContainerRefs.current[playlistIndex]!.scrollWidth - scrollContainerRefs.current[playlistIndex]!.clientWidth)) * 100 * (1 - (scrollContainerRefs.current[playlistIndex]!.clientWidth / scrollContainerRefs.current[playlistIndex]!.scrollWidth))}%)`
-                      : 'translateX(0%)',
-                    transition: 'transform 0.1s ease-out'
-                  }}
-                />
-              </div>
+              {/* Simple orange gradient line */}
+              <div className="h-1 w-full bg-gradient-to-r from-[#ff9901] to-[#ff7801] rounded-full"></div>
             </div>
           </div>
         ))}
