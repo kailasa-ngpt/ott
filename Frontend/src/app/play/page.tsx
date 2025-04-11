@@ -6,7 +6,7 @@ import Header from "../shared/header";
 import Player from "../components/player";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import LiveChat from "../components/livechat";
+// import LiveChat from "../components/livechat";
 
 interface IVideoData {
   videoLink: string;
@@ -66,7 +66,7 @@ function PlayContent() {
         </div>
         {videoData.isLive && (
           <div className="w-2/5 ml-4 flex-grow flex-shrink flex-col max-h-200px">
-            <LiveChat />
+            {/* <LiveChat /> */}
           </div>
         )}
       </div>
