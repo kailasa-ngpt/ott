@@ -16,7 +16,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://ott-backend.koogle.sk']
+    origin: ['http://localhost:3000', 'https://ott-frontend.koogle.sk'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['Set-Cookie']
 }));
 
 // Connect to MongoDB
@@ -51,10 +55,9 @@ import apiRouter from './routes/api/index';
 import cloudflareR2Routes from './routes/cloudflareR2Router';
 
 // Mount routes
-// Temporarily disable R2 routes
-// app.use("/api/v1/r2", cloudflareR2Routes);
 app.use("/api", apiRouter);
-app.use('/api/videos', videoRoutes);
+// Remove the duplicate video routes since they're already included in apiRouter
+// app.use('/api/videos', videoRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

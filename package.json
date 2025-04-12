@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@videojs/http-streaming": "^3.17.0",
+    "aws-sdk": "^2.1692.0"
+  }
+}

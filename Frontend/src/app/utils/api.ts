@@ -1,9 +1,7 @@
-const API_URL = "https://api.nithyananda.ai";//process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://ott-backend.koogle.sk";
 const CLIENT_ID = "aeecdcc1-6127-4030-b6f0-97ce7ae35c6a";//process.env.NEXT_PUBLIC_CLIENT_ID;
-const REDIRECT_URI = "http://localhost:3000/auth/callback";//process.env.NEXT_PUBLIC_REDIRECT_URI;
-console.log('API_URL from env:', API_URL);  // Debug: Check if API_URL is being loaded
-// app/utils/api.ts
-import { redirect } from 'next/navigation';
+const REDIRECT_URI = "http://localhost:4000/auth/callback";//process.env.NEXT_PUBLIC_REDIRECT_URI;
+console.log('API_URL from env:', API_URL);  
 
 export async function exchangeCodeForToken(code: string): Promise<string | null> {
 
@@ -56,7 +54,7 @@ export const initiateLogin = () => {
         console.error('initiateLogin: Environment variables are not properly loaded.');
         return;
     }
-    const loginUrl = `${API_URL}/api/v1/auth/keycloak?redirect_uri=${encodeURIComponent(REDIRECT_URI)}&client_id=${CLIENT_ID}&shouldRedirect=true`;
+    const loginUrl = `${API_URL}/api/auth/keycloak?redirect_uri=${encodeURIComponent(REDIRECT_URI)}&client_id=${CLIENT_ID}&shouldRedirect=true`;
     console.log('initiateLogin: Redirecting to:', loginUrl);
     window.location.href = loginUrl;
     console.log('initiateLogin: Ending');
@@ -69,8 +67,8 @@ export const verifyToken = async (accessToken: string) => {
         return null;
     }
     try {
-        console.log('verifyToken: Verifying token with URL:', `${API_URL}/api/v1/auth/keycloak/verify?client_id=${CLIENT_ID}`);
-        const response = await fetch(`${API_URL}/api/v1/auth/keycloak/verify?client_id=${CLIENT_ID}`, {
+        console.log('verifyToken: Verifying token with URL:', `${API_URL}/api/auth/keycloak/verify?client_id=${CLIENT_ID}`);
+        const response = await fetch(`${API_URL}/api/auth/keycloak/verify?client_id=${CLIENT_ID}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`, // Use the access token
             },
@@ -101,9 +99,12 @@ export const getSession = async () => {
         return null;
     }
     try {
-        console.log('getSession: Fetching session from:', `${API_URL}/api/v1/auth/session`);
-        const response = await fetch(`${API_URL}/api/v1/auth/session`, {
-            credentials: 'include', // If session is managed via cookies
+        console.log('getSession: Fetching session from:', `${API_URL}/api/auth/session`);
+        const response = await fetch(`${API_URL}/api/auth/session`, {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
         console.log('getSession: Response status:', response.status);
 
@@ -138,9 +139,12 @@ export const logout = async () => {
         return false;
     }
     try {
-        console.log('logout: Logging out from:', `${API_URL}/api/v1/auth/logout`);
-        const response = await fetch(`${API_URL}/api/v1/auth/logout`, {
+        console.log('logout: Logging out from:', `${API_URL}/api/auth/logout`);
+        const response = await fetch(`${API_URL}/api/auth/logout`, {
             credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
         console.log('logout: Response status:', response.status);
         if (!response.ok) {

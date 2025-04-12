@@ -3,6 +3,11 @@ import React, { useEffect, useRef } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 
+// Import HLS tech
+if (typeof window !== 'undefined') {
+  require('@videojs/http-streaming');
+}
+
 interface PlayerProps {
   videoSrc: string;
   thumbnail?: string;
@@ -26,45 +31,79 @@ const Player: React.FC<PlayerProps> = ({
 }) => {
   const videoNode = useRef<HTMLVideoElement | null>(null);
   const playerInstance = useRef<typeof videojs.players | null>(null);
-  console.log("videoSrc at player.tsx:");
-  console.log(videoSrc);
+  console.log("videoSrc at player.tsx:", videoSrc);
   
   useEffect(() => {
     if (videoNode.current && !playerInstance.current) {
-      playerInstance.current = videojs(videoNode.current, {
+      // Add detailed logging
+      console.log('Attempting to load video with URL:', videoSrc);
+      
+      // Test URL accessibility
+      fetch(videoSrc, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/x-mpegURL',
+          'Range': 'bytes=0-',
+        },
+        mode: 'cors',
+        credentials: 'omit'
+      })
+        .then(response => {
+          console.log('M3U8 response status:', response.status);
+          console.log('M3U8 response headers:', response.headers);
+          return response.text();
+        })
+        .then(content => console.log('M3U8 content:', content))
+        .catch(error => console.error('Failed to fetch M3U8:', error));
+
+      const options = {
         autoplay: autoPlay,
         controls,
         loop: autoLoop,
         preload,
         poster: thumbnail,
-        sources: [
-          {
-            src: videoSrc,
-            type: videoSrc.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4',          
+        sources: [{
+          src: videoSrc,
+          type: 'application/x-mpegURL',
+          withCredentials: false // Explicitly disable credentials
+        }],
+        html5: {
+          vhs: {
+            overrideNative: true,
+            enableLowInitialPlaylist: true,
+            smoothQualityChange: true
           },
-        ],
-      });
+          nativeAudioTracks: false,
+          nativeVideoTracks: false
+        }
+      };
+
+      playerInstance.current = videojs(videoNode.current, options);
+      
       playerInstance.current.ready(() => {
+        console.log('Player is ready');
         const player = playerInstance.current;
         if (player) {
-          // Adding a playback speed control
           player.controlBar.addChild('PlaybackRateMenuButton', {});
 
-          // Custom event listener
-          player.on('ended', () => {
-            console.log('Video has ended');
+          player.on('error', (error: Error) => {
+            console.error('Player error:', error);
+            console.error('Error details:', player.error());
           });
 
-          // Error handling
-          player.on('error', () => {
-            console.error('Error occurred while loading the video:', player.error());
+          // Log when metadata is loaded
+          player.on('loadedmetadata', () => {
+            console.log('Video metadata loaded');
+          });
+
+          // Log when playback starts
+          player.on('playing', () => {
+            console.log('Video playback started');
           });
         }
       });
-
     }
 
-    // Cleanup function to dispose of the player instance when the component unmounts or videoSrc changes:
     return () => {
       if (playerInstance.current) {
         playerInstance.current.dispose();
@@ -74,15 +113,13 @@ const Player: React.FC<PlayerProps> = ({
   }, [videoSrc, thumbnail, autoLoop, autoPlay, controls, preload]);
 
   return (
-      <div data-vjs-player>
-        <video
-          height="452" width="768"
-          ref={videoNode}
-          className={`video-js  ${className}`}
-          playsInline
-          src = {videoSrc}
-        ></video>
-      </div>
+    <div data-vjs-player>
+      <video
+        ref={videoNode}
+        className={`video-js vjs-big-play-centered ${className}`}
+        playsInline
+      />
+    </div>
   );
 };
 

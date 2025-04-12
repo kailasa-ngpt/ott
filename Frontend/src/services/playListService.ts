@@ -7,7 +7,7 @@ console.log('API_URL:', API_URL);
 
 export const getPlaylistById = async (playlistId: string): Promise<IPlayList> => {
     try {
-        const response = await fetch(`${API_URL}/playlists/${playlistId}`, {
+        const response = await fetch(`${API_URL}/api/playlists/${playlistId}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ export const getPlaylistsByIds = async (playlistIds: string[]): Promise<IPlayLis
     try {
         const encodedIds = playlistIds.map(id => encodeURIComponent(id)).join(',');
         
-        const response = await fetch(`${API_URL}/playlists/getPlaylistsByIds?ids=${encodedIds}`, {
+        const response = await fetch(`${API_URL}/api/playlists/getPlaylistsByIds?ids=${encodedIds}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

@@ -87,8 +87,24 @@ export const getPlaylistsByIds = async (ids: string[]): Promise<IPlaylist[]> => 
     try {
         console.log('Fetching playlists with IDs:', ids);
         const playlists = await Playlist.find({ id: { $in: ids } });
-        console.log('Found playlists:', playlists);
-        return playlists;
+        
+        // Transform video URLs to use Cloudflare R2
+        const BUCKET_NAME = process.env.CLOUDFLARE_BUCKET_NAME || 'ntv-ott';
+        const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || 'ea4b278dc87ae2346b7f5b8f453c97c4';
+        
+        const transformedPlaylists = playlists.map(playlist => {
+            if (playlist.videos && Array.isArray(playlist.videos)) {
+                playlist.videos = playlist.videos.map(video => ({
+                    ...video,
+                    videoLink: `https://${BUCKET_NAME}.${ACCOUNT_ID}.r2.cloudflarestorage.com/${video.id}/master.m3u8`,
+                    thumbnail: `https://${BUCKET_NAME}.${ACCOUNT_ID}.r2.cloudflarestorage.com/${video.id}/thumbnail.jpg`
+                }));
+            }
+            return playlist;
+        });
+        
+        console.log('Found playlists:', transformedPlaylists);
+        return transformedPlaylists;
     } catch (error) {
         console.error('Error fetching playlists by IDs:', error);
         throw error;

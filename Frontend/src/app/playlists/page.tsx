@@ -16,6 +16,8 @@ if (!cloudflareEndPointUrl || !bucketName) {
 
 // Extract the account ID from the endpoint URL
 const accountId = cloudflareEndPointUrl.split('.')[0].split('//')[1];
+// Construct base URL once
+const baseUrl = `https://${bucketName}.${accountId}.r2.cloudflarestorage.com`;
 
 const Playlists = () => {
   const [playlistsState, setPlaylistsState] = useState<IPlayList[]>([]);
@@ -36,10 +38,10 @@ const Playlists = () => {
         const playlists = await getPlaylistsByIds(playlistIds);
         for (const playlist of playlists) {
           for (const video of playlist.videos) {
-            // Construct URLs using the correct R2 public URL format
-            //standard format: https://{bucket_name}.{account_id}.r2.cloudflarestorage.com/{video_id}/master.m3u8
-            video.videoLink = `https://${bucketName}.${accountId}.r2.cloudflarestorage.com/${video.id}/master.m3u8`;
-            video.thumbnail = `https://${bucketName}.${accountId}.r2.cloudflarestorage.com/${video.id}/thumbnail.jpg`;
+            const videoUrl = `${baseUrl}/${video.id}/master.m3u8`;
+            console.log('Constructed video URL:', videoUrl);
+            video.videoLink = videoUrl;
+            video.thumbnail = `${baseUrl}/${video.id}/thumbnail.jpg`;
           }
         }
         console.log('Received playlists:', playlists);

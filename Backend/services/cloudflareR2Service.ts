@@ -1,4 +1,8 @@
-import { S3Client, ListObjectsV2Command, HeadObjectCommand, GetObjectCommand, ListObjectsV2CommandOutput, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, ListObjectsV2Command, HeadObjectCommand, GetObjectCommand, ListObjectsV2CommandOutput, PutObjectCommand, PutBucketCorsCommand } from '@aws-sdk/client-s3';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 // Old configuration - commented out
 // const s3Client = new S3Client({
@@ -20,17 +24,21 @@ import { S3Client, ListObjectsV2Command, HeadObjectCommand, GetObjectCommand, Li
 //     region: 'auto'  // Required for Cloudflare R2
 // });
 
-// New configuration
-const BUCKET_NAME = "ntv-ott";
-const ENDPOINT_URL = "https://ea4b278dc87ae2346b7f5b8f453c97c4.r2.cloudflarestorage.com";
-const ACCESS_KEY_ID = "7129775cb1da9a1341e4b56d870eb3a2";
-const ACCESS_KEY_SECRET = "e628efcfc75f717bf3dfd40905dbbeb6ead73f3d3cc7f31c7348e7f471721e31";
+// New configuration from environment variables
+const cloudFlare_BUCKET_NAME = process.env.CLOUDFLARE_BUCKET_NAME || "ntv-ott";
+const CloudFlareENDPOINT_URL = process.env.CLOUDFLARE_ENDPOINT_URL;
+const CloudFlare_ACCESS_KEY_ID = process.env.CLOUDFLARE_ACCESS_KEY_ID;
+const CloudFlare_ACCESS_KEY_SECRET = process.env.CLOUDFLARE_ACCESS_KEY_SECRET;
+
+if (!CloudFlareENDPOINT_URL || !CloudFlare_ACCESS_KEY_ID || !CloudFlare_ACCESS_KEY_SECRET) {
+    throw new Error('Missing required Cloudflare R2 environment variables');
+}
 
 const s3Client = new S3Client({
-    endpoint: ENDPOINT_URL,
+    endpoint: CloudFlareENDPOINT_URL,
     credentials: {
-        accessKeyId: ACCESS_KEY_ID,
-        secretAccessKey: ACCESS_KEY_SECRET
+        accessKeyId: CloudFlare_ACCESS_KEY_ID,
+        secretAccessKey: CloudFlare_ACCESS_KEY_SECRET
     },
     region: 'auto'  // Required for Cloudflare R2
 });
@@ -326,11 +334,11 @@ const testVideoIds = async () => {
 export const testR2Connection = async () => {
     try {
         console.log('Testing R2 connection with parameters:');
-        console.log('Endpoint:', ENDPOINT_URL);
-        console.log('Bucket:', BUCKET_NAME);
+        console.log('Endpoint:', CloudFlareENDPOINT_URL);
+        console.log('Bucket:', cloudFlare_BUCKET_NAME);
         
         const command = new ListObjectsV2Command({
-            Bucket: BUCKET_NAME
+            Bucket: cloudFlare_BUCKET_NAME
         });
 
         const response = await s3Client.send(command);
@@ -340,8 +348,8 @@ export const testR2Connection = async () => {
         
         return {
             success: true,
-            bucket: BUCKET_NAME,
-            endpoint: ENDPOINT_URL,
+            bucket: cloudFlare_BUCKET_NAME,
+            endpoint: CloudFlareENDPOINT_URL,
             objectCount: response.Contents?.length || 0
         };
     } catch (error) {
@@ -358,7 +366,13 @@ testR2Connection().then(console.log).catch(console.error);
 
 export const testVideoAccess = async (videoId: string) => {
     try {
-        const videoUrl = `https://${BUCKET_NAME}.${ENDPOINT_URL.split('//')[1]}/${videoId}/master.m3u8`;
+        // Old URL structure
+        // const videoUrl = `https://${BUCKET_NAME}.${ENDPOINT_URL.split('//')[1]}/${videoId}/master.m3u8`;
+        
+        // New URL structure following Cloudflare R2 format
+        const accountId = CloudFlareENDPOINT_URL.split('//')[1].split('.')[0];
+        const videoUrl = `https://${accountId}.r2.cloudflarestorage.com/${cloudFlare_BUCKET_NAME}/${videoId}/master.m3u8`;
+        
         console.log('Testing video URL:', videoUrl);
         
         const response = await fetch(videoUrl);
@@ -387,3 +401,56 @@ export const testVideoAccess = async (videoId: string) => {
 
 // Test with a known video ID
 testVideoAccess('-23ixHuyjtE').then(console.log).catch(console.error);
+
+// Configure CORS for the R2 bucket
+export const configureCORS = async () => {
+    try {
+        const corsConfig = {
+            CORSRules: [
+                {
+                    AllowedHeaders: [
+                        'Range',
+                        'If-Match',
+                        'If-None-Match',
+                        'If-Modified-Since',
+                        'If-Unmodified-Since',
+                        'Accept',
+                        'Content-Type',
+                        'Origin',
+                        'Authorization'
+                    ],
+                    AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                    AllowedOrigins: [
+                        'http://localhost:3000',
+                        'https://ott-frontend.koogle.sk',
+                        'https://*.koogle.sk'
+                    ],
+                    ExposeHeaders: [
+                        'ETag',
+                        'Content-Type',
+                        'Content-Length',
+                        'Content-Range',
+                        'Accept-Ranges',
+                        'Content-Encoding',
+                        'Transfer-Encoding',
+                        'Access-Control-Allow-Origin',
+                        'Access-Control-Allow-Methods',
+                        'Access-Control-Allow-Headers'
+                    ],
+                    MaxAgeSeconds: 3000
+                }
+            ]
+        };
+
+        const command = new PutBucketCorsCommand({
+            Bucket: cloudFlare_BUCKET_NAME,
+            CORSConfiguration: corsConfig
+        });
+
+        await s3Client.send(command);
+        console.log('CORS configuration updated successfully');
+    } catch (error) {
+        console.error('Error configuring CORS:', error);
+        throw error;
+    }
+};

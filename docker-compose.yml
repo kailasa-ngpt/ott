@@ -45,7 +45,7 @@ services:
     ports:
       - "4001:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:4000
+      - NEXT_PUBLIC_API_URL=http://backend:3000
       - NEXT_TELEMETRY_DISABLED=1
     restart: unless-stopped
     networks:
