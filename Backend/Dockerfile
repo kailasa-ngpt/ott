@@ -13,24 +13,14 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Debug: Check what files exist in the current directory
-RUN ls -la
+# Install specific packages that might be missing
+RUN npm install --save node-cache @types/node-cache
 
-# Debug: Show tsconfig.json content
-RUN cat tsconfig.json
+# Build TypeScript code
+RUN npm run build
 
-# Debug: Run build with verbose output
-RUN npm run build --verbose
+# Expose the application port
+EXPOSE 4000
 
-# Debug: Check if dist directory was created
-RUN ls -la dist || echo "dist directory does not exist"
-
-# Try to use the TypeScript compiler directly if npm run build fails
-RUN npx tsc || echo "tsc command failed"
-
-# Check again if dist directory was created
-RUN ls -la dist || echo "dist directory still does not exist"
-
-# As a fallback, use ts-node
-EXPOSE 8080
-CMD ["npx", "ts-node", "app.ts"]
+# Start the server
+CMD ["npm", "start"]

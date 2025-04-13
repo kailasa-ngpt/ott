@@ -11,6 +11,9 @@ export interface IVideo extends Document {
     videoLength: number;      // Duration in seconds
     tags: string[];          // Array of tag IDs
     loves: number;           // Like count
+    // Add these properties to fix the type errors
+    streamUrl?: string;       // Dynamically generated streaming URL
+    thumbnailUrl?: string;    // Dynamically generated thumbnail URL
 }
 
 const videoSchema = new Schema({

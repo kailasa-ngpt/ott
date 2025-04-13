@@ -9,7 +9,7 @@ if (typeof window !== 'undefined') {
 }
 
 interface PlayerProps {
-  videoId: string;     // Changed from videoSrc to videoId
+  videoId: string;     // Using videoId instead of direct URL
   autoLoop?: boolean;
   autoPlay?: boolean;
   controls?: boolean;
@@ -18,9 +18,8 @@ interface PlayerProps {
   isLive?: boolean;
 }
 
-
 const Player: React.FC<PlayerProps> = ({
-  videoId,            // Using videoId instead of videoSrc
+  videoId,
   autoLoop = false,
   autoPlay = false,
   controls = true,
@@ -31,12 +30,16 @@ const Player: React.FC<PlayerProps> = ({
   const videoNode = useRef<HTMLVideoElement | null>(null);
   const playerInstance = useRef<typeof videojs.players | null>(null);
 
-  // Construct URLs from the videoId
-  const videoSrc = `/media/${videoId}/master.m3u8`;
-  const thumbnailSrc = `/media/${videoId}/thumbnail.webp`;
+  // Get API URL from environment or use default
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
-  console.log("Video ID at player.tsx:", videoId);
-  console.log("Video URL at player.tsx:", videoSrc);
+  // Construct media URLs - using the streaming proxy
+  const videoSrc = `${API_URL}/media/${videoId}/master.m3u8`;
+  const thumbnailSrc = `${API_URL}/media/${videoId}/thumbnail.webp`;
+
+  console.log("Video ID:", videoId);
+  console.log("Video URL:", videoSrc);
+  console.log("Thumbnail URL:", thumbnailSrc);
 
   useEffect(() => {
     if (videoNode.current && !playerInstance.current) {
@@ -57,9 +60,9 @@ const Player: React.FC<PlayerProps> = ({
         controls,
         loop: autoLoop,
         preload,
-        poster: thumbnailSrc,  // Using the thumbnail path
+        poster: thumbnailSrc,
         sources: [{
-          src: videoSrc,       // Using the video path
+          src: videoSrc,
           type: 'application/x-mpegURL',
           withCredentials: false
         }],

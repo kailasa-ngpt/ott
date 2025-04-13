@@ -2,13 +2,14 @@ import express, { Request, Response, Router } from 'express';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import axios from 'axios';
-import NodeCache from 'node-cache';
 import dotenv from 'dotenv';
+// Import NodeCache with proper type declaration
+import NodeCache from 'node-cache';
 
 dotenv.config();
 
 // R2 Configuration - From environment variables
-const R2_ENDPOINT = process.env.CLOUDFLARE_ENDPOINT_URL || "https://ea4b278dc87ae2346b7f5b8f453c97c4.r2.cloudflarestorage.com";
+const R2_ENDPOINT = process.env.CLOUDFLARE_ENDPOINT_URL || "";
 const ACCESS_KEY = process.env.CLOUDFLARE_ACCESS_KEY_ID || "";
 const SECRET_KEY = process.env.CLOUDFLARE_ACCESS_KEY_SECRET || "";
 const BUCKET_NAME = process.env.CLOUDFLARE_BUCKET_NAME || "ntv-ott";
@@ -136,10 +137,10 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
       try {
         // Fetch the image
         const response = await axios.get(signedUrl, { responseType: 'arraybuffer' });
-        
+
         // Determine content type
         const contentType = response.headers['content-type'] || 'image/webp';
-        
+
         // Send the image data
         res.setHeader('Content-Type', contentType);
         res.send(response.data);

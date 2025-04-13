@@ -5,7 +5,6 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import connectDB from './config/db';
 import path from 'path';
-import videoRoutes from './routes/api/videos';
 
 // Load environment variables first
 dotenv.config({ path: path.join(process.cwd(), '.env') });
@@ -15,8 +14,20 @@ const app = express();
 // Configure middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const corsOrigins = process.env.CORS_ORIGINS 
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : [];
+
+// Log warning if no origins are configured
+if (corsOrigins.length === 0) {
+  console.warn('No CORS origins configured. API may not be accessible from browsers.');
+}
+
+console.log('CORS origins:', corsOrigins);
+
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://ott-frontend.koogle.sk'],
+    origin: corsOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
@@ -50,8 +61,10 @@ app.get('/swagger.json', (req, res) => {
   res.send(swaggerSpec);
 });
 
-// proxy middleware routes
+// Import the stream proxy middleware
 import { streamProxyRouter } from './middleware/streamProxy';
+
+// Use the stream proxy middleware for /media paths
 app.use('/media', streamProxyRouter);
 
 // a simple endpoint for checking if videos exist
@@ -68,8 +81,6 @@ import cloudflareR2Routes from './routes/cloudflareR2Router';
 
 // Mount routes
 app.use("/api", apiRouter);
-// Remove the duplicate video routes since they're already included in apiRouter
-// app.use('/api/videos', videoRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

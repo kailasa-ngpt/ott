@@ -26,7 +26,15 @@ export class VideoService {
     //Remove getAllVideos after 1000s of videos are uploaded.
     //When 1000s of videos are uploaded we need pagination.
     async getAllVideos(): Promise<IVideo[]> {
-        return await Video.find();
+        const videos = await Video.find();
+        // Transform videos to include dynamic URLs
+        return Promise.all(videos.map(async (video) => {
+            const videoObj = video.toObject() as IVideo;
+            const resources = await this.getVideoResources(video.id);
+            videoObj.streamUrl = resources.streamUrl;
+            videoObj.thumbnailUrl = resources.thumbnailUrl;
+            return videoObj;
+        }));
     }
 
     //From POSTMAN send id=OS8lk2KnzNE
@@ -41,7 +49,7 @@ export class VideoService {
             }
 
             // Add the dynamically generated URLs
-            const videoWithUrls = video.toObject();
+            const videoWithUrls = video.toObject() as IVideo;
             const resources = await this.getVideoResources(video.id);
             videoWithUrls.streamUrl = resources.streamUrl;
             videoWithUrls.thumbnailUrl = resources.thumbnailUrl;
@@ -74,51 +82,39 @@ export class VideoService {
         const videos = await Video.find({ categories: categoryId });
 
         // Add dynamic URLs to each video
-        const videosWithUrls = await Promise.all(
-            videos.map(async (video) => {
-                const videoObj = video.toObject();
-                const resources = await this.getVideoResources(video.id);
-                videoObj.streamUrl = resources.streamUrl;
-                videoObj.thumbnailUrl = resources.thumbnailUrl;
-                return videoObj;
-            })
-        );
-
-        return videosWithUrls;
+        return Promise.all(videos.map(async (video) => {
+            const videoObj = video.toObject() as IVideo;
+            const resources = await this.getVideoResources(video.id);
+            videoObj.streamUrl = resources.streamUrl;
+            videoObj.thumbnailUrl = resources.thumbnailUrl;
+            return videoObj;
+        }));
     }
 
     async getVideosByTag(tagId: string): Promise<IVideo[]> {
         const videos = await Video.find({ tags: tagId });
 
         // Add dynamic URLs to each video
-        const videosWithUrls = await Promise.all(
-            videos.map(async (video) => {
-                const videoObj = video.toObject();
-                const resources = await this.getVideoResources(video.id);
-                videoObj.streamUrl = resources.streamUrl;
-                videoObj.thumbnailUrl = resources.thumbnailUrl;
-                return videoObj;
-            })
-        );
-
-        return videosWithUrls;
+        return Promise.all(videos.map(async (video) => {
+            const videoObj = video.toObject() as IVideo;
+            const resources = await this.getVideoResources(video.id);
+            videoObj.streamUrl = resources.streamUrl;
+            videoObj.thumbnailUrl = resources.thumbnailUrl;
+            return videoObj;
+        }));
     }
 
     async getVideosByPlaylist(playlistId: string): Promise<IVideo[]> {
         const videos = await Video.find({ playlists: playlistId });
 
         // Add dynamic URLs to each video
-        const videosWithUrls = await Promise.all(
-            videos.map(async (video) => {
-                const videoObj = video.toObject();
-                const resources = await this.getVideoResources(video.id);
-                videoObj.streamUrl = resources.streamUrl;
-                videoObj.thumbnailUrl = resources.thumbnailUrl;
-                return videoObj;
-            })
-        );
-
-        return videosWithUrls;
+        return Promise.all(videos.map(async (video) => {
+            const videoObj = video.toObject() as IVideo;
+            const resources = await this.getVideoResources(video.id);
+            videoObj.streamUrl = resources.streamUrl;
+            videoObj.thumbnailUrl = resources.thumbnailUrl;
+            return videoObj;
+        }));
     }
 
     async incrementViews(videoId: string): Promise<IVideo | null> {
@@ -130,7 +126,7 @@ export class VideoService {
 
         if (video) {
             // Add dynamic URLs to the returned video
-            const videoWithUrls = video.toObject();
+            const videoWithUrls = video.toObject() as IVideo;
             const resources = await this.getVideoResources(video.id);
             videoWithUrls.streamUrl = resources.streamUrl;
             videoWithUrls.thumbnailUrl = resources.thumbnailUrl;
@@ -149,7 +145,7 @@ export class VideoService {
 
         if (video) {
             // Add dynamic URLs to the returned video
-            const videoWithUrls = video.toObject();
+            const videoWithUrls = video.toObject() as IVideo;
             const resources = await this.getVideoResources(video.id);
             videoWithUrls.streamUrl = resources.streamUrl;
             videoWithUrls.thumbnailUrl = resources.thumbnailUrl;
@@ -167,17 +163,13 @@ export const getVideosByPlaylist = async (playlistId: string): Promise<IVideo[]>
     const videos = await Video.find({ playlists: playlistId });
 
     // Add dynamic URLs to each video
-    const videosWithUrls = await Promise.all(
-        videos.map(async (video) => {
-            const videoObj = video.toObject();
-            const resources = await videoService.getVideoResources(video.id);
-            videoObj.streamUrl = resources.streamUrl;
-            videoObj.thumbnailUrl = resources.thumbnailUrl;
-            return videoObj;
-        })
-    );
-
-    return videosWithUrls;
+    return Promise.all(videos.map(async (video) => {
+        const videoObj = video.toObject() as IVideo;
+        const resources = await videoService.getVideoResources(video.id);
+        videoObj.streamUrl = resources.streamUrl;
+        videoObj.thumbnailUrl = resources.thumbnailUrl;
+        return videoObj;
+    }));
 };
 
 // Increment video views - Updated to include dynamic URLs
@@ -190,7 +182,7 @@ export const incrementViews = async (videoId: string): Promise<IVideo | null> =>
 
     if (video) {
         // Add dynamic URLs to the returned video
-        const videoWithUrls = video.toObject();
+        const videoWithUrls = video.toObject() as IVideo;
         const resources = await videoService.getVideoResources(video.id);
         videoWithUrls.streamUrl = resources.streamUrl;
         videoWithUrls.thumbnailUrl = resources.thumbnailUrl;
@@ -210,7 +202,7 @@ export const incrementLoves = async (videoId: string): Promise<IVideo | null> =>
 
     if (video) {
         // Add dynamic URLs to the returned video
-        const videoWithUrls = video.toObject();
+        const videoWithUrls = video.toObject() as IVideo;
         const resources = await videoService.getVideoResources(video.id);
         videoWithUrls.streamUrl = resources.streamUrl;
         videoWithUrls.thumbnailUrl = resources.thumbnailUrl;

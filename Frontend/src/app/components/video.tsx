@@ -4,10 +4,9 @@ import React from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { useRouter } from "next/navigation";
-import PlaceholderImage from "./PlaceholderImage";
 
 interface VideoProps {
-  id: string;            // Using id instead of thumbnailPath/videoLink
+  id: string;            // Video ID
   videoTitle: string;
   deliveredDate: string | null;
   description: string;
@@ -15,13 +14,14 @@ interface VideoProps {
 }
 
 const Video: React.FC<VideoProps> = ({
-  id = '',              // This is now the key identifier
+  id = '',
   videoTitle = 'Untitled Video',
   deliveredDate = null,
   description = '',
   isLive = false
 }) => {
   const router = useRouter();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
   const handleVideoClick = () => {
     // Use video ID in the URL instead of direct links
@@ -35,14 +35,8 @@ const Video: React.FC<VideoProps> = ({
     router.push(url.toString());
   };
 
-  // ✅ Add null check before using startsWith
-  const thumbnailUrl = `/media/${id}/thumbnail.webp`;
-
-  // Generate random background color for placeholders
-  const getRandomColor = () => {
-    const colors = ['#e57373', '#81c784', '#64b5f6', '#ffb74d', '#ba68c8', '#4fc3f7', '#aed581'];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
+  // Construct thumbnail URL using the media proxy
+  const thumbnailUrl = `${API_URL}/media/${id}/thumbnail.webp`;
 
   return (
     <div onClick={handleVideoClick} className="relative w-40 sm:w-52 lg:w-72 h-auto cursor-pointer group">
@@ -62,7 +56,7 @@ const Video: React.FC<VideoProps> = ({
           }}
         />
 
-        {/* Play Button Overlay - Rest of component unchanged */}
+        {/* Play Button Overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
           <Play className="text-white w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12" />
         </div>
