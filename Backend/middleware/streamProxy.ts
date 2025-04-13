@@ -151,6 +151,8 @@ streamProxyRouter.get('*', async (req: Request, res: Response, next: NextFunctio
       return;
     }
 
+    // Previous code remains the same...
+
     // Handle M3U8 files
     if (isM3U8) {
       // Check cache first
@@ -166,14 +168,14 @@ streamProxyRouter.get('*', async (req: Request, res: Response, next: NextFunctio
         const signedUrl = await getSignedUrlWithCache(decodedPath);
 
         // Fetch the M3U8 content
-        const response = await axios.get<string>(signedUrl);
-        let m3u8Content = response.data;
+        const response = await axios.get(signedUrl);
+        let m3u8Content: string | Buffer = response.data;
 
         // Ensure content is a string
-        if (typeof m3u8Content !== 'string') {
-          m3u8Content = Buffer.isBuffer(m3u8Content)
-            ? m3u8Content.toString()
-            : String(m3u8Content);
+        if (Buffer.isBuffer(m3u8Content)) {
+          m3u8Content = m3u8Content.toString('utf-8');
+        } else if (typeof m3u8Content !== 'string') {
+          m3u8Content = String(m3u8Content);
         }
 
         // Rewrite URLs
@@ -190,6 +192,7 @@ streamProxyRouter.get('*', async (req: Request, res: Response, next: NextFunctio
         return next(error);
       }
     }
+
     // Handle TS files
     else if (isTS) {
       // Check if we have this TS segment cached
