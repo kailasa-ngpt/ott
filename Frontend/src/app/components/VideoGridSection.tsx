@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import PlaceholderImage from './PlaceholderImage';
 
 // CSV data (first 20 records)
@@ -47,7 +48,7 @@ const VideoGridSection = () => {
         >
           {videosToDisplay.map(video => (
             <div key={video.id} className="flex flex-col">
-              <a href={`https://ott-ui.koogle.sk/play?id=${video.id}`} target="_blank" rel="noopener noreferrer">
+              <Link href={`/play?id=${video.id}`}>
                 <div
                   className="aspect-[9/16] w-full rounded overflow-hidden mb-1 bg-gray-100"
                 >
@@ -57,7 +58,7 @@ const VideoGridSection = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-              </a>
+              </Link>
               <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-center truncate px-1`}>
                 {video.title}
               </h3>
