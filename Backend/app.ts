@@ -86,7 +86,6 @@ app.head('/media/:videoId/*', (req, res) => {
 
 // Import routes
 import apiRouter from './routes/api/index';
-import cloudflareR2Routes from './routes/cloudflareR2Router';
 
 // Mount routes
 app.use("/api", apiRouter);
