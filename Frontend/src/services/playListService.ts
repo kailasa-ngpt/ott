@@ -62,7 +62,7 @@ export const getPlaylistsByIds = async (playlistIds: string[]): Promise<IPlayLis
         }
 
         // Transform the playlists to use the media proxy for video URLs
-        const transformedPlaylists = data.map((playlist: IPlayList) => {s
+        const transformedPlaylists = data.map((playlist: IPlayList) => {
             if (playlist.videos && Array.isArray(playlist.videos)) {
                 playlist.videos = playlist.videos.map((video: IPlayList['videos'][0]) => ({
                     ...video,
