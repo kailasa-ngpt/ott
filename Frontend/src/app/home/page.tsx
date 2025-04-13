@@ -16,10 +16,10 @@ const Home = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -28,7 +28,7 @@ const Home = () => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 500);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -36,7 +36,7 @@ const Home = () => {
     <div className="bg-white text-black font-sans min-h-screen flex flex-col">
       {/* Header */}
       <Header />
-      
+
       {/* Main Content */}
       <main className={`flex-grow ${isMobile ? 'pb-16' : ''}`}>
         {isLoading ? (
@@ -49,15 +49,15 @@ const Home = () => {
             <section className="w-full mb-8">
               <Carousel />
             </section>
-            
+
             {/* Video Grid Sections */}
             <section className="w-full container mx-auto px-4">
               <VideoGridSection />
             </section>
-            
+
             {/* Featured Playlists Section */}
             <FeaturedPlaylists />
-            
+
             {/* Additional sections - Include the proper padding on mobile */}
             <section className="container mx-auto px-4 py-8">
               <h2 className="text-2xl font-bold mb-4">Recommended For You</h2>
@@ -68,7 +68,7 @@ const Home = () => {
           </>
         )}
       </main>
-      
+
       {/* Footer - Add bottom padding on mobile to prevent content from being hidden behind the bottom nav */}
       <Footer />
     </div>

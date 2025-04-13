@@ -13,29 +13,29 @@ interface ContentData {
 
 // Sample content items
 const contentItems: ContentData[] = [
-  { 
-    id: 1, 
+  {
+    id: 1,
     title: "Manifesting Powers",
     description: "Explore ancient yogic techniques and spiritual practices to awaken the divine powers (shaktis) within you through Paramashiva's sacred knowledge.",
     color: '#862e24'
   },
-  { 
-    id: 2, 
+  {
+    id: 2,
     title: "Divine Consciousness",
     description: "Join this spiritual journey as we explore ancient wisdom and practices that can transform your life and connect you with higher consciousness.",
     color: '#8B3A3A'
   },
-  { 
-    id: 3, 
+  {
+    id: 3,
     title: "Meditation Mastery",
     description: "Experience guided meditation sessions designed to help you reduce stress, find inner peace, and develop mindfulness in your daily life.",
-    color: '#862e24' 
+    color: '#862e24'
   },
-  { 
-    id: 4, 
+  {
+    id: 4,
     title: "Sacred Teachings",
     description: "Discover the secrets of the universe through sacred teachings that explore cosmic phenomena and spiritual understanding.",
-    color: '#8B3A3A' 
+    color: '#8B3A3A'
   },
 ];
 
@@ -50,19 +50,19 @@ export default function Carousel(): JSX.Element {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
-    
+
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   // const nextSlide = () => {
   //   if (isAnimating) return;
-    
+
   //   setDirection('right');
   //   setIsAnimating(true);
-    
+
   //   // After animation duration, change the slide
   //   setTimeout(() => {
   //     setActiveIndex((prev) => (prev + 1) % contentItems.length);
@@ -75,10 +75,10 @@ export default function Carousel(): JSX.Element {
 
   // const prevSlide = () => {
   //   if (isAnimating) return;
-    
+
   //   setDirection('left');
   //   setIsAnimating(true);
-    
+
   //   // After animation duration, change the slide
   //   setTimeout(() => {
   //     setActiveIndex((prev) => (prev - 1 + contentItems.length) % contentItems.length);
@@ -94,7 +94,7 @@ export default function Carousel(): JSX.Element {
   //     const interval = setInterval(() => {
   //       nextSlide();
   //     }, 5000);
-      
+
   //     return () => clearInterval(interval);
   //   }
   // }, [isHovered, isAnimating]);
@@ -109,12 +109,12 @@ export default function Carousel(): JSX.Element {
 
   // const handleDotClick = (index: number) => {
   //   if (isAnimating) return;
-    
+
   //   if (index === activeIndex) return;
-    
+
   //   setDirection(index > activeIndex ? 'right' : 'left');
   //   setIsAnimating(true);
-    
+
   //   // After animation duration, change the slide
   //   setTimeout(() => {
   //     setActiveIndex(index);
@@ -127,25 +127,25 @@ export default function Carousel(): JSX.Element {
 
   // // Get the current slide and next/prev slide based on direction
   const currentItem = contentItems[activeIndex];
-  // const nextIndex = direction === 'right' 
-  //   ? (activeIndex + 1) % contentItems.length 
+  // const nextIndex = direction === 'right'
+  //   ? (activeIndex + 1) % contentItems.length
   //   : (activeIndex - 1 + contentItems.length) % contentItems.length;
   // const nextItem = contentItems[nextIndex];
 
   return (
-    <div 
-      className="relative w-full overflow-hidden" 
-      // onMouseOver={handleMouseOver} 
+    <div
+      className="relative w-full overflow-hidden"
+      // onMouseOver={handleMouseOver}
       // onMouseLeave={handleMouseLeave}
       style={{ backgroundColor: currentItem.color }}
     >
       {/* Main slider container */}
       <div className={`relative w-full ${isMobile ? 'h-[520px]' : 'h-[450px]'}`}>
         {/* Current Slide */}
-        <div 
+        <div
           className={`absolute inset-0 w-full h-full transition-transform duration-300 ease-in-out ${
-            isAnimating 
-              ? direction === 'right' ? '-translate-x-full' : 'translate-x-full' 
+            isAnimating
+              ? direction === 'right' ? '-translate-x-full' : 'translate-x-full'
               : 'translate-x-0'
           }`}
           style={{ backgroundColor: currentItem.color }}
@@ -153,7 +153,7 @@ export default function Carousel(): JSX.Element {
           {isMobile ? (
             // Mobile Layout
             <div className="container mx-auto px-4 flex flex-col items-center text-center h-full justify-center">
-              {/* <div 
+              {/* <div
                 className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
                 style={{ aspectRatio: '9/16' }}
               >
@@ -165,12 +165,12 @@ export default function Carousel(): JSX.Element {
   className="w-full mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg overflow-hidden"
 >
                 <img
-    src="/SliderImages/swamiji-live.jpeg" // Replace with your image path
+    src="/SliderImages/Ott.png" // Replace with your image path
     alt={currentItem.title}
     className="w-full h-full object-cover"
   />
   </div>
-              
+
               {/* <div className="w-full px-2 text-white max-w-xs">
                 <h1 className="text-2xl font-bold mb-2">
                   {currentItem.title}
@@ -190,7 +190,7 @@ export default function Carousel(): JSX.Element {
               {/* <div className="flex items-center max-w-4xl"> */}
               <div className="w-full bg-gray-100 flex-shrink-0 shadow-lg overflow-hidden">
               <img
-    src="/SliderImages/swamiji-live.jpeg"
+    src="/SliderImages/Ott.png"
     alt={currentItem.title}
     className="w-full h-full object-cover"
   />
@@ -200,7 +200,7 @@ export default function Carousel(): JSX.Element {
                     Poster
                   </div>
                 </div> */}
-                
+
                  {/*  <div className="ml-8 text-white max-w-2xl">
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
                     {currentItem.title}
@@ -220,7 +220,7 @@ export default function Carousel(): JSX.Element {
 
         {/* Next Slide (for animation) */}
        {/* {isAnimating && (
-          <div 
+          <div
             className={`absolute inset-0 w-full h-full transition-transform duration-300 ease-in-out ${
               direction === 'right' ? 'translate-x-full' : '-translate-x-full'
             }`}
@@ -229,7 +229,7 @@ export default function Carousel(): JSX.Element {
             {/* {isMobile ? (
               // Mobile Layout for next slide
               <div className="container mx-auto px-4 flex flex-col items-center text-center h-full justify-center">
-                <div 
+                <div
                   className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
                   style={{ aspectRatio: '9/16' }}
                 >
@@ -237,7 +237,7 @@ export default function Carousel(): JSX.Element {
                     Poster
                   </div>
                 </div>
-                
+
                 <div className="w-full px-2 text-white max-w-xs">
                   <h1 className="text-2xl font-bold mb-2">
                     {nextItem.title}
@@ -260,7 +260,7 @@ export default function Carousel(): JSX.Element {
                       Poster
                     </div>
                   </div>
-                  
+
                   <div className="ml-8 text-white max-w-2xl">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">
                       {nextItem.title}
@@ -295,7 +295,7 @@ export default function Carousel(): JSX.Element {
       >
         <FaChevronRight size={isMobile ? 16 : 32} />
       </button> */}
-      
+
       {/* Pagination indicators */}
       {/* <div className="flex justify-center mt-2 md:mt-4">
         {contentItems.map((_, index) => (
