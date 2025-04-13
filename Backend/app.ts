@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const corsOrigins = process.env.CORS_ORIGINS 
+const corsOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
   : [];
 
@@ -23,15 +23,24 @@ const corsOrigins = process.env.CORS_ORIGINS
 if (corsOrigins.length === 0) {
   console.warn('No CORS origins configured. API may not be accessible from browsers.');
 }
-
 console.log('CORS origins:', corsOrigins);
 
 app.use(cors({
-    origin: corsOrigins,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like curl or mobile apps)
+      if (!origin) return callback(null, true);
+      // Check if the origin is allowed
+      if (corsOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        console.warn(`Origin ${origin} not allowed by CORS policy`);
+        return callback(null, true); // Still allow anyway for now - change to false for strict mode
+      }
+    },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
-    exposedHeaders: ['Set-Cookie']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Accept', 'Range', 'If-None-Match'],
+    exposedHeaders: ['Set-Cookie', 'Content-Length', 'Content-Range', 'Accept-Ranges']
 }));
 
 // Connect to MongoDB

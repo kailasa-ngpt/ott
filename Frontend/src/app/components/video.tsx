@@ -21,7 +21,7 @@ const Video: React.FC<VideoProps> = ({
   isLive = false
 }) => {
   const router = useRouter();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
   const handleVideoClick = () => {
     // Use video ID in the URL instead of direct links

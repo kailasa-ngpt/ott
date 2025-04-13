@@ -15,6 +15,11 @@ const SECRET_KEY = process.env.CLOUDFLARE_ACCESS_KEY_SECRET || "";
 const BUCKET_NAME = process.env.CLOUDFLARE_BUCKET_NAME || "ntv-ott";
 const EXPIRATION = parseInt(process.env.URL_EXPIRATION || "300"); // 5 minutes default
 
+// Get CORS origins from environment
+const CORS_ORIGINS = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : [];
+
 // Create S3 client for R2
 const s3Client = new S3Client({
   region: "auto",
@@ -111,6 +116,26 @@ function rewriteM3U8Content(content: string, basePath: string): string {
 // Create the router
 const streamProxyRouter = Router();
 
+// Add CORS middleware using environment variables
+streamProxyRouter.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // Check if the origin is allowed
+  if (origin && CORS_ORIGINS.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Range, Accept, Content-Type');
+    res.header('Access-Control-Expose-Headers', 'Content-Length, Content-Range, Accept-Ranges');
+  }
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
+
 // Handle streaming media requests (both M3U8 and TS files)
 streamProxyRouter.get('*', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -150,8 +175,6 @@ streamProxyRouter.get('*', async (req: Request, res: Response, next: NextFunctio
       }
       return;
     }
-
-    // Previous code remains the same...
 
     // Handle M3U8 files
     if (isM3U8) {
