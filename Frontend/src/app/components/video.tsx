@@ -9,15 +9,15 @@ interface VideoProps {
   id: string;            // Video ID
   videoTitle: string;
   deliveredDate: string | null;
-  description: string;
-  isLive: boolean | null;
+  description?: string;  // Made optional by adding ?
+  isLive?: boolean | null; // Made optional since it has a default value
 }
 
 const Video: React.FC<VideoProps> = ({
   id = '',
   videoTitle = 'Untitled Video',
   deliveredDate = null,
-  description = '',
+  description = '',      // Default value will be used when not provided
   isLive = false
 }) => {
   const router = useRouter();
