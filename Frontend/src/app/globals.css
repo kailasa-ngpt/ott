@@ -3,6 +3,116 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Video Player YouTube-like Styling */
+.video-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.player-wrapper {
+  position: relative;
+  background-color: black;
+}
+
+/* YouTube-like styling for video.js */
+.vjs-youtube-skin {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.vjs-youtube-skin .vjs-big-play-button {
+  background-color: rgba(0, 0, 0, 0.45);
+  border: none;
+  border-radius: 50%;
+  width: 68px;
+  height: 68px;
+  line-height: 68px;
+  font-size: 1.5em;
+}
+
+.vjs-youtube-skin .vjs-big-play-button:hover {
+  background-color: rgba(255, 0, 0, 0.9);
+}
+
+.vjs-youtube-skin .vjs-control-bar {
+  background-color: rgba(0, 0, 0, 0.7);
+  height: 40px;
+}
+
+.vjs-youtube-skin .vjs-progress-control {
+  position: absolute;
+  top: -10px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+}
+
+.vjs-youtube-skin .vjs-progress-control:hover {
+  height: 10px;
+  top: -15px;
+}
+
+.vjs-youtube-skin .vjs-progress-holder {
+  height: 100%;
+}
+
+.vjs-youtube-skin .vjs-play-progress {
+  background-color: #f00;
+}
+
+.vjs-youtube-skin .vjs-load-progress {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.vjs-youtube-skin .vjs-slider {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.vjs-youtube-skin .vjs-volume-level {
+  background-color: #fff;
+}
+
+.vjs-youtube-skin .vjs-volume-panel {
+  margin-right: 10px;
+}
+
+.vjs-youtube-skin .vjs-remaining-time {
+  display: none;
+}
+
+.vjs-youtube-skin .vjs-playback-rate .vjs-menu-button {
+  font-size: 12px;
+}
+
+.vjs-youtube-skin .vjs-title-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  color: white;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+  width: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.vjs-youtube-skin:hover .vjs-title-overlay {
+  opacity: 1;
+}
+
+.vjs-youtube-skin .title-text {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
 /* Sidebar animations and styling */
 .sidebar-enter {
   transform: translateX(-100%);
