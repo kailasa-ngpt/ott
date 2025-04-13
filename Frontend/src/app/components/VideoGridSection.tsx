@@ -66,7 +66,7 @@ const VideoGridSection: React.FC = () => {
     <div className="w-full bg-white text-black py-8">
       <div className="container mx-auto px-4">
         {/* Section Tabs */}
-        <div className="flex justify-center space-x-6 mb-6">
+        {/* <div className="flex justify-center space-x-6 mb-6">
           {sections.map(section => (
             <button
               key={section.id}
@@ -80,10 +80,10 @@ const VideoGridSection: React.FC = () => {
               {section.name}
             </button>
           ))}
-        </div>
+        </div> */}
 
         {/* Filter Tags - scrollable */}
-        <div className="relative w-full max-w-full mb-8">
+        {/* <div className="relative w-full max-w-full mb-8">
           <div className="flex justify-start space-x-4 overflow-x-auto pb-2 px-1 scrollbar-thin">
             {tags.map(tag => (
               <button
@@ -99,7 +99,7 @@ const VideoGridSection: React.FC = () => {
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Videos Grid - Responsive grid with proper breakpoints */}
         <div className={`grid ${
