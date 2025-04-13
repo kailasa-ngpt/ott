@@ -62,7 +62,7 @@ export const getPlaylistsByIds = async (playlistIds: string[]): Promise<IPlayLis
         }
 
         // Transform the playlists to use the media proxy for video URLs
-        const transformedPlaylists = data.map(playlist => {
+        const transformedPlaylists = data.map((playlist: IPlayList) => {s
             if (playlist.videos && Array.isArray(playlist.videos)) {
                 playlist.videos = playlist.videos.map((video: IPlayList['videos'][0]) => ({
                     ...video,
@@ -81,8 +81,7 @@ export const getPlaylistsByIds = async (playlistIds: string[]): Promise<IPlayLis
 };
 
 export const getPlaylists = async (): Promise<IPlayList[]> => {
-    try
-    {
+    try {
       const response = await fetch(`${API_URL}/api/playlists`, {
         headers: {
           'Accept': 'application/json',
@@ -97,7 +96,7 @@ export const getPlaylists = async (): Promise<IPlayList[]> => {
       const data = await response.json();
 
       // Transform the playlists to use the media proxy for video URLs
-      const transformedPlaylists = data.map(playlist => {
+      const transformedPlaylists = data.map((playlist: IPlayList) => {
         if (playlist.videos && Array.isArray(playlist.videos)) {
             playlist.videos = playlist.videos.map((video: IPlayList['videos'][0]) => ({
                 ...video,
@@ -109,8 +108,7 @@ export const getPlaylists = async (): Promise<IPlayList[]> => {
       });
 
       return transformedPlaylists;
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error fetching playlists:', error);
       throw error;
     }
