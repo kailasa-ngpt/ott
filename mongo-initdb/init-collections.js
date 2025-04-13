@@ -7,8 +7,6 @@ db.createCollection("videos", {
           id: { bsonType: "string" },
           title: { bsonType: "string" },
           description: { bsonType: "string" },
-          video_url: { bsonType: "string" },
-          thumbnail_url: { bsonType: "string" },
           date_of_video: { bsonType: "date" },
           upload_date: { bsonType: "date" },
           categories: {
@@ -24,7 +22,7 @@ db.createCollection("videos", {
       }
     }
   });
-  
+
   db.createCollection("playlists", {
     validator: {
       $jsonSchema: {
@@ -43,7 +41,7 @@ db.createCollection("videos", {
       }
     }
   });
-  
+
   db.createCollection("categories", {
     validator: {
       $jsonSchema: {
@@ -55,7 +53,7 @@ db.createCollection("videos", {
       }
     }
   });
-  
+
   db.createCollection("users", {
     validator: {
       $jsonSchema: {
@@ -71,4 +69,3 @@ db.createCollection("videos", {
       }
     }
   });
-  
