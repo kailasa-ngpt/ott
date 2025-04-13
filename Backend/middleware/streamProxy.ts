@@ -1,14 +1,13 @@
-import express, { Request, Response, Router } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import axios from 'axios';
 import dotenv from 'dotenv';
-// Import NodeCache with proper type declaration
 import NodeCache from 'node-cache';
 
 dotenv.config();
 
-// R2 Configuration - From environment variables
+// R2 Configuration
 const R2_ENDPOINT = process.env.CLOUDFLARE_ENDPOINT_URL || "";
 const ACCESS_KEY = process.env.CLOUDFLARE_ACCESS_KEY_ID || "";
 const SECRET_KEY = process.env.CLOUDFLARE_ACCESS_KEY_SECRET || "";
@@ -26,10 +25,9 @@ const s3Client = new S3Client({
 });
 
 // Initialize cache
-// ttl is in seconds: 5 min for m3u8, 30 min for ts files
 const m3u8Cache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
 const tsCache = new NodeCache({ stdTTL: 1800, checkperiod: 300 });
-const urlCache = new NodeCache({ stdTTL: Math.floor(EXPIRATION * 0.9), checkperiod: 30 }); // 90% of EXPIRATION
+const urlCache = new NodeCache({ stdTTL: Math.floor(EXPIRATION * 0.9), checkperiod: 30 });
 
 // Logging function
 function logger(message: string, level: 'debug' | 'info' | 'error' = 'info') {
@@ -109,10 +107,10 @@ function rewriteM3U8Content(content: string, basePath: string): string {
 }
 
 // Create the router
-const streamProxyRouter = Router();
+const streamProxyRouter = express.Router();
 
 // Handle streaming media requests (both M3U8 and TS files)
-streamProxyRouter.get('*', async (req: Request, res: Response) => {
+streamProxyRouter.get('*', async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Extract the media path from the URL and properly decode it
     const mediaPath = req.path.substring(1); // Remove leading slash
@@ -167,13 +165,13 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
 
       try {
         // Fetch the M3U8 content
-        const response = await axios.get<string>(signedUrl);
-        const m3u8Content = response.data;
-
+        const response = await axios.get(signedUrl);
+        const responseData = response.data;
+        
         // Ensure content is a string
-        const contentAsString = typeof m3u8Content === 'string' 
-          ? m3u8Content 
-          : String(m3u8Content);
+        const contentAsString = typeof responseData === 'string' 
+          ? responseData 
+          : JSON.stringify(responseData);
 
         // Rewrite URLs
         const modifiedContent = rewriteM3U8Content(contentAsString, decodedPath);
@@ -208,14 +206,14 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
         if (process.env.TS_CACHE_ENABLED !== 'false') {
           // For caching, we need the full response
           const response = await axios.get(signedUrl, { responseType: 'arraybuffer' });
-          const responseData = response.data;
+          const buffer = Buffer.from(response.data as ArrayBuffer);
 
           // Cache the segment
-          tsCache.set(decodedPath, responseData);
+          tsCache.set(decodedPath, buffer);
 
           // Send response
           res.setHeader('Content-Type', 'video/mp2t');
-          res.send(responseData);
+          res.send(buffer);
         } else {
           // For larger files or when caching is disabled, use streaming
           const response = await axios({
