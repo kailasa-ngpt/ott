@@ -78,12 +78,11 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos = []}) => {
         >
           {videos.map((video) => (
             <div key={video.id} className="flex-none w-64">
-              <Video 
-                thumbnailPath={video.thumbnail}
-                videoTitle={video.videoTitle}
-                videoLink={video.videoLink}
+              <Video
+                id={video.id}                    // Pass the id instead of thumbnailPath
+                videoTitle={video.videoTitle}    // This is correct
                 deliveredDate={video.createdDate}
-                description={`${video.views} views`}
+                description={video.description}
                 isLive={false}
               />
             </div>
