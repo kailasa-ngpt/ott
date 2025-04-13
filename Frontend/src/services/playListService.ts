@@ -24,7 +24,7 @@ export const getPlaylistById = async (playlistId: string): Promise<IPlayList> =>
 
         // Transform the playlist to use the media proxy for video URLs
         if (data.videos && Array.isArray(data.videos)) {
-            data.videos = data.videos.map(video => ({
+            data.videos = data.videos.map((video: IPlayList['videos'][0]) => ({
                 ...video,
                 videoLink: `${API_URL}/media/${video.id}/master.m3u8`,
                 thumbnail: `${API_URL}/media/${video.id}/thumbnail.webp`
@@ -64,7 +64,7 @@ export const getPlaylistsByIds = async (playlistIds: string[]): Promise<IPlayLis
         // Transform the playlists to use the media proxy for video URLs
         const transformedPlaylists = data.map(playlist => {
             if (playlist.videos && Array.isArray(playlist.videos)) {
-                playlist.videos = playlist.videos.map(video => ({
+                playlist.videos = playlist.videos.map((video: IPlayList['videos'][0]) => ({
                     ...video,
                     videoLink: `${API_URL}/media/${video.id}/master.m3u8`,
                     thumbnail: `${API_URL}/media/${video.id}/thumbnail.webp`
@@ -99,7 +99,7 @@ export const getPlaylists = async (): Promise<IPlayList[]> => {
       // Transform the playlists to use the media proxy for video URLs
       const transformedPlaylists = data.map(playlist => {
         if (playlist.videos && Array.isArray(playlist.videos)) {
-            playlist.videos = playlist.videos.map(video => ({
+            playlist.videos = playlist.videos.map((video: IPlayList['videos'][0]) => ({
                 ...video,
                 videoLink: `${API_URL}/media/${video.id}/master.m3u8`,
                 thumbnail: `${API_URL}/media/${video.id}/thumbnail.webp`
