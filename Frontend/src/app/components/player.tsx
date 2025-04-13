@@ -9,8 +9,7 @@ if (typeof window !== 'undefined') {
 }
 
 interface PlayerProps {
-  videoSrc: string;
-  thumbnail?: string;
+  videoId: string;     // Changed from videoSrc to videoId
   autoLoop?: boolean;
   autoPlay?: boolean;
   controls?: boolean;
@@ -19,41 +18,38 @@ interface PlayerProps {
   isLive?: boolean;
 }
 
+
 const Player: React.FC<PlayerProps> = ({
-  videoSrc,
-  thumbnail = '',
+  videoId,            // Using videoId instead of videoSrc
   autoLoop = false,
   autoPlay = false,
   controls = true,
   preload = 'auto',
-  className = '', 
+  className = '',
   isLive,
 }) => {
   const videoNode = useRef<HTMLVideoElement | null>(null);
   const playerInstance = useRef<typeof videojs.players | null>(null);
-  console.log("videoSrc at player.tsx:", videoSrc);
-  
+
+  // Construct URLs from the videoId
+  const videoSrc = `/media/${videoId}/master.m3u8`;
+  const thumbnailSrc = `/media/${videoId}/thumbnail.webp`;
+
+  console.log("Video ID at player.tsx:", videoId);
+  console.log("Video URL at player.tsx:", videoSrc);
+
   useEffect(() => {
     if (videoNode.current && !playerInstance.current) {
-      // Add detailed logging
-      console.log('Attempting to load video with URL:', videoSrc);
-      
-      // Test URL accessibility
+      // Test URL accessibility for debugging
       fetch(videoSrc, {
-        method: 'GET',
+        method: 'HEAD',
         headers: {
           'Accept': 'application/x-mpegURL',
-          'Range': 'bytes=0-',
         },
-        mode: 'cors',
-        credentials: 'omit'
       })
         .then(response => {
           console.log('M3U8 response status:', response.status);
-          console.log('M3U8 response headers:', response.headers);
-          return response.text();
         })
-        .then(content => console.log('M3U8 content:', content))
         .catch(error => console.error('Failed to fetch M3U8:', error));
 
       const options = {
@@ -61,11 +57,11 @@ const Player: React.FC<PlayerProps> = ({
         controls,
         loop: autoLoop,
         preload,
-        poster: thumbnail,
+        poster: thumbnailSrc,  // Using the thumbnail path
         sources: [{
-          src: videoSrc,
+          src: videoSrc,       // Using the video path
           type: 'application/x-mpegURL',
-          withCredentials: false // Explicitly disable credentials
+          withCredentials: false
         }],
         html5: {
           vhs: {
@@ -79,7 +75,7 @@ const Player: React.FC<PlayerProps> = ({
       };
 
       playerInstance.current = videojs(videoNode.current, options);
-      
+
       playerInstance.current.ready(() => {
         console.log('Player is ready');
         const player = playerInstance.current;
@@ -110,7 +106,7 @@ const Player: React.FC<PlayerProps> = ({
         playerInstance.current = null;
       }
     };
-  }, [videoSrc, thumbnail, autoLoop, autoPlay, controls, preload]);
+  }, [videoId, thumbnailSrc, videoSrc, autoLoop, autoPlay, controls, preload]);
 
   return (
     <div data-vjs-player>

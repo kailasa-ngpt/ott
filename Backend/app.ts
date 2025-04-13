@@ -50,6 +50,18 @@ app.get('/swagger.json', (req, res) => {
   res.send(swaggerSpec);
 });
 
+// proxy middleware routes
+import { streamProxyRouter } from './middleware/streamProxy';
+app.use('/media', streamProxyRouter);
+
+// a simple endpoint for checking if videos exist
+app.head('/media/:videoId/*', (req, res) => {
+  const videoId = req.params.videoId;
+  // You could check if the video exists in your database here
+  // For now, just return a success response
+  res.status(200).send();
+});
+
 // Import routes
 import apiRouter from './routes/api/index';
 import cloudflareR2Routes from './routes/cloudflareR2Router';

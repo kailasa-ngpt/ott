@@ -7,7 +7,6 @@ db.createCollection("videos", {
           id: { bsonType: "string" },
           title: { bsonType: "string" },
           description: { bsonType: "string" },
-          date_of_video: { bsonType: "date" },
           upload_date: { bsonType: "date" },
           categories: {
             bsonType: "array",

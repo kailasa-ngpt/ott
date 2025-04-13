@@ -4,9 +4,6 @@ export interface IVideo extends Document {
     id: string;               // YouTube video ID
     title: string;            // Video title
     description: string;      // Video description
-    videoUrl: string;         // Video URL/link
-    thumbnailUrl: string;     // Thumbnail image URL
-    dateOfVideo?: Date;       // Original date of the video
     uploadDate: string;       // Date uploaded to platform
     categories: string[];     // Array of category IDs
     viewStatus: 'public' | 'private' | 'unlisted'; // Visibility status
@@ -31,17 +28,6 @@ const videoSchema = new Schema({
         type: String,
         required: true,
         trim: true
-    },
-    videoUrl: {
-        type: String,
-        required: true
-    },
-    thumbnailUrl: {
-        type: String,
-        required: true
-    },
-    dateOfVideo: {
-        type: Date
     },
     uploadDate: {
         type: String,
@@ -79,4 +65,4 @@ const videoSchema = new Schema({
 
 const Video = mongoose.model<IVideo>('Video', videoSchema);
 export { Video };
-export default Video; 
+export default Video;

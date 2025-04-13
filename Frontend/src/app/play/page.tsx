@@ -9,12 +9,11 @@ import { useEffect, useState } from "react";
 // import LiveChat from "../components/livechat";
 
 interface IVideoData {
-  videoLink: string;
-  thumbnailPath: string;
+  id: string;           // Video ID - this becomes the key field
   videoTitle: string;
-  isLive?: boolean;
-  deliveredDate?: string;
   description?: string;
+  deliveredDate?: string;
+  isLive?: boolean;
 }
 
 // This component will use useSearchParams
@@ -27,19 +26,35 @@ function PlayContent() {
   const deliveredDate = searchParams.get('deliveredDate');
   const isLive = searchParams.get('isLive') === 'true';
   const [videoData, setVideoData] = useState<IVideoData | null>();
-  
+
   useEffect(() => {
-    if (thumbnailPath && videoTitle && videoLink) {
-      setVideoData({
-        thumbnailPath: thumbnailPath as string,
-        videoTitle: videoTitle as string,
-        videoLink: videoLink as string,
-        description: description as string,
-        deliveredDate: deliveredDate as string,
-        isLive: true, //TEMPORARILY HARDCODED. Replace with isLive later.
-      });
+    const videoId = searchParams.get('id');
+    if (videoId) {
+      // Fetch video metadata from your API
+      fetch(`/api/videos/${videoId}`)
+        .then(response => response.json())
+        .then(data => {
+          setVideoData({
+            id: videoId,
+            videoTitle: data.title || searchParams.get('videoTitle') || 'Untitled Video',
+            description: data.description || searchParams.get('description') || '',
+            deliveredDate: data.deliveredDate || searchParams.get('deliveredDate') || null,
+            isLive: data.isLive || searchParams.get('isLive') === 'true' || false,
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching video:', error);
+          // Fallback to URL parameters if API fails
+          setVideoData({
+            id: videoId,
+            videoTitle: searchParams.get('videoTitle') || 'Untitled Video',
+            description: searchParams.get('description') || '',
+            deliveredDate: searchParams.get('deliveredDate') || null,
+            isLive: searchParams.get('isLive') === 'true' || false,
+          });
+        });
     }
-  }, [thumbnailPath, videoTitle, videoLink, description, deliveredDate]);
+  }, [searchParams]);
 
   if (!videoData) {
     return <div>Loading...</div>;
@@ -49,13 +64,12 @@ function PlayContent() {
     <div className="mx-auto flex-grow flex flex-col justify-center items-center">
       <div className="p-4 w-full flex">
         <div className="w-3/5 flex flex-col">
-          <Player 
-            videoSrc={videoData.videoLink} 
-            thumbnail={videoData.thumbnailPath} 
-            autoLoop={false} 
-            autoPlay={true} 
-            controls={true} 
-            preload="auto" 
+          <Player
+            videoId={videoData.id}
+            autoLoop={false}
+            autoPlay={true}
+            controls={true}
+            preload="auto"
             className="flex-grow flex-shrink"
           />
           <h1 className="text-4xl font-bold mt-4">{videoData.videoTitle}</h1>
@@ -66,7 +80,7 @@ function PlayContent() {
         </div>
         {videoData.isLive && (
           <div className="w-2/5 ml-4 flex-grow flex-shrink flex-col max-h-200px">
-            {/* <LiveChat /> */}
+            {/* LiveChat component */}
           </div>
         )}
       </div>
@@ -81,7 +95,7 @@ const Play = () => {
       <Suspense fallback={<div>Loading video details...</div>}>
         <PlayContent />
       </Suspense>
-      <Footer /> 
+      <Footer />
     </div>
   );
 };
