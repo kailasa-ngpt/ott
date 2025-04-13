@@ -2,27 +2,15 @@
 import { useEffect, useState } from "react";
 import Footer from "../shared/footer";
 import Header from "../shared/header";
-//import { getPlayListsByUserId } from "../../services/playListService";
 import VideoSlider from "../components/videoSlider";
 import { IPlayList } from "@/models/IPlayList";
 import { getPlaylistsByIds } from "@/services/playListService";
-
-const cloudflareEndPointUrl = process.env.NEXT_PUBLIC_CLOUDFLARE_ENDPOINT_URL;
-const bucketName = process.env.NEXT_PUBLIC_CLOUDFLARE_BUCKET_NAME;
-
-if (!cloudflareEndPointUrl || !bucketName) {
-    throw new Error('Missing required Cloudflare R2 environment variables');
-}
-
-// Extract the account ID from the endpoint URL
-const accountId = cloudflareEndPointUrl.split('.')[0].split('//')[1];
-// Construct base URL once
-const baseUrl = `https://${bucketName}.${accountId}.r2.cloudflarestorage.com`;
 
 const Playlists = () => {
   const [playlistsState, setPlaylistsState] = useState<IPlayList[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Define the playlists we want to fetch
   const playlistIds = [
     "nithyanandasatsang2025",
     "shivasankalpaupanishads",
@@ -35,15 +23,8 @@ const Playlists = () => {
     const fetchPlaylists = async () => {
       try {
         console.log('Fetching playlists with IDs:', playlistIds);
+        // This service already transforms URLs to use the media proxy
         const playlists = await getPlaylistsByIds(playlistIds);
-        for (const playlist of playlists) {
-          for (const video of playlist.videos) {
-            const videoUrl = `${baseUrl}/${video.id}/master.m3u8`;
-            console.log('Constructed video URL:', videoUrl);
-            video.videoLink = videoUrl;
-            video.thumbnail = `${baseUrl}/${video.id}/thumbnail.jpg`;
-          }
-        }
         console.log('Received playlists:', playlists);
         setPlaylistsState(playlists);
       } catch (error) {
@@ -76,9 +57,9 @@ const Playlists = () => {
               ) : (
                 playlistsState.map((playlist, index) => (
                     <div key={index}>
-                      <VideoSlider 
-                        category={playlist.name}  
-                        videos={playlist.videos} 
+                      <VideoSlider
+                        category={playlist.name}
+                        videos={playlist.videos}
                       />
                     </div>
                   )
@@ -86,11 +67,9 @@ const Playlists = () => {
               )
         }
       </div>
-      <Footer/> 
+      <Footer/>
     </div>
   );
 }
 
 export default Playlists;
-
-const getCurrentUserId = () => "123"; //modify this code later as we make the actual call. This is just for testing
