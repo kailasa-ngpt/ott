@@ -44,15 +44,15 @@ const VideoGridSection = () => {
       <div className="container mx-auto px-4">
         {/* Videos Grid - Responsive grid with proper breakpoints */}
         <div className={`grid ${
-          isMobile 
+          isMobile
             ? 'grid-cols-3 gap-2' // 3 columns on mobile
             : 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 md:gap-4'
           } mb-6`}
         >
           {videosToDisplay.map(video => (
             <div key={video.id} className="flex flex-col">
-              <a href={`https://ott-backend.koogle.sk/media/${video.id}/master.m3u8`} target="_blank" rel="noopener noreferrer">
-                <div 
+              <a href={`https://ott-ui.koogle.sk/play?id=${video.id}`} target="_blank" rel="noopener noreferrer">
+                <div
                   className="aspect-[9/16] w-full rounded overflow-hidden mb-1 bg-gray-100"
                 >
                   <img
