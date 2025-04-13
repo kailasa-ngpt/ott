@@ -4,17 +4,14 @@ export interface IPlaylist extends Document {
     id: string;
     name: string;
     description: string;
-    thumbnailPath: string;
     videos: {
-        id: string;
-        thumbnail: string;
-        videoTitle: string;
-        videoLink: string;
-        createdDate: string;
-        views: number;
-    }[]
-    createdDate: string;
-    updatedDate: string;
+        id: string;           // Video ID reference
+        videoTitle: string;   // Title of the video
+        uploadDate: string;   // Upload date of the video
+        views: number;        // View count of the video
+    }[];
+    createdDate: string;      // Playlist creation date
+    updatedDate: string;      // Playlist last update date
 }
 
 const playlistSchema = new Schema({
@@ -33,16 +30,8 @@ const playlistSchema = new Schema({
         required: true,
         trim: true
     },
-    thumbnailPath: {
-        type: String,
-        required: true
-    },
     videos: [{
         id: {
-            type: String,
-            required: true
-        },
-        thumbnail: {
             type: String,
             required: true
         },
@@ -50,11 +39,7 @@ const playlistSchema = new Schema({
             type: String,
             required: true
         },
-        videoLink: {
-            type: String,
-            required: true
-        },
-        createdDate: {
+        uploadDate: {
             type: String,
             required: true
         },
@@ -66,12 +51,16 @@ const playlistSchema = new Schema({
     }],
     createdDate: {
         type: String,
-        required: true
+        required: true,
+        default: () => new Date().toISOString()
     },
     updatedDate: {
         type: String,
-        required: true
+        required: true,
+        default: () => new Date().toISOString()
     }
 });
 
-export default mongoose.model<IPlaylist>('Playlist', playlistSchema); 
+const Playlist = mongoose.model<IPlaylist>('Playlist', playlistSchema);
+export { Playlist };
+export default Playlist;

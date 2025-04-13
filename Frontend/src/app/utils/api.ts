@@ -1,7 +1,7 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://ott-backend.koogle.sk";
 const CLIENT_ID = "aeecdcc1-6127-4030-b6f0-97ce7ae35c6a";//process.env.NEXT_PUBLIC_CLIENT_ID;
-const REDIRECT_URI = "http://localhost:4000/auth/callback";//process.env.NEXT_PUBLIC_REDIRECT_URI;
-console.log('API_URL from env:', API_URL);  
+//const REDIRECT_URI = "http://localhost:4000/auth/callback";//process.env.NEXT_PUBLIC_REDIRECT_URI;
+// console.log('API_URL from env:', API_URL);
 
 export async function exchangeCodeForToken(code: string): Promise<string | null> {
 
