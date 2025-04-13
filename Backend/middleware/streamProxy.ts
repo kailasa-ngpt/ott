@@ -167,16 +167,16 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
 
       try {
         // Fetch the M3U8 content
-        const response = await axios.get(signedUrl);
-        let m3u8Content = response.data;
+        const response = await axios.get<string>(signedUrl);
+        const m3u8Content = response.data;
 
         // Ensure content is a string
-        if (typeof m3u8Content !== 'string') {
-          m3u8Content = m3u8Content.toString();
-        }
+        const contentAsString = typeof m3u8Content === 'string' 
+          ? m3u8Content 
+          : String(m3u8Content);
 
         // Rewrite URLs
-        const modifiedContent = rewriteM3U8Content(m3u8Content, decodedPath);
+        const modifiedContent = rewriteM3U8Content(contentAsString, decodedPath);
 
         // Cache the modified content
         m3u8Cache.set(decodedPath, modifiedContent);
@@ -208,13 +208,14 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
         if (process.env.TS_CACHE_ENABLED !== 'false') {
           // For caching, we need the full response
           const response = await axios.get(signedUrl, { responseType: 'arraybuffer' });
+          const responseData = response.data;
 
           // Cache the segment
-          tsCache.set(decodedPath, response.data);
+          tsCache.set(decodedPath, responseData);
 
           // Send response
           res.setHeader('Content-Type', 'video/mp2t');
-          res.send(response.data);
+          res.send(responseData);
         } else {
           // For larger files or when caching is disabled, use streaming
           const response = await axios({
