@@ -56,18 +56,20 @@ if (portArgIndex !== -1 && args.length > portArgIndex + 1) {
     PORT = parseInt(args[portArgIndex + 1], 10);
 }
 
-// Setup Swagger at root URL
-app.use('/', swaggerUi.serve);
-app.get('/', swaggerUi.setup(swaggerSpec));
-
-// Also keep /api-docs route for backward compatibility
+// Redirect Swagger UI routes to frontend
 app.use('/api-docs', swaggerUi.serve);
-app.get('/api-docs', swaggerUi.setup(swaggerSpec));
+app.get('/api-docs', (req, res) => {
+  res.redirect('https://ntv.nithyananda.ai'); // Redirect to frontend URL
+});
 
-// Provide swagger.json endpoint
+// Redirect root path to frontend
+app.get('/', (req, res) => {
+  res.redirect('https://ntv.nithyananda.ai'); // Redirect to frontend URL
+});
+
+// Also redirect swagger.json to frontend
 app.get('/swagger.json', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.send(swaggerSpec);
+  res.redirect('https://ntv.nithyananda.ai'); // Redirect to frontend URL
 });
 
 // Import the stream proxy middleware
