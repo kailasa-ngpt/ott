@@ -82,7 +82,6 @@ const VideoSlider: React.FC<VideoSliderProps> = ({category, videos = []}) => {
                 id={video.id}                    // Pass the id instead of thumbnailPath
                 videoTitle={video.videoTitle}    // This is correct
                 deliveredDate={video.createdDate}
-                description={video.description}
                 isLive={false}
               />
             </div>
