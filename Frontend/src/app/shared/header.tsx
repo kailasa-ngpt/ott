@@ -154,7 +154,7 @@ const Header: React.FC = () => {
               </form>
             </div>
 
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               {isLoggedIn ? (
                 <button 
                   onClick={handleLogout}
@@ -170,7 +170,7 @@ const Header: React.FC = () => {
                   Login
                 </button>
               )}
-            </div>
+            </div> */}
           </nav>
         </header>
       )}
