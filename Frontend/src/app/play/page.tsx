@@ -38,7 +38,7 @@ function PlayContent() {
             id: videoId,
             videoTitle: data.title || searchParams.get('videoTitle') || 'Untitled Video',
             description: data.description || searchParams.get('description') || '',
-            deliveredDate: data.deliveredDate || searchParams.get('deliveredDate') || null,
+            deliveredDate: data.deliveredDate || searchParams.get('deliveredDate') || '',
             isLive: data.isLive || searchParams.get('isLive') === 'true' || false,
           });
         })
@@ -49,7 +49,7 @@ function PlayContent() {
             id: videoId,
             videoTitle: searchParams.get('videoTitle') || 'Untitled Video',
             description: searchParams.get('description') || '',
-            deliveredDate: searchParams.get('deliveredDate') || null,
+            deliveredDate: searchParams.get('deliveredDate') || '',
             isLive: searchParams.get('isLive') === 'true' || false,
           });
         });
