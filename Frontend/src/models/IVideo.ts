@@ -5,4 +5,4 @@ export interface IVideo {
     videoLink: string;
     createdDate: string;
     views: number;
-} 
+}

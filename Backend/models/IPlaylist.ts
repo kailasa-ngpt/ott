@@ -1,17 +1,13 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IPlaylist extends Document {
-    id: string;
-    name: string;
-    description: string;
-    videos: {
-        id: string;           // Video ID reference
-        videoTitle: string;   // Title of the video
-        uploadDate: string;   // Upload date of the video
-        views: number;        // View count of the video
-    }[];
-    createdDate: string;      // Playlist creation date
-    updatedDate: string;      // Playlist last update date
+    id: string;                   // Custom playlist ID (not MongoDB's _id)
+    name: string;                 // Name of the playlist
+    description?: string;         // Optional description
+    thumbnailPath?: string;       // Optional thumbnail path
+    videos: string[];             // Array of video IDs that reference videos collection
+    createdDate: string;          // Creation date
+    updatedDate: string;          // Last updated date
 }
 
 const playlistSchema = new Schema({
@@ -27,27 +23,16 @@ const playlistSchema = new Schema({
     },
     description: {
         type: String,
-        required: true,
-        trim: true
+        trim: true,
+        default: ''
+    },
+    thumbnailPath: {
+        type: String,
+        default: ''
     },
     videos: [{
-        id: {
-            type: String,
-            required: true
-        },
-        videoTitle: {
-            type: String,
-            required: true
-        },
-        uploadDate: {
-            type: String,
-            required: true
-        },
-        views: {
-            type: Number,
-            required: true,
-            default: 0
-        }
+        type: String,  // Video IDs
+        ref: 'Video'   // Reference to the Video model
     }],
     createdDate: {
         type: String,
@@ -61,6 +46,4 @@ const playlistSchema = new Schema({
     }
 });
 
-const Playlist = mongoose.model<IPlaylist>('Playlist', playlistSchema);
-export { Playlist };
-export default Playlist;
+export default mongoose.model<IPlaylist>('Playlist', playlistSchema);
