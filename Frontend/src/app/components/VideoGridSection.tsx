@@ -5,7 +5,6 @@ import PlaceholderImage from './PlaceholderImage';
 
 // CSV data (first 20 records)
 const videoData = [
-  { id: "-23ixHuyjtE", title: "The Paramasatyas of KAILASA: Glimpse of KAILASA Manifestating | Nithyananda Day 2025", category: "General" },
   { id: "EjOfOIwpVMA", title: "Paramashiva Sena: Manifest Paramadvaita In And Around You", category: "General" },
   { id: "jOr2zm932_4", title: "Paramashiva's Ultimate Truths About Various Dimensions Of Cosmos", category: "General" },
   { id: "KEqxVh8hk0A", title: "Break Free From Overwhelm: The Path to Paramashiva!", category: "General" },
@@ -19,10 +18,7 @@ const videoData = [
   { id: "KfMpXoAelrQ", title: "The #Science of Building #Bhakti", category: "General" },
   { id: "oYmvgHbIHJk", title: "One Decision That Changes Everything: The Power of Guru", category: "General" },
   { id: "bxC_wzAvz9s", title: "Experience the Guru's Grace: The Dance of Paramashiva | Narada Bhakthi Sutra - Satsang Series", category: "General" },
-  { id: "I_P5l7lEaO0", title: "Unlock the Mystical Secrets of Guru Puja! | Narada Bhakti Sutras - Satsang Series", category: "General" },
-  { id: "jYUpPyf_BM4", title: "Experience Liberation Through Initiation | Narada Bhakthi Sutra - Satsang Series", category: "General" },
-  { id: "p0_RZOfZn1A", title: "Illuminate with the Divine Blessings of Guru - Narada Bhakti Sutras Satsang series", category: "General" },
-  { id: "RNFRZFJ1ek8", title: "Bhakti - When Your Supreme Love turns Towards God (Narada Bhakti Sutra 2) | 11 July 2007", category: "General" }
+  { id: "I_P5l7lEaO0", title: "Unlock the Mystical Secrets of Guru Puja! | Narada Bhakti Sutras - Satsang Series", category: "General" }
 ];
 
 const VideoGridSection = () => {
