@@ -190,7 +190,7 @@ export default function Carousel(): JSX.Element {
               {/* <div className="flex items-center max-w-4xl"> */}
               <div className="w-full bg-gray-100 flex-shrink-0 shadow-lg overflow-hidden">
               <img
-    src="/SliderImages/Ott.png"
+    src="/SliderImages/Ott1.png"
     alt={currentItem.title}
     className="w-full h-full object-cover"
   />
