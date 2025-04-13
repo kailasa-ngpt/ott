@@ -122,7 +122,7 @@ function PlayContent() {
       <div className="px-4 py-3 bg-white">
         <h1 className="text-xl font-bold text-black mb-1">{videoData.title}</h1>
         
-        <div className="flex justify-between items-center mb-4">
+        <div className="mb-4">
           <div className="text-sm text-gray-500 flex items-center">
             {videoData.uploadDate && (
               <span className="mr-3">Published on {formatDate(videoData.uploadDate)}</span>
@@ -135,27 +135,6 @@ function PlayContent() {
                 {formatDuration(videoData.videoLength)}
               </span>
             )}
-          </div>
-          
-          <div className="flex space-x-4">
-            <button className="flex items-center text-gray-700">
-              <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"></path>
-              </svg>
-              Like
-            </button>
-            <button className="flex items-center text-gray-700">
-              <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"></path>
-              </svg>
-              Dislike
-            </button>
-            <button className="flex items-center text-gray-700">
-              <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"></path>
-              </svg>
-              Share
-            </button>
           </div>
         </div>
         

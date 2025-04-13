@@ -111,13 +111,6 @@ const Player: React.FC<PlayerProps> = ({
           // Add YouTube-like appearance
           player.addClass('vjs-youtube-like');
           
-          // Add custom title overlay if title is provided
-          if (title) {
-            const titleOverlay = player.addChild('component');
-            titleOverlay.addClass('vjs-title-overlay');
-            titleOverlay.el().innerHTML = `<div class="title-text">${title}</div>`;
-          }
-
           player.on('error', (error: Error) => {
             console.error('Player error:', error);
             console.error('Error details:', player.error());
