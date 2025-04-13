@@ -57,86 +57,86 @@ export default function Carousel(): JSX.Element {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  const nextSlide = () => {
-    if (isAnimating) return;
+  // const nextSlide = () => {
+  //   if (isAnimating) return;
     
-    setDirection('right');
-    setIsAnimating(true);
+  //   setDirection('right');
+  //   setIsAnimating(true);
     
-    // After animation duration, change the slide
-    setTimeout(() => {
-      setActiveIndex((prev) => (prev + 1) % contentItems.length);
-      // Allow a little time for the state to update before resetting animation flag
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 50);
-    }, 300);
-  };
+  //   // After animation duration, change the slide
+  //   setTimeout(() => {
+  //     setActiveIndex((prev) => (prev + 1) % contentItems.length);
+  //     // Allow a little time for the state to update before resetting animation flag
+  //     setTimeout(() => {
+  //       setIsAnimating(false);
+  //     }, 50);
+  //   }, 300);
+  // };
 
-  const prevSlide = () => {
-    if (isAnimating) return;
+  // const prevSlide = () => {
+  //   if (isAnimating) return;
     
-    setDirection('left');
-    setIsAnimating(true);
+  //   setDirection('left');
+  //   setIsAnimating(true);
     
-    // After animation duration, change the slide
-    setTimeout(() => {
-      setActiveIndex((prev) => (prev - 1 + contentItems.length) % contentItems.length);
-      // Allow a little time for the state to update before resetting animation flag
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 50);
-    }, 300);
-  };
+  //   // After animation duration, change the slide
+  //   setTimeout(() => {
+  //     setActiveIndex((prev) => (prev - 1 + contentItems.length) % contentItems.length);
+  //     // Allow a little time for the state to update before resetting animation flag
+  //     setTimeout(() => {
+  //       setIsAnimating(false);
+  //     }, 50);
+  //   }, 300);
+  // };
 
-  useEffect(() => {
-    if (!isHovered && !isAnimating) {
-      const interval = setInterval(() => {
-        nextSlide();
-      }, 5000);
+  // useEffect(() => {
+  //   if (!isHovered && !isAnimating) {
+  //     const interval = setInterval(() => {
+  //       nextSlide();
+  //     }, 5000);
       
-      return () => clearInterval(interval);
-    }
-  }, [isHovered, isAnimating]);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [isHovered, isAnimating]);
 
-  const handleMouseOver = () => {
-    setIsHovered(true);
-  };
+  // const handleMouseOver = () => {
+  //   setIsHovered(true);
+  // };
 
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
+  // const handleMouseLeave = () => {
+  //   setIsHovered(false);
+  // };
 
-  const handleDotClick = (index: number) => {
-    if (isAnimating) return;
+  // const handleDotClick = (index: number) => {
+  //   if (isAnimating) return;
     
-    if (index === activeIndex) return;
+  //   if (index === activeIndex) return;
     
-    setDirection(index > activeIndex ? 'right' : 'left');
-    setIsAnimating(true);
+  //   setDirection(index > activeIndex ? 'right' : 'left');
+  //   setIsAnimating(true);
     
-    // After animation duration, change the slide
-    setTimeout(() => {
-      setActiveIndex(index);
-      // Allow a little time for the state to update before resetting animation flag
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 50);
-    }, 300);
-  };
+  //   // After animation duration, change the slide
+  //   setTimeout(() => {
+  //     setActiveIndex(index);
+  //     // Allow a little time for the state to update before resetting animation flag
+  //     setTimeout(() => {
+  //       setIsAnimating(false);
+  //     }, 50);
+  //   }, 300);
+  // };
 
-  // Get the current slide and next/prev slide based on direction
+  // // Get the current slide and next/prev slide based on direction
   const currentItem = contentItems[activeIndex];
-  const nextIndex = direction === 'right' 
-    ? (activeIndex + 1) % contentItems.length 
-    : (activeIndex - 1 + contentItems.length) % contentItems.length;
-  const nextItem = contentItems[nextIndex];
+  // const nextIndex = direction === 'right' 
+  //   ? (activeIndex + 1) % contentItems.length 
+  //   : (activeIndex - 1 + contentItems.length) % contentItems.length;
+  // const nextItem = contentItems[nextIndex];
 
   return (
     <div 
       className="relative w-full overflow-hidden" 
-      onMouseOver={handleMouseOver} 
-      onMouseLeave={handleMouseLeave}
+      // onMouseOver={handleMouseOver} 
+      // onMouseLeave={handleMouseLeave}
       style={{ backgroundColor: currentItem.color }}
     >
       {/* Main slider container */}
@@ -153,16 +153,25 @@ export default function Carousel(): JSX.Element {
           {isMobile ? (
             // Mobile Layout
             <div className="container mx-auto px-4 flex flex-col items-center text-center h-full justify-center">
-              <div 
+              {/* <div 
                 className="w-[180px] mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg"
                 style={{ aspectRatio: '9/16' }}
               >
                 <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
                   Poster
                 </div>
-              </div>
+              </div> */}
+              <div
+  className="w-full mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg overflow-hidden"
+>
+                <img
+    src="/SliderImages/swamiji-live.jpeg" // Replace with your image path
+    alt={currentItem.title}
+    className="w-full h-full object-cover"
+  />
+  </div>
               
-              <div className="w-full px-2 text-white max-w-xs">
+              {/* <div className="w-full px-2 text-white max-w-xs">
                 <h1 className="text-2xl font-bold mb-2">
                   {currentItem.title}
                 </h1>
@@ -173,20 +182,27 @@ export default function Carousel(): JSX.Element {
                   <BiPlay className="mr-2" size={18} />
                   Watch Now
                 </button>
-              </div>
+              </div> */}
             </div>
           ) : (
             // Desktop Layout
             <div className="container mx-auto px-4 flex justify-center items-center h-full">
-              <div className="flex items-center max-w-4xl">
-                <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
+              {/* <div className="flex items-center max-w-4xl"> */}
+              <div className="w-full bg-gray-100 flex-shrink-0 shadow-lg overflow-hidden">
+              <img
+    src="/SliderImages/swamiji-live.jpeg"
+    alt={currentItem.title}
+    className="w-full h-full object-cover"
+  />
+  </div>
+                {/* <div className="h-[350px] w-[250px] bg-gray-100 flex-shrink-0 shadow-lg">
                   <div className="w-full h-full bg-gradient-to-b from-gray-300 to-gray-400 flex items-center justify-center text-gray-700 font-bold text-xl">
                     Poster
                   </div>
-                </div>
+                </div> */}
                 
-                <div className="ml-8 text-white max-w-2xl">
-                  <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                 {/*  <div className="ml-8 text-white max-w-2xl">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">
                     {currentItem.title}
                   </h1>
                   <p className="text-lg mb-6 opacity-90">
@@ -196,21 +212,21 @@ export default function Carousel(): JSX.Element {
                     <BiPlay className="mr-2" size={24} />
                     Watch Now
                   </button>
-                </div>
-              </div>
+                </div> */}
+              {/* </div> */}
             </div>
           )}
         </div>
 
         {/* Next Slide (for animation) */}
-        {isAnimating && (
+       {/* {isAnimating && (
           <div 
             className={`absolute inset-0 w-full h-full transition-transform duration-300 ease-in-out ${
               direction === 'right' ? 'translate-x-full' : '-translate-x-full'
             }`}
             style={{ backgroundColor: nextItem.color }}
-          >
-            {isMobile ? (
+          >*/}
+            {/* {isMobile ? (
               // Mobile Layout for next slide
               <div className="container mx-auto px-4 flex flex-col items-center text-center h-full justify-center">
                 <div 
@@ -259,13 +275,13 @@ export default function Carousel(): JSX.Element {
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        )}
+            )} */}
+          {/* </div> */}
+        {/* )} */}
       </div>
 
       {/* Navigation arrows */}
-      <button
+      {/* <button
         className={`absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 rounded-full text-white ${isMobile ? 'p-1' : 'p-2'} z-20`}
         onClick={prevSlide}
         disabled={isAnimating}
@@ -278,10 +294,10 @@ export default function Carousel(): JSX.Element {
         disabled={isAnimating}
       >
         <FaChevronRight size={isMobile ? 16 : 32} />
-      </button>
+      </button> */}
       
       {/* Pagination indicators */}
-      <div className="flex justify-center mt-2 md:mt-4">
+      {/* <div className="flex justify-center mt-2 md:mt-4">
         {contentItems.map((_, index) => (
           <div
             key={index}
@@ -293,7 +309,7 @@ export default function Carousel(): JSX.Element {
             } mx-1 transition-all duration-500 ease-in-out cursor-pointer`}
           ></div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
