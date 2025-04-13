@@ -3,8 +3,8 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import axios from 'axios';
 import dotenv from 'dotenv';
-// Import NodeCache with proper type declaration
 import NodeCache from 'node-cache';
+import { Readable } from 'stream';
 
 dotenv.config();
 
@@ -112,7 +112,7 @@ function rewriteM3U8Content(content: string, basePath: string): string {
 const streamProxyRouter = Router();
 
 // Handle streaming media requests (both M3U8 and TS files)
-streamProxyRouter.get('*', async (req: Request, res: Response) => {
+streamProxyRouter.get('*', async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Extract the media path from the URL and properly decode it
     const mediaPath = req.path.substring(1); // Remove leading slash
@@ -131,10 +131,10 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
 
     // Handle image files (thumbnails)
     if (isWebp) {
-      // Get signed URL
-      const signedUrl = await getSignedUrlWithCache(decodedPath, 'm3u8');
-
       try {
+        // Get signed URL
+        const signedUrl = await getSignedUrlWithCache(decodedPath, 'm3u8');
+
         // Fetch the image
         const response = await axios.get(signedUrl, { responseType: 'arraybuffer' });
 
@@ -146,7 +146,7 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
         res.send(response.data);
       } catch (error: any) {
         logger(`Error fetching image ${decodedPath}: ${error.message}`, 'error');
-        res.status(500).send(`Error fetching image: ${error.message}`);
+        return next(error);
       }
       return;
     }
@@ -158,21 +158,22 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
       if (cachedM3u8) {
         logger(`M3U8 cache hit: ${decodedPath}`, 'debug');
         res.setHeader('Content-Type', 'application/vnd.apple.mpegurl');
-        res.send(cachedM3u8);
-        return;
+        return res.send(cachedM3u8);
       }
 
-      // Get signed URL
-      const signedUrl = await getSignedUrlWithCache(decodedPath);
-
       try {
+        // Get signed URL
+        const signedUrl = await getSignedUrlWithCache(decodedPath);
+
         // Fetch the M3U8 content
         const response = await axios.get<string>(signedUrl);
         let m3u8Content = response.data;
 
         // Ensure content is a string
         if (typeof m3u8Content !== 'string') {
-          m3u8Content = m3u8Content.toString();
+          m3u8Content = Buffer.isBuffer(m3u8Content)
+            ? m3u8Content.toString()
+            : String(m3u8Content);
         }
 
         // Rewrite URLs
@@ -183,10 +184,10 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
 
         // Send the response
         res.setHeader('Content-Type', 'application/vnd.apple.mpegurl');
-        res.send(modifiedContent);
+        return res.send(modifiedContent);
       } catch (error: any) {
         logger(`Error fetching M3U8 ${decodedPath}: ${error.message}`, 'error');
-        res.status(500).send(`Error fetching M3U8: ${error.message}`);
+        return next(error);
       }
     }
     // Handle TS files
@@ -196,14 +197,13 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
         logger(`TS cache hit: ${decodedPath}`, 'debug');
         const cachedData = tsCache.get(decodedPath);
         res.setHeader('Content-Type', 'video/mp2t');
-        res.send(cachedData);
-        return;
+        return res.send(cachedData);
       }
 
-      // Get signed URL
-      const signedUrl = await getSignedUrlWithCache(decodedPath, 'ts');
-
       try {
+        // Get signed URL
+        const signedUrl = await getSignedUrlWithCache(decodedPath, 'ts');
+
         // For smaller TS files, we'll cache them in memory
         if (process.env.TS_CACHE_ENABLED !== 'false') {
           // For caching, we need the full response
@@ -214,7 +214,7 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
 
           // Send response
           res.setHeader('Content-Type', 'video/mp2t');
-          res.send(response.data);
+          return res.send(response.data);
         } else {
           // For larger files or when caching is disabled, use streaming
           const response = await axios({
@@ -224,11 +224,16 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
           });
 
           res.setHeader('Content-Type', 'video/mp2t');
-          response.data.pipe(res);
+
+          if (response.data && response.data instanceof Readable) {
+            return response.data.pipe(res);
+          } else {
+            throw new Error('Invalid response data format');
+          }
         }
       } catch (error: any) {
         logger(`Error fetching TS file ${decodedPath}: ${error.message}`, 'error');
-        res.status(500).send(`Error fetching video segment: ${error.message}`);
+        return next(error);
       }
     } else {
       logger(`Unsupported media type: ${decodedPath}`, 'error');
@@ -236,7 +241,7 @@ streamProxyRouter.get('*', async (req: Request, res: Response) => {
     }
   } catch (error: any) {
     logger(`Error processing media request: ${error.message}`, 'error');
-    res.status(500).send(`Error processing media: ${error.message}`);
+    return next(error);
   }
 });
 
@@ -247,10 +252,10 @@ streamProxyRouter.get('/clear-cache', (req: Request, res: Response) => {
     tsCache.flushAll();
     urlCache.flushAll();
     logger('Cache cleared', 'info');
-    res.json({ success: true });
+    return res.json({ success: true });
   } catch (error: any) {
     logger(`Error clearing cache: ${error.message}`, 'error');
-    res.json({ success: false, error: error.message });
+    return res.json({ success: false, error: error.message });
   }
 });
 
