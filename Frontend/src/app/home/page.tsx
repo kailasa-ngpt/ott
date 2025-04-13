@@ -57,14 +57,6 @@ const Home = () => {
 
             {/* Featured Playlists Section */}
             <FeaturedPlaylists />
-
-            {/* Additional sections - Include the proper padding on mobile */}
-            <section className="container mx-auto px-4 py-8">
-              <h2 className="text-2xl font-bold mb-4">Recommended For You</h2>
-              <div className="bg-gray-100 p-8 rounded-lg text-center">
-                <p className="text-gray-500">Personalized recommendations will appear here</p>
-              </div>
-            </section>
           </>
         )}
       </main>
