@@ -1,3 +1,7 @@
+/// <reference types="node" />
+/// <reference types="react" />
+/// <reference types="next" />
+
 import React from 'react';
 
 declare global {

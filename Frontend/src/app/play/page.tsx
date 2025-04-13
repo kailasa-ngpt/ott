@@ -127,7 +127,7 @@ function PlayContent() {
             {videoData.uploadDate && (
               <span className="mr-3">Published on {formatDate(videoData.uploadDate)}</span>
             )}
-            {videoData.videoLength > 0 && (
+            {videoData.videoLength !== undefined && videoData.videoLength > 0 && (
               <span className="flex items-center">
                 <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-0.5-13H13v5.25l4.5 2.67-0.75 1.23L11 13V7z"></path>
@@ -161,7 +161,7 @@ function PlayContent() {
         
         {videoData.categories && videoData.categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3">
-            {videoData.categories.map((category, index) => (
+            {videoData.categories.map((category: string, index: number) => (
               <span key={index} className="px-2 py-1 text-xs bg-gray-100 rounded-full text-gray-700">
                 {category}
               </span>
