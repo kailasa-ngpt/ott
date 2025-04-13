@@ -8,55 +8,97 @@ import { useSearchParams } from "next/navigation";
 // import LiveChat from "../components/livechat";
 
 interface IVideoData {
-  id: string;           // Video ID - this becomes the key field
-  videoTitle: string;
+  id: string;           
+  title: string;
   description?: string;
-  deliveredDate?: string;
+  uploadDate?: string;
+  videoLength?: number; // Duration in seconds
+  categories?: string[];
+  tags?: string[];
+  streamUrl?: string;
+  thumbnailUrl?: string;
   isLive?: boolean;
 }
+
+// Format seconds to MM:SS or HH:MM:SS
+const formatDuration = (seconds: number): string => {
+  if (!seconds) return "0:00";
+  
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+};
+
+// Format date to readable format
+const formatDate = (dateString: string): string => {
+  if (!dateString) return "";
+  
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+};
 
 // This component will use useSearchParams
 function PlayContent() {
   const searchParams = useSearchParams();
-  const thumbnailPath = searchParams.get('thumbnailPath');
-  const videoTitle = searchParams.get('videoTitle');
-  const videoLink = searchParams.get('videoLink');
-  const description = searchParams.get('description');
-  const deliveredDate = searchParams.get('deliveredDate');
-  const isLive = searchParams.get('isLive') === 'true';
-  const [videoData, setVideoData] = useState<IVideoData | null>();
+  const videoId = searchParams.get('id');
+  const [videoData, setVideoData] = useState<IVideoData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const videoId = searchParams.get('id');
-    if (videoId) {
-      // Fetch video metadata from your API
-      fetch(`/api/videos/${videoId}`)
-        .then(response => response.json())
-        .then(data => {
-          setVideoData({
-            id: videoId,
-            videoTitle: data.title || searchParams.get('videoTitle') || 'Untitled Video',
-            description: data.description || searchParams.get('description') || '',
-            deliveredDate: data.deliveredDate || searchParams.get('deliveredDate') || '',
-            isLive: data.isLive || searchParams.get('isLive') === 'true' || false,
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching video:', error);
-          // Fallback to URL parameters if API fails
-          setVideoData({
-            id: videoId,
-            videoTitle: searchParams.get('videoTitle') || 'Untitled Video',
-            description: searchParams.get('description') || '',
-            deliveredDate: searchParams.get('deliveredDate') || '',
-            isLive: searchParams.get('isLive') === 'true' || false,
-          });
-        });
+    if (!videoId) {
+      setError("No video ID provided");
+      setIsLoading(false);
+      return;
     }
-  }, [searchParams]);
 
-  if (!videoData) {
-    return <div>Loading...</div>;
+    // Fetch video metadata from your API
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    
+    fetch(`${API_URL}/api/videos/${videoId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to fetch video data: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setVideoData({
+          id: data.id,
+          title: data.title || 'Untitled Video',
+          description: data.description || '',
+          uploadDate: data.uploadDate || '',
+          videoLength: data.videoLength || 0,
+          categories: data.categories || [],
+          tags: data.tags || [],
+          streamUrl: data.streamUrl,
+          thumbnailUrl: data.thumbnailUrl,
+          isLive: data.isLive || false,
+        });
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching video:', error);
+        setError(error.message);
+        setIsLoading(false);
+      });
+  }, [videoId]);
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64">Loading video details...</div>;
+  }
+
+  if (error || !videoData) {
+    return <div className="flex justify-center items-center h-64 text-red-500">{error || "Failed to load video"}</div>;
   }
 
   return (
@@ -71,19 +113,27 @@ function PlayContent() {
               controls={true}
               preload="auto"
               className="w-full h-full"
-              title={videoData.videoTitle}
+              title={videoData.title}
             />
           </div>
         </div>
       </div>
       
       <div className="px-4 py-3 bg-white">
-        <h1 className="text-xl font-bold text-black mb-1">{videoData.videoTitle}</h1>
+        <h1 className="text-xl font-bold text-black mb-1">{videoData.title}</h1>
         
         <div className="flex justify-between items-center mb-4">
-          <div className="text-sm text-gray-500">
-            {videoData.deliveredDate && (
-              <span>Published on {videoData.deliveredDate}</span>
+          <div className="text-sm text-gray-500 flex items-center">
+            {videoData.uploadDate && (
+              <span className="mr-3">Published on {formatDate(videoData.uploadDate)}</span>
+            )}
+            {videoData.videoLength > 0 && (
+              <span className="flex items-center">
+                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-0.5-13H13v5.25l4.5 2.67-0.75 1.23L11 13V7z"></path>
+                </svg>
+                {formatDuration(videoData.videoLength)}
+              </span>
             )}
           </div>
           
@@ -108,6 +158,16 @@ function PlayContent() {
             </button>
           </div>
         </div>
+        
+        {videoData.categories && videoData.categories.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-3">
+            {videoData.categories.map((category, index) => (
+              <span key={index} className="px-2 py-1 text-xs bg-gray-100 rounded-full text-gray-700">
+                {category}
+              </span>
+            ))}
+          </div>
+        )}
         
         <div className="pt-3 border-t border-gray-200">
           <div className="text-sm text-gray-800 whitespace-pre-line">

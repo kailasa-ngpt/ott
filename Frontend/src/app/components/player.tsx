@@ -16,7 +16,7 @@ interface PlayerProps {
   preload?: 'auto' | 'metadata' | 'none';
   className?: string;
   isLive?: boolean;
-  title?: string;
+  title?: string;      // Title to display in overlay
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -42,6 +42,7 @@ const Player: React.FC<PlayerProps> = ({
   console.log("Video ID:", videoId);
   console.log("Video URL:", videoSrc);
   console.log("Thumbnail URL:", thumbnailSrc);
+  console.log("Video Title:", title);
 
   useEffect(() => {
     if (videoNode.current && !playerInstance.current) {
