@@ -165,7 +165,7 @@ export default function Carousel(): JSX.Element {
   className="w-full mb-4 mt-8 bg-gray-100 flex-shrink-0 shadow-lg overflow-hidden"
 >
                 <img
-    src="/SliderImages/Ott.png" // Replace with your image path
+    src="/SliderImages/Ott3.png" // Replace with your image path
     alt={currentItem.title}
     className="w-full h-full object-cover"
   />
@@ -190,7 +190,7 @@ export default function Carousel(): JSX.Element {
               {/* <div className="flex items-center max-w-4xl"> */}
               <div className="w-full bg-gray-100 flex-shrink-0 shadow-lg overflow-hidden">
               <img
-    src="/SliderImages/Ott1.png"
+    src="/SliderImages/Ott3.png"
     alt={currentItem.title}
     className="w-full h-full object-cover"
   />
