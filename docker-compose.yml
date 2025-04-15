@@ -2,7 +2,7 @@ version: '3.8'
 services:
   mongo:
     image: mongo:8.0
-    container_name: mongodb_container
+    container_name: mongodb_container-1
     # ports:
     #  - "27018:27017"
     volumes:
@@ -22,7 +22,7 @@ services:
   backend:
     build:
       context: ./Backend
-    container_name: backend_container
+    container_name: backend_container-1
     depends_on:
       mongo:
         condition: service_healthy  # Wait for MongoDB to be healthy
@@ -39,7 +39,7 @@ services:
   frontend:
     build:
       context: ./Frontend
-    container_name: frontend_container
+    container_name: frontend_container-1
     depends_on:
       - backend
     #ports:
