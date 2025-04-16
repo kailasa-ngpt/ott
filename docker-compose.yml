@@ -36,12 +36,32 @@ services:
     networks:
       - app-network
 
+  ai-service:
+    build:
+      context: ./Backend/ai_service
+    container_name: ai_service_container
+    depends_on:
+      - backend
+    # ports:
+    #   - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_BASE=${OPENAI_API_BASE:-https://api.openai.com/v1}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - RAG_API_ENDPOINT=${RAG_API_ENDPOINT}
+      - PORT=8000
+      - HOST=0.0.0.0
+    restart: unless-stopped
+    networks:
+      - app-network
+
   frontend:
     build:
       context: ./Frontend
     container_name: frontend_container-1
     depends_on:
       - backend
+      - ai-service
     #ports:
     #  - "4001:3000"
     environment:
