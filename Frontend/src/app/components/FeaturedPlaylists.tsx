@@ -191,7 +191,7 @@ const FeaturedPlaylists = () => {
                       rel="noopener noreferrer"
                     >
                       <img
-                        src={`https://ott-backend.koogle.sk/media/${video.id}/thumbnail.webp`}
+                        src={`https://cms.nithyananda.ai/media/${video.id}/thumbnail.webp`}
                         alt={video.title}
                         className="w-full h-full object-cover"
                       />
